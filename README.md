@@ -16,7 +16,7 @@ An owner defines the purpose, approved knowledge, operating policy and initial b
 
 Northstar Care, our fictional insurance customer-service organization, is the hackathon example. **CompanyOs is the platform; insurance is one instance.** Research services, document services and other customer-facing agent businesses are intended applications of the same operating model, not separate products already demonstrated.
 
-[Mentor's guide](docs/MENTOR_GUIDE.md) · [Organization guide](docs/COMPANYOS_GUIDE.md) · [Local demo](docs/LOCAL_REAL_DEMO.md) · [Recovery evidence](docs/RECOVERY_EXECUTION.md) · [Claim-to-evidence index](CLAIMS.md)
+[Source repository](https://github.com/Jayesh1512/CompanyOS) · [Mentor's guide](docs/MENTOR_GUIDE.md) · [Organization guide](docs/COMPANYOS_GUIDE.md) · [Local demo](docs/LOCAL_REAL_DEMO.md) · [Recovery evidence](docs/RECOVERY_EXECUTION.md) · [Claim-to-evidence index](CLAIMS.md)
 
 ## How a living organization works
 
@@ -203,6 +203,8 @@ The top-right **Start demo** button opens a fresh local agency with its own nati
 Requires Node **24.22.1+**, npm, Git and Rust/Cargo.
 
 ```sh
+git clone https://github.com/Jayesh1512/CompanyOS.git
+cd CompanyOS
 npm ci
 npm run setup:jbrain
 npm run dev
