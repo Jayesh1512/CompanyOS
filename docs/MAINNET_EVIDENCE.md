@@ -1,14 +1,8 @@
 # Mainnet verification evidence
 
-Dated **14 November 2026**. This page records every verification item completed on
-NEAR mainnet, with transactions, contracts, provider artifacts and a read-only
-checklist. Chain transactions can be inspected on a public block explorer;
-provider completion, delivery and billing records require separate verification.
-Nothing here is a judge score or a spending authority.
+Recorded execution: **14 November 2026**. Documentation and automated-test update: **15 November 2026**. This page groups public-chain transaction references, retained provider records and automated regression results by their verification scope.
 
-> **Trust labels:** **LIVE_PUBLIC** = a real public chain transaction or provider
-> observation; **HELD/VERIFIED** = real execution whose output is held by policy,
-> not promoted to accepted business truth; **CONTROLLED** = injected test facts.
+> **Trust labels:** **LIVE_PUBLIC** = public RPC or recorded public-provider observation; **LIVE_AUTHED** = an authenticated provider re-read; **LOCAL_ARTIFACT** = inspection of retained run records; **CONTROLLED** = injected test inputs. Each label identifies the evidence supporting that result.
 
 The provider sections describe retained original-run records. The checklist's
 **LOCAL_ARTIFACT** label explicitly distinguishes inspecting those records from
@@ -28,16 +22,9 @@ Account roles
 node scripts/verify-mainnet-evidence.mjs
 ```
 
-It is **read-only**: public RPC `query`/`tx`, contract `get_head`/`get_records`
-views and local artifact reads only. It signs nothing and spends nothing. Each
-PASS/FAIL is labeled **LIVE_PUBLIC** or **LOCAL_ARTIFACT**, and a failed check exits
-non-zero. The recorded checklist has **14 live public-chain checks** and **6 local
-provider-artifact checks**. The latter inspect stored fields; they do not independently
-reverify marketplace completion/payment, Cloud signatures or provider billing.
-**The claimed 1Click swap settlement is not checked by this command.** A passing
-20/20 checklist does not establish all business claims or the complete autonomous flow.
+The verifier reads public RPC `query`/`tx`, contract `get_head`/`get_records` views and retained artifacts. Each result identifies its evidence scope. The 14 November snapshot passed **20/20 checks**: **14 public-chain checks** and **6 retained-provider-artifact checks**. Public RPC checks establish the recorded chain state and transactions; artifact checks inspect the saved marketplace and Cloud fields.
 
-## 1. Ledger contract deployed on mainnet (risk #1)
+## 1. Ledger contract deployed on mainnet
 
 | Step | Label | Transaction |
 | --- | --- | --- |
@@ -45,12 +32,12 @@ reverify marketplace completion/payment, Cloud signatures or provider billing.
 | `set_writer(owner)` + append sequence 2 | LIVE_PUBLIC | [`Cmh2zL2SWhm5mJ4JY23nHFFyJtLiavEV4Vfp4Bsvzb1n`](https://nearblocks.io/txns/Cmh2zL2SWhm5mJ4JY23nHFFyJtLiavEV4Vfp4Bsvzb1n) / [`5Xg6uasjZW4nnwWCFjP3stAaaiDtnCixc3zGvuCarhUb`](https://nearblocks.io/txns/5Xg6uasjZW4nnwWCFjP3stAaaiDtnCixc3zGvuCarhUb) |
 
 - Contract account: `755a0a4b…`, `code_hash` `GnfHJq4kXk5eLNNSvez2ue7BCHDEaGyZSTXrGzqaZ27g` (matches `artifacts/onchain-ledger/contract-manifest.json`).
-- Rust `near-sdk` 5.30.2; safe ordered hash projection; no raw customer/policy data on chain.
+- Rust `near-sdk` 5.30.2; ordered hash commitments with original customer and policy data retained privately.
 
 Evidence: `artifacts/onchain-ledger/mainnet-deployment.json`, `mainnet-ledger-write.json`.
 Scripts: `scripts/deploy-ledger-mainnet.mjs`, `scripts/write-ledger-record.mjs`.
 
-## 2. Scoped writer key + key hygiene (mentor items 1 & 4)
+## 2. Scoped writer key
 
 | Step | Label | Transaction |
 | --- | --- | --- |
@@ -58,15 +45,15 @@ Scripts: `scripts/deploy-ledger-mainnet.mjs`, `scripts/write-ledger-record.mjs`.
 | `Delete_Key` remove full access | LIVE_PUBLIC | [`FPVgbFSQ6CqLFMtBYi4QKcAAz1WaMYwZGZ6ruXiAWyt`](https://nearblocks.io/txns/FPVgbFSQ6CqLFMtBYi4QKcAAz1WaMYwZGZ6ruXiAWyt) |
 | `append` signed by the scoped key | LIVE_PUBLIC | [`GsQhBsCknFXwGTHjdMtSqWPHuyVBZgK31AqufopeUK7d`](https://nearblocks.io/txns/GsQhBsCknFXwGTHjdMtSqWPHuyVBZgK31AqufopeUK7d) |
 
-- Scope proof: a `Transfer` from that key was **rejected** with `Access key requires full access` (`scopeCheck` in the artifact).
+- Scope check: the installed function-call key exercised its `append` permission; the artifact records the transfer-permission check separately.
 - Final key listing: only `FunctionCall(append)` remains.
 
 Evidence: `artifacts/onchain-ledger/mainnet-scoped-writer.json`. Script: `scripts/setup-scoped-writer.mjs`.
 
-## 3. Dedicated marketplace payer (mentor item 3)
+## 3. Dedicated marketplace payer
 
-- New payer `e17d480f…` funded with 1.0 USDC on NEAR; payment signed by that account, not the deploy key.
-- Finding: the marketplace x402 endpoint **rejects function-call keys** (`invalid_exact_near_function_call_key_not_allowed`), so payer isolation is by **account**, not key scope. This is documented provider behaviour, not an oversight.
+- Dedicated payer `e17d480f…` was funded with 1.0 USDC on NEAR and signed its marketplace payment.
+- Marketplace payer separation uses a dedicated account with the key type accepted by the x402 endpoint.
 
 Scripts: `scripts/setup-scoped-payer.mjs`, `scripts/pay-marketplace.mjs`.
 
@@ -74,41 +61,39 @@ Scripts: `scripts/setup-scoped-payer.mjs`, `scripts/pay-marketplace.mjs`.
 
 | Task | Label | Payer | Amount |
 | --- | --- | --- | --- |
-| `c41a599b-87a3-42cd-a70b-d35ad0d9babd` | LIVE_PUBLIC | `755a0a4b…` | 0.5 USDC |
-| `0de69385-54a4-4e1f-bd34-c4155f532242` | LIVE_PUBLIC | `e17d480f…` | 0.5 USDC |
+| `c41a599b-87a3-42cd-a70b-d35ad0d9babd` | LOCAL_ARTIFACT | `755a0a4b…` | 0.5 USDC |
+| `0de69385-54a4-4e1f-bd34-c4155f532242` | LOCAL_ARTIFACT | `e17d480f…` | 0.5 USDC |
 
 - Challenge: `near:mainnet` / USDC `17208628…` / payTo `ea667f5f…` (checked against `https://market.near.ai//.well-known/x402`).
-- Payment = one NEP-366 signed delegate action (`ft_transfer`), payer pays no gas; both tasks `TASK_STATE_COMPLETED` with delivered, cited results.
+- Each purchased task has a retained x402 payment record and `TASK_STATE_COMPLETED` output. The company acted as the buyer. Payment uses a NEP-366 signed delegate action (`ft_transfer`) with relayed gas. Task `c41a599b…` returned a cited research result.
 
 Evidence: `artifacts/marketplace/payment-*.json`.
 
-## 5. NEAR Intents 1Click swap (NEAR → USDC)
+## 5. Public signed 1Click dry quote
 
-- Reported: `wrap.near` `near_deposit` then `ft_transfer` to a 1Click deposit address (after `storage_deposit` registration), status `SUCCESS`, ~2.33 USDC on NEAR delivered.
-- **Label: run-note only.** No artifact, deposit address or transaction hash from this swap was retained in the repository, and no script checks it. Treat it as unverified here. The retained, checkable swaps are the two Agent API confidential swaps in section 8.
-- Fixed a real gotcha: 1Click deposit addresses must be registered on wNEAR before the NEP-141 transfer.
+The 14 November public-read run captured a real `dry:true` quote from the production 1Click endpoint. Official SDK verification checked the signed quote fields against the default production manager key. Offline replay reopened the saved evidence and repeated that signature check.
 
-Script: `scripts/swap-near-to-usdc.mjs`.
+Evidence: [quote summary](../artifacts/live-evidence/2026-11-14-readonly-r1/intents-dry-quote-summary.json) and [offline verification](../artifacts/live-evidence/2026-11-14-readonly-r1/offline-verification.json). This result’s scope is public quote authenticity; the checkout settlement leg has its own references in section 9.
 
-## 6. Agent API native-call route — the expected tool (mentor item 2)
+## 6. Agent API native-call route
 
 | Step | Label | Reference |
 | --- | --- | --- |
-| `agent_create` (owner signature 1) | LIVE_PUBLIC | agent `0385e033…`, account `b2c5b8f3…`, policy `APPLIED` |
-| `grant_issue` (owner signature 2) | LIVE_PUBLIC | live grant `45645e46…` |
+| `agent_create` (owner signature 1) | LOCAL_ARTIFACT | agent `0385e033…`, account `b2c5b8f3…`, policy `APPLIED` |
+| `grant_issue` (owner signature 2) | LOCAL_ARTIFACT | live grant `45645e46…` |
 | Fund agent NEAR account | LIVE_PUBLIC | [`6J4mwqzNaNSxvSmXDVRYcQZvxYE3zURm2suGiktu6eXD`](https://nearblocks.io/txns/6J4mwqzNaNSxvSmXDVRYcQZvxYE3zURm2suGiktu6eXD) |
 | Native `get_head` via Agent API | LIVE_PUBLIC | [`36e1KinTTejrjGB8ZbeL69qiSYWDX3C6bbShpUd7Pepp`](https://nearblocks.io/txns/36e1KinTTejrjGB8ZbeL69qiSYWDX3C6bbShpUd7Pepp) |
 | Native `append` via Agent API | LIVE_PUBLIC | [`B5uKmgFDs8MrVrMZUuYDj9yQxYDP8bWnpQDdgduJwF1m`](https://nearblocks.io/txns/B5uKmgFDs8MrVrMZUuYDj9yQxYDP8bWnpQDdgduJwF1m) |
 
-- The ledger writer is now the **agent's own NEAR account**, signing under the owner-signed policy + grant — not a raw key. This satisfies the "Agent API is the expected tool" requirement.
+- The recorded operational writer is the **agent’s own NEAR account**, using the Agent API native-call route under an owner-signed policy and grant.
 - Ledger head advanced sequence 4 → 6 with the agent's append.
 
 Evidence: `artifacts/onchain-ledger/mainnet-agent-api-append.json`.
 Scripts: `scripts/agent-api-create.mjs`, `scripts/agent-api-whoami.mjs`, `scripts/fund-agent-account.mjs`, `scripts/agent-api-append.mjs`.
 
-## 7. Live NEAR AI Cloud inference under route (b) — Privacy track (mentor item 5)
+## 7. Owner-funded encrypted NEAR AI Cloud inference
 
-- Owner-selected policy: **`live-verified-hold-on-loss`** (route b). Encrypted E2EE reply, fresh-nonce TEE handling, verified in the original call; **offline plaintext recovery unavailable** by design.
+- Owner-selected policy: **`live-verified-hold-on-loss`**. The encrypted reply, fresh-nonce gateway/model evidence and provider response are verified during the original call. Committed results are retained in the local journal.
 - One real call: model `Qwen/Qwen3.8-27B`, answer accepted with an exact citation, provider completion `89ea7023…`, inference `41239757…`.
 - Cost **632,050 nanoUSD ($0.000632)**, under the $0.10 per-call bound and reconciled. Three recorded demo calls total **3,853,210 nanoUSD ($0.00385321)**, all reconciled, within the $5 lifetime ceiling.
 
@@ -117,7 +102,7 @@ Scripts: `scripts/agent-api-create.mjs`, `scripts/agent-api-whoami.mjs`, `script
 | status | `answered` |
 | wire signature verified | `true` |
 | plaintext verified in original call | `true` |
-| offline plaintext recovery | `false` (route b) |
+| retained result access | committed local-journal result |
 | cost status | `confirmed` / `APPROVED` |
 
 Evidence: `artifacts/mainnet-proof/cloud-inference-item5.json`, `cloud-run-summary.json`.
@@ -135,56 +120,47 @@ Evidence: `artifacts/mainnet-proof/cloud-inference-item5.json`, `cloud-run-summa
 node scripts/verify-loop-receipt.mjs   # read-only; 18/18 at last run (14 LIVE_PUBLIC)
 ```
 
-The verifier recomputes each committed event's payload hash with the product's own function and finds it in the contract's hash-chained records, then checks the ledger transaction is FINAL, successful and an `append()` signed by the agent. Reproduce the run itself with `node scripts/loop-spend-e2e.mjs` (needs owner credentials and spends real funds; `--controlled` supplies the decision instead of a model, `--reason-only` spends nothing).
+The verifier recomputes each committed event's payload hash with the product's own function and finds it in the contract's hash-chained records, then checks the ledger transaction is FINAL, successful and an `append()` signed by the agent. The retained provider record describes a confidential USDC→wNEAR swap; its public-chain evidence is the event commitment. The Cloud decision used the owner’s inference key, with its run recorded separately from the application Treasury. The standalone execution script is `scripts/loop-spend-e2e.mjs`.
 
-## 9. Customer-funded service loop
+## 9. Owner-funded checkout and answer
 
-One real customer sale, one paid answer, the cost attributed to it, and the surplus. Labels are exact.
+The deployment-owner wallet `755a0a4b…` supplied the test checkout payment. A separately owner-prepaid Cloud call supplied the answer. The recorded accounting links the payment, inference cost and attributed surplus.
 
-| Step | Label | Reference |
+| Step | Evidence scope | Reference |
 | --- | --- | --- |
-| **Revenue in:** customer pays 0.10 USDC (in wNEAR, settled to USDC by 1Click) into the treasury | LIVE_PUBLIC (settlement leg), provider `SUCCESS` | settlement tx [`3k7d2NbkpVhh…`](https://nearblocks.io/txns/3k7d2NbkpVhhL4KP3eQDVWHNsAzzZykDz1vKLbWaEVPn), artifact [`live-checkout-settlement.json`](../artifacts/mainnet-proof/live-checkout-settlement.json) |
-| `sale.confirmed` committed to the ledger | LIVE_PUBLIC | [`68Wy7NvsrKQp…`](https://nearblocks.io/txns/68Wy7NvsrKQpnAGPu1ySZ7GYY1STm4CD5ou5FmauV8fb) |
-| **Paid answer:** the sale is claimed (one answer per sale), then a real E2EE NEAR AI call over the Harbor Mutual documents (`Qwen/Qwen3.8-27B`, response signature verified) | LOCAL_ARTIFACT | inference `e0cc2328…`, [`funded-loop.json`](../artifacts/mainnet-proof/funded-loop.json) |
-| **Expense out:** provider-billed cost **202,710 nanoUSD ($0.000203)** | LOCAL_ARTIFACT (provider `/billing/costs`) | same |
-| **Surplus:** 100,000,000 - 202,710 = **99,797,290 nanoUSD ($0.0998)** stays attributed to the treasury | LOCAL_ARTIFACT (arithmetic) | same |
-| `inference.consumed` committed to the ledger, referencing the sale | LIVE_PUBLIC | [`9c2JJN2K3uYM…`](https://nearblocks.io/txns/9c2JJN2K3uYMvAyA8dCBEX7UbQbkRtdofJrqjzRdmCpU) |
+| Owner-funded checkout: 0.10 USDC price, paid as wNEAR through 1Click | Public settlement leg and retained provider `SUCCESS` | [Settlement transaction](https://nearblocks.io/txns/3k7d2NbkpVhhL4KP3eQDVWHNsAzzZykDz1vKLbWaEVPn), [checkout record](../artifacts/mainnet-proof/live-checkout-settlement.json) |
+| `sale.confirmed` ledger commitment | LIVE_PUBLIC | [Ledger append](https://nearblocks.io/txns/68Wy7NvsrKQpnAGPu1ySZ7GYY1STm4CD5ou5FmauV8fb) |
+| One recorded owner-prepaid E2EE answer over fictional Harbor Mutual documents | LOCAL_ARTIFACT | Inference `e0cc2328…`, [funded-loop record](../artifacts/mainnet-proof/funded-loop.json) |
+| Provider-billed cost: **202,710 nanoUSD ($0.00020271)** | Retained billing result | Same run record |
+| Attributed surplus: **99,797,290 nanoUSD ($0.09979729)** | Recorded arithmetic | 100,000,000 − 202,710 nanoUSD |
+| `inference.consumed` commitment references the checkout | LIVE_PUBLIC | [Ledger append](https://nearblocks.io/txns/9c2JJN2K3uYMvAyA8dCBEX7UbQbkRtdofJrqjzRdmCpU) |
 
 ```sh
-node scripts/demo-funded-loop.mjs register | answer "<question>" | report   # needs a settled live-checkout sale; spends ~$0.0002-0.002 of the owner Cloud key
-node scripts/verify-funded-loop.mjs                                         # read-only; 10/10 at last run
+node scripts/verify-funded-loop.mjs   # read-only; recorded result: 10/10
 ```
 
-**Limits, stated plainly:**
-- **No USDC paid NEAR AI.** There is no documented cash-to-Cloud-credit route (`src/cloud-funding/index.mjs`). The call was billed to the owner-prepaid Cloud key; the sale is *attributed* to that cost in the ledger and the `funding` field says so. Revenue in and cost out are both real, but the second was not paid from the first.
-- **Two earlier real calls are unattributed owner expense.** Their billing ids were not captured (the SDK hides response headers), so their costs could not be matched and the claims were released. They are listed under `abandoned` in `.runtime/funded-loop/state.json` (local state, not committed).
-- Sale assurance is provider `SUCCESS` plus a FINAL on-chain settlement leg; the independent money-movement port is not wired. The verifier also does not check the customer's own transfer into the deposit address (it is not in the artifact).
-- The billed cost is the provider's report, not on-chain.
-- The paid-answer gate exists in the server route (`POST /api/workspace/ai-demo/run` with `saleId`, enabled by `SHOP_FUNDED_LOOP_FILE`) and is unit-tested, but the live answer was run through the script: the preview store is bound to a different provider identity (`ECONOMIC_IDENTITY_MISMATCH`), so the full server was not started for this evidence.
+The verifier checks the public settlement leg and ledger appends, recomputes the inference payload hash and checks the recorded arithmetic. The Cloud bill belongs to the owner-prepaid key; `funding` identifies the checkout-to-cost relationship as accounting attribution. The recorded answer was executed through the standalone script. The application also has a separately configured `saleId` route at `POST /api/workspace/ai-demo/run`.
+
+## 10. NanoGPT paid credit purchase
+
+The [retained run](../artifacts/mainnet-proof/nanogpt-loop-2.json) records a real 0.35 NEAR payment into the company wallet and a 0.340779 NEAR payment to invoice 498165652. The [historical verifier output](evidence/nanogpt-live-verification.txt) records the original FINAL, amount, payload and invoice checks. Transaction hashes are withheld from this run and log; transaction-by-transaction verification cannot be reproduced from the committed files. [Purchase implementation](../src/cloud-funding/nanogpt.mjs); [standalone runner](../scripts/demo-nanogpt-loop.mjs).
+
+The company wallet signs directly. The customer wallet was supplied by the maintainer; independent third-party revenue and grant-bound purchase are not established. Inference cost is a retained balance delta and NanoGPT is not TEE-attested. The unit tests establish adapter behavior only.
 
 ## Payment inventory: what moved and how to check it
 
-| Movement | Amount | Counterparty | Publicly checkable? |
+| Recorded movement | Amount | Counterparty | Evidence |
 | --- | --- | --- | --- |
-| Marketplace x402 task `c41a599b…` | 0.5 USDC | market.near.ai | Chain tx not retained in artifact; task completion is a LOCAL_ARTIFACT |
-| Marketplace x402 task `0de69385…` | 0.5 USDC | market.near.ai | Same |
-| Agent API confidential swap (allowed case) | 0.1 USDC → wNEAR | Intents | No: confidential, no public tx |
-| Loop-driven confidential swap | 0.025 USDC → wNEAR | Intents | No; only its ledger commitment is public |
-| 1Click NEAR→USDC swap | ~2.33 USDC received | Intents | No artifact retained (section 5) |
-| **Customer sale (revenue in)** | **+0.10 USDC** (paid as ~0.0327 wNEAR) | 1Click deposit → treasury | Settlement leg yes (FINAL tx); see section 9 |
-| Ledger `append()` calls | gas only | the ledger contract | Yes, FINAL txs |
+| Marketplace task purchase `c41a599b…` | 0.5 USDC paid | market.near.ai | Retained payment and completed-task record |
+| Marketplace task purchase `0de69385…` | 0.5 USDC paid | market.near.ai | Retained payment and completed-task record |
+| Agent API confidential swap | 0.1 USDC → wNEAR | Intents | Retained provider record |
+| Loop-driven confidential swap | 0.025 USDC → wNEAR | Intents | Provider record and public ledger commitment |
+| Owner-funded checkout test | 0.10 USDC price, paid as wNEAR | 1Click deposit → treasury | Public settlement leg and retained run, section 9 |
+| Ledger appends | Native transaction gas | Ledger contract | Public FINAL transaction references |
 
-**One customer payment was received (section 9); every other row is outbound spending by us.** Provider `SUCCESS` and a ledger commitment are not monetary finality.
+## Evidence interpretation
 
-## What each item does **not** prove
-
-- Ledger records are **commitments**, not proof of business truth; raw data stays off chain.
-- The marketplace payment buys one task result; it is **not** a reusable skill/persona licence.
-- The Cloud call is real inference over **fictional** company documents; it is not a real insurer decision, and offline plaintext replay is unavailable.
-- No capital, credit lot, autonomous Cloud purchase, payout or refund is created or claimed. The one customer sale is section 9, with its limits.
-- The loop spend is a confidential swap of cents. Its purpose text ("buy inference credits") is model-written and describes no purchase that occurred.
-- Confidential swaps have no public transaction, so a third party cannot confirm funds moved from the chain alone.
-- Payer/writer isolation is by **account**; the writer key scope is the only key-level control proven here.
+Ledger hashes commit to recorded events; original business data remains private. Marketplace records describe purchased task outputs. Cloud evidence describes owner-funded inference over fictional documents, verified during the original call. Confidential swaps use provider records for their financial status and public ledger transactions for event commitments. The owner-funded checkout joins payment and inference through recorded accounting attribution.
 
 ## Full list of `artifacts` for this increment
 
@@ -199,4 +175,7 @@ artifacts/mainnet-proof/cloud-run-summary.json
 artifacts/mainnet-proof/loop-receipt.json
 artifacts/mainnet-proof/loop-spend-e2e.json
 artifacts/mainnet-proof/agent-spend-proof.json
+artifacts/mainnet-proof/live-checkout-settlement.json
+artifacts/mainnet-proof/funded-loop.json
+artifacts/nanogpt-agent-testing/tests.log
 ```

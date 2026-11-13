@@ -32,7 +32,8 @@ test('inference, knowledge and wallet states reflect facts and unconfigured serv
  assert.equal(resourceStatus(find('near-cloud-inference'),s).label,'Setup required');assert.equal(resourceStatus(find('intents-wallet'),s).label,'Setup required');
  assert.equal(resourceStatus(find('jbrain-knowledge'),s).label,'JBrain unavailable');
  assert.equal(resourceStatus(find('jbrain-knowledge'),{...s,marketKnowledge:{status:'connected',documents:[]}}).label,'Connected · local JBrain');
- for(const id of ['near-cloud-inference','intents-wallet']){const html=renderListing({...s,route:parseRoute('#marketplace/'+id)});assert.ok(html.includes('Setup required'));assert.ok(html.includes('href="#settings"'));assert.ok(!html.includes('id="use-listing-form"'));}
+ assert.equal(resourceStatus(find('nanogpt-inference'),s).label,'Setup required');assert.ok(find('nanogpt-inference').limitations.includes('Not TEE-attested'));
+ for(const id of ['near-cloud-inference','nanogpt-inference','intents-wallet']){const html=renderListing({...s,route:parseRoute('#marketplace/'+id)});assert.ok(html.includes('Setup required'));assert.ok(html.includes('href="#settings"'));assert.ok(!html.includes('id="use-listing-form"'));}
 });
 
 test('SOUL.md preview/download is independently sourced and review does not write until an ordinary Rules-gated save',async t=>{

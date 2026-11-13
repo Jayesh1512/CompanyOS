@@ -156,7 +156,7 @@ export function createWeb({ aiDemo,fundedLoop,workflow, ledger, rules, readiness
             if(request.method==='POST'){
               const input=await supportInput(request),key=request.headers.get('idempotency-key');
               if(op==='prepare'){if(Object.keys(input).some(k=>!['kind','input'].includes(k))||!input.input||typeof input.input!=='object'||Array.isArray(input.input))throw error('INVALID_INPUT','Select an operation and its exact inputs.');return json(await nearIntegrations.prepare(input.kind,input.input,access,key));}
-              if(['execute','reconcile','verify-evaluation','probe-resource','cost'].includes(op)){if(Object.keys(input).some(k=>k!=='planId')||typeof input.planId!=='string')throw error('INVALID_INPUT','Use an original prepared plan.');return json(await nearIntegrations[op==='verify-evaluation'?'verifyEvaluation':op==='probe-resource'?'probeResource':op](input,access));}
+              if(['execute','reconcile'].includes(op)){if(Object.keys(input).some(k=>k!=='planId')||typeof input.planId!=='string')throw error('INVALID_INPUT','Use an original prepared plan.');return json(await nearIntegrations[op==='verify-evaluation'?'verifyEvaluation':op==='probe-resource'?'probeResource':op](input,access));}
               if(op==='accounts')return json(nearIntegrations.accountPlan(input,access));
               if(op==='checkpoint-feed')return json(nearIntegrations.feedPlan(input,access));
             }

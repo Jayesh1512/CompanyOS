@@ -5,7 +5,6 @@ import {createNearCloudClient} from '../inference/http.mjs';
 import {readCloudJson} from '../cloud/http.mjs';
 import {RECOVERY_LIMITS as limits,RECOVERY_SPEC} from '../rules/recovery.mjs';
 import {evaluateTemplateChange} from '../autonomy/evaluation.mjs';
-import {createRecoveryEvaluator} from './recovery-evaluator.mjs';
 import {recoveryScenario,DEFAULT_RECOVERY_SCENARIO} from './recovery-scenarios.mjs';
 
 export const RECOVERY_COMPANY='near-ai-recovery';
@@ -16,25 +15,15 @@ const json=(v,status=200)=>new Response(JSON.stringify(v),{status,headers:{'cont
 
 /** Real NEAR model work. No recorded responses, fake SDK evidence, fake credit,
  * fake bills or timers that manufacture a successful lifecycle. */
-export function createRecovery({app,authorization,credential,clock=()=>new Date(),verificationFactory,cloudClient,readModels,outlayerEvaluator,outlayerBinding,resolveSecret,verifyOutlayerExecution,outlayerTransport,scenarioId=DEFAULT_RECOVERY_SCENARIO,requireOutlayer=false}={}){
+export function createRecovery({app,authorization,credential,clock=()=>new Date(),verificationFactory,cloudClient,readModels,scenarioId=DEFAULT_RECOVERY_SCENARIO}={}){
  const {journal,rules,workspace,knowledge,treasury,autonomy}=app,companyId=RECOVERY_COMPANY,access={role:'owner',verified:true,companyId};
  const scenario=recoveryScenario(scenarioId),{profiles,instructions}=scenario;
  const now=()=>new Date(clock()).toISOString();
- const evaluator=outlayerEvaluator??createRecoveryEvaluator({journal,binding:outlayerBinding,resolveSecret,verifyExecution:verifyOutlayerExecution,transport:outlayerTransport,clock});
  async function evaluate(spec,stage){
   const jobId=`recovery:${scenarioId}:${get().attempt??1}:${stage}`;
-  let observation,evidence;
-  try{
-   const remote=await evaluator.evaluate({...spec,jobId});
-   if(remote.status!=='confirmed'||!remote.proof||fingerprint(remote.output)!==fingerprint(evaluateTemplateChange(spec)))fail('OUTLAYER_EXECUTION_PROOF_REQUIRED');
-   observation=remote.output;evidence={source:'outlayer',callId:remote.providerRequestId,proof:remote.proof,attestationEvidenceRef:remote.attestationEvidenceRef,responseEvidenceRef:remote.responseEvidenceRef};
-  }catch(error){
-   observation=evaluateTemplateChange(spec);const remote=journal.get('recoveryOutlayerJobs',jobId);
-   evidence={source:'local-fallback',reasonCode:error.code??'OUTLAYER_UNAVAILABLE',callId:remote?.callId??null,attestationEvidenceRef:remote?.attestationEvidenceRef??null};
-  }
+  const observation=evaluateTemplateChange(spec),evidence={source:'local-fixed-evaluator'};
   const value={id:jobId,stage,observation,...evidence};
   await journal.transaction({actionId:jobId+':observation',fingerprint:fingerprint(value)},tx=>{tx.put('recoveryEvaluations',jobId,value);tx.append('recovery.evaluation_observed',{companyId,stage,...evidence});});
-  if(requireOutlayer&&evidence.source!=='outlayer')fail(evidence.reasonCode);
   return {observation,evidence};
  }
  let busy=false;
