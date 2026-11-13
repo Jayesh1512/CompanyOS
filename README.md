@@ -2,9 +2,146 @@
 
 CompanyOs records agent commitments in a **hash-chained on-chain ledger with a tamper-rejecting evidence index**. Each record binds the actor, payload and preceding commitment. The evidence index checks retained bytes and claim scopes against the committed catalog; immutable proof digests are pinned so rebuilding cannot silently accept changed evidence. [Ledger construction](src/rules/onchain-ledger.mjs#L27), [contract validation](contracts/company-ledger/src/lib.rs#L96), [index validation](scripts/evidence/model.mjs#L61) and [redacted signer records](docs/evidence/swarm-execution.txt). Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
-The local workspace combines company setup, agent profiles, native JBrain knowledge, customer care and versioned improvements. Owners approve context and operating boundaries. [Operating model](docs/COMPANYOS_GUIDE.md) and [local execution evidence](artifacts/local-real-demo/validation.json).
+**Create an organization, not just an agent.** CompanyOs is a platform for autonomous organizations designed to earn from useful work, maintain a treasury, and pay for the infrastructure and services that keep them running.
 
-Start with [How CompanyOs works](docs/COMPANYOS_GUIDE.md) for the operating model and [the local demo](docs/LOCAL_REAL_DEMO.md) for a guided customer-care walkthrough.
+An owner defines the purpose, approved knowledge, operating policy and initial budget. A master agent coordinates specialists around that purpose. The intended business cycle connects customer services, revenue, permitted operating expenses and improvements that help the organization serve the next customer. The local workspace implements company setup, agent profiles, native JBrain knowledge, customer care and versioned improvements. [Operating model](docs/COMPANYOS_GUIDE.md) and [local execution evidence](artifacts/local-real-demo/validation.json).
+
+**Earn → Spend → Improve → Sustain.** Self-repair keeps the organization useful between requests. Continuous operation funded by independent customers remains the goal; the demonstrated paths and their limits are described below.
+
+Northstar Care, our fictional insurance customer-service organization, is the hackathon example. **CompanyOs is the platform; insurance is one instance.** Research services, document services and other customer-facing agent businesses are intended applications of the same operating model, not separate products already demonstrated.
+
+[Judge's guide](docs/JUDGE_GUIDE.md) · [Organization guide](docs/COMPANYOS_GUIDE.md) · [Local demo](docs/LOCAL_REAL_DEMO.md) · [Recovery evidence](docs/RECOVERY_EXECUTION.md) · [Claim-to-evidence index](CLAIMS.md)
+
+## How a living organization works
+
+An organization has to coordinate useful work, maintain knowledge, account for its costs and keep serving customers. CompanyOs brings those responsibilities into one operating model.
+
+```text
+             Owner defines purpose, knowledge, policy and budget
+                                      |
+                                      v
+                      Master agent + specialist agents
+                                      |
+              Customers request useful work and pay for services
+                                      |
+                                      v
+                         Treasury receives revenue
+                                      |
+                         Pays for permitted resources
+                         |- Inference and compute
+                         |- External services and task providers
+                         `- Maintenance and improvements
+                                      |
+                                      v
+                      Agents deliver the customer's work
+                                      |
+                                      v
+                     Record revenue, costs and obligations
+                                      |
+                                      v
+                   Retain working funds for the next request
+                                      |
+                              Keep serving customers
+
+       When a gap is observed: backlog -> specialist work -> evaluated update
+       The updated knowledge or template supports subsequent permitted work.
+```
+
+This diagram describes the **business design**. Implemented local workflows and bounded recorded runs cover parts of it; it does not assert continuous autonomous operation or a self-funded business. The recorded checkout uses NEAR Intents / 1Click. Cloud inference uses owner-prepaid credits; automatic treasury-to-Cloud funding remains open. x402 customer revenue is not a supported product feature. [Capability boundaries](docs/COMPANYOS_GUIDE.md#current-capability-and-status), [checkout scope](docs/MAINNET_EVIDENCE.md#9-owner-funded-checkout-and-answer) and [integration scope](#integration-scope).
+
+### Earn: provide something worth paying for
+
+The intended organization offers a useful service: answer a support question, produce a document, or complete a research task. The current local customer-care service answers from approved fictional documents and creates owner-review tickets. A separately configured checkout demonstration links a service payment to one delivered answer. Those are specific execution paths; independent customer demand is not established. [Customer-care implementation](src/support/index.mjs) and [checkout accounting](src/payments/funded-loop.mjs).
+
+### Spend: buy what the organization needs
+
+A treasury accounts for incoming payments, committed costs, pending work and available operating funds. Inference, compute and external task services are operating expenses in the intended organization model.
+
+Rules control permitted actions and limits; Treasury records reservations and costs. Actual resource acquisition depends on supported provider routes, credentials and verifiable receipts. A model cannot grant itself spending permission. The configured application ceiling includes actual costs and pending reservations. [Rules](src/rules/index.mjs), [Treasury](src/treasury/index.mjs) and [bounded spend execution](src/workflow/spend.mjs).
+
+### Improve: maintain the business between requests
+
+Missing knowledge or a workflow defect becomes backlog work. The master agent coordinates specialist roles within the allowed scope. A knowledge curator selects approved source text; a developer proposes a supported template change; a fixed evaluator compares baseline and candidate before Rules admits promotion. The resulting revisions become context for subsequent work. Instruction changes require paused owner review; arbitrary host-code changes and paid external hiring are not established by the recovery demonstrations. [Recovery executor](src/demo/recovery.mjs), [fixed evaluator](src/autonomy/evaluation.mjs) and [revision controls](docs/COMPANYOS_GUIDE.md#how-it-heals).
+
+### Sustain: keep the organization able to operate
+
+The goal is to cover operating costs from service revenue and retain working funds for continued delivery and maintenance. Recorded paths connect a sale to its associated cost, but continuously replenishing provider credits from revenue, paying contributors and operating a fully self-funded business remain open. [Accounting and funding limits](docs/MAINNET_EVIDENCE.md#9-owner-funded-checkout-and-answer) and [current capabilities](docs/COMPANYOS_GUIDE.md#current-capability-and-status).
+
+## The hackathon instance: Northstar Care
+
+Northstar Care serves fictional Harbor Mutual insurance documents. The example makes the platform tangible; it does not represent a real insurer. Its ordinary customer-care portal uses model-free document lookup and persistent review tickets. The separately configured AI and recovery paths use owner-funded inference. [Customer-care flow](docs/CUSTOMER_CARE.md) and [AI execution scope](docs/REAL_AI_DEMO.md).
+
+### Recorded interfaces
+
+| Recovery scenario | Company ledger setup | AI demo |
+| --- | --- | --- |
+| [![Recorded claims-intake recovery demonstration](artifacts/live-recovery/desktop.png)](artifacts/live-recovery/desktop.png) | [![Company ledger setup and local company history](artifacts/onchain-ledger/ledger-desktop.png)](artifacts/onchain-ledger/ledger-desktop.png) | [![Owner-funded AI answers and review ticket](artifacts/real-ai-demo/desktop.png)](artifacts/real-ai-demo/desktop.png) |
+
+Historical interface captures; open an image for the full view. The recovery screen shows its recorded local company history. The ledger image shows a setup screen before binding. [Recovery run and revisions](artifacts/live-recovery/browser-proof.json), [ledger behavior](docs/NEAR_ONCHAIN_LEDGER.md) and [AI records](docs/REAL_AI_DEMO.md) describe the corresponding execution scopes.
+
+### A service payment linked to a delivered answer
+
+The recorded demonstration links an owner-funded **0.10 USDC checkout via 1Click** to one encrypted, signature-verified NEAR AI answer. [Retained payment and answer records](docs/MAINNET_EVIDENCE.md#9-owner-funded-checkout-and-answer).
+
+| Business item | Recorded value |
+| --- | ---: |
+| Service payment | 0.10 USDC |
+| Matched inference bill | $0.00020271 |
+| Payment less that one bill | $0.09979729 |
+
+The remainder is **accounting only, not profit**: gas, other calls and operating costs are excluded. The deployment-owner wallet supplied the payment, so this does not establish independent customer demand. Inference was billed to the owner-prepaid Cloud key; the sale did not purchase those credits. The verifier checks the recorded settlement leg and ledger records, rather than full independent monetary settlement. [Exact evidence and limits](docs/MAINNET_EVIDENCE.md#9-owner-funded-checkout-and-answer).
+
+### See the organization improve
+
+A fictional claims-intake request asks which contact preference to record. The customer chooses `portal`, but the support runbook does not explain that requirement.
+
+1. **Encounter the gap.** Support escalates instead of inventing policy. The intake template also lacks `contactPreference`.
+2. **Delegate repair.** Within the bounded recovery workflow, the backlog selects a knowledge curator and template developer.
+3. **Update knowledge.** The curator selects an exact passage from an owner-approved source. The runtime validates it and saves a new native JBrain runbook revision.
+4. **Test the change.** The developer proposes the missing field. The fixed evaluator rejects the baseline and accepts the candidate; Rules checks the current revision before promotion.
+5. **Retry with the improvement.** Support reads the new knowledge and template revisions, cites the guidance and completes the same intake with `contactPreference: portal`.
+
+The recorded run contains six real NEAR AI Cloud responses, original-process SDK verification and **$0.005128148** in matched provider bills. Its restart record reports no extra provider calls. A second scenario repairs a missing mailing-address requirement; its six accepted calls and **$0.00776905** in bills are retained separately. These are bounded knowledge/template repairs. Their original evaluations used local fallback; current recovery directly uses the local fixed evaluator. [Contact-preference run](docs/LIVE_RECOVERY_DEMO.md), [restart record](artifacts/live-recovery/restart-proof.json) and [second scenario](docs/RECOVERY_EXECUTION.md).
+
+### Architecture: the living-system loop
+
+```text
+Owner: objective + approved knowledge + policy + budget
+                         |
+                    Master agent
+                         |
+              Scoped specialist -> deliverable
+                         |
+                 Observed knowledge gap
+                         |
+                  Permanent backlog
+                         |
+          Knowledge curator + template developer
+                         |
+             Fixed evaluation + revision check
+                         |
+            New revision -> subsequent permitted work
+
+Treasury: receipts, reservations, costs and accounting
+Private journal: source data, work and causal history
+NEAR ledger: safe event/hash commitments, not raw customer data
+```
+
+The private journal retains source data and causal work history. The public ledger stores safe commitments; the evidence index checks retained bytes and declared scopes. A commitment alone does not prove the underlying business assertion. [Workflow controls](docs/COMPANYOS_GUIDE.md#work-controls-and-recovery), [ledger construction](src/rules/onchain-ledger.mjs) and [index validation](scripts/evidence/model.mjs).
+
+## Why NEAR fits this organization model
+
+| Component | Responsibility | Implementation and evidence boundary |
+| --- | --- | --- |
+| Agent API | Owner-signed policy/grant, native ledger calls and bounded spend routes | [Spend executor](src/workflow/spend.mjs); confidential movement and public ledger commitments have separate evidence scopes. |
+| NEAR AI Cloud | Encrypted inference with original-process attestation and response verification | [Recorded AI calls](docs/REAL_AI_DEMO.md); offline plaintext verification is unavailable. |
+| NEAR Intents / 1Click | Cross-asset quotes and service checkout | [Quote evidence](docs/LIVE_EVIDENCE.md) and [owner-funded checkout](docs/MAINNET_EVIDENCE.md#9-owner-funded-checkout-and-answer). |
+| Rust ledger / NEAR RPC | Ordered event commitments, writer authorization and finality reads | [Contract](contracts/company-ledger/src/lib.rs) and [ledger verification](docs/MAINNET_EVIDENCE.md); original business data stays private. |
+| Agent subaccounts | Bind configured recovery roles to distinct signers | [Signer](src/onchain/agent-ledger.mjs) and [redacted records](docs/evidence/swarm-execution.txt); arbitrary future profiles are not automatically provisioned. |
+| Official NEAR MCP server | Ledger head, actor authorization and record readback through a CompanyOs read tool | [MCP integration](src/onchain/near-mcp.mjs); the read tool has no signing keys or spending route. |
+| Native JBrain | Approved organizational knowledge and source revisions | [Knowledge implementation](src/knowledge/index.mjs) and [recorded revision reuse](docs/LIVE_RECOVERY_DEMO.md). |
+
+The separate [read-only Agent API MCP server](src/integrations/mcp-server.mjs) exposes balances and policy over stdio. It is distinct from the official NEAR MCP integration above. Removed signing and remote-evaluation paths are listed under [Integration scope](#integration-scope).
 
 ## What you can use
 
@@ -13,7 +150,7 @@ Start with [How CompanyOs works](docs/COMPANYOS_GUIDE.md) for the operating mode
 - **Customer care.** The fictional Northstar Care agency serves Harbor Mutual policy questions with exact source quotations and creates persistent owner-review tickets. [Executed scenario](evidence/runs/2026-11-14T12-49-11-380Z/care-scenario.json).
 - **Versioned improvements.** Registered structured templates use fixed baseline/candidate evaluation, revision promotion and rollback. Instruction changes use paused owner review. Controlled full-loop tests exercise delegation, gap detection, repair and future context. [Fixed evaluator](src/autonomy/evaluation.mjs#L1), [live recovery](docs/evidence/swarm-live-run.json).
 - **Marketplace guidance.** Browse local templates, written skills, independently authored SOUL.md guidance and customer-care services. [Catalog](src/workspace/resources.mjs#L1).
-- **Private and mainnet records.** Inspect private company events and the deployed NEAR ledger’s ordered hash commitments. [Private ledger](src/ledger/index.mjs#L1), [historical verification log, redacted](docs/evidence/swarm-verification.txt).
+- **Private and mainnet records.** Inspect private company events and the deployed NEAR ledger’s ordered hash commitments. [Private ledger](src/ledger/index.mjs#L1), [mainnet verification](docs/MAINNET_EVIDENCE.md).
 
 ## Demonstrated integrations
 
@@ -77,7 +214,7 @@ node scripts/evidence/verify.mjs
 node scripts/verify-mainnet-evidence.mjs
 ```
 
-The final [clean committed-source run](docs/evidence/tests-final-committed.txt) passed **618 tests**, with every name retained. All **15 evidence-index tests** and syntax checks for **218 committed JavaScript files** also passed; [validation output](docs/evidence/final-validation.txt). The working tree, including pre-existing uncommitted tests, separately passed 625 tests.
+The retained [clean committed-source snapshot](docs/evidence/tests-final-committed.txt) passed **618 tests**, with every name recorded. Its **15 evidence-index tests** and syntax checks for **218 committed JavaScript files** also passed; [validation output](docs/evidence/final-validation.txt). These are historical outputs; rerun the commands above to check the current checkout.
 
 The original **512-test baseline** is readable in [the unabridged historical output](docs/evidence/tests-baseline-512.txt), including every test name and its pass count. After item 1, the [committed regression suite](docs/evidence/tests-item2.txt) passed **606 tests**. The [second recovery timeline](docs/evidence/recovery-missing-address.txt) lists all six original Cloud calls, revisions, evaluation results and bills, plus redacted metadata for the later testnet evidence anchor. The anchor commits the retained historical bytes; the original recovery ran off-chain. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
