@@ -1,0 +1,43 @@
+FRESH CURRENT-BUILD BROWSER PROOF
+Run: browser-20261117124943549
+Started: 2026-11-17T12:49:43.549Z
+Completed: 2026-11-17T12:49:47.353Z
+Base commit: 5736d7662f3b565919abc0310ccac7e83fed3bb4
+Base commit; sourceFiles bind the actual tested working-tree bytes, including uncommitted changes.
+Scope: actual isolated HTTP/browser application; fictional QA metadata; no provider fixtures, paid calls or financial effects.
+Navigated views: 26
+Provider effects: 0; financial version: 0
+
+operations-desktop.png captured 2026-11-17T12:49:45.344Z
+  sha256=9d03b9dd0375b0fa9cbc5ddb3d2b1a5a3569e684298b97447bfbfb6210bd4ca1; bytes=157952; viewport=1440; documentWidth=1440
+  visible keyboard-focus checks=39; failures=0
+setup-desktop.png captured 2026-11-17T12:49:45.501Z
+  sha256=cf7fda1cc33510eb232b307480e59903dba83c88a3c07687d195219135c99d3c; bytes=201882; viewport=1440; documentWidth=1440
+  visible keyboard-focus checks=43; failures=0
+operations-mobile.png captured 2026-11-17T12:49:45.609Z
+  sha256=0505cf91b04a2b5e2ecb6bf82e7c0d67135c36eb6774b6524398b712c286fa7c; bytes=87954; viewport=390; documentWidth=390
+  visible keyboard-focus checks=36; failures=0
+agents-mobile.png captured 2026-11-17T12:49:45.689Z
+  sha256=69991396fe52cac9941aa7858b7c3ad3bfa42a957877ac89f891e048752b6e0e; bytes=50104; viewport=390; documentWidth=390
+  visible keyboard-focus checks=33; failures=0
+ledger-mobile.png captured 2026-11-17T12:49:45.773Z
+  sha256=c5b865f14efaf44187e2b43d528bb2a0eff2ea06afd3af2f2503a1e8c27ac5ff; bytes=301365; viewport=390; documentWidth=390
+  visible keyboard-focus checks=34; failures=0
+setup-mobile.png captured 2026-11-17T12:49:45.874Z
+  sha256=69a5c52e59e3207bd1e62b0a146c906fcc6c1b211870735bfbc7038ad5ac82e6; bytes=141524; viewport=390; documentWidth=390
+  visible keyboard-focus checks=40; failures=0
+empty-agents-desktop.png captured 2026-11-17T12:49:46.976Z
+  sha256=471222184c9f5ee22f6201ff9131ee52625754357dc5aa1d70ae6c65b8aa1215; bytes=101212; viewport=1440; documentWidth=1440
+  visible keyboard-focus checks=34; failures=0
+keyboard-focus-desktop.png captured 2026-11-17T12:49:47.025Z
+  sha256=167c6df30dd6882c081c388e2eb6d10181764a1229cc295de1abdc139ee5fa81; bytes=102663; viewport=1440; documentWidth=1440
+  visible keyboard-focus checks=34; failures=0
+error-knowledge-desktop.png captured 2026-11-17T12:49:47.233Z
+  sha256=7a78de82261c669bdda96215f8ce1b2de48a5e3f1bd5e1b3f5ae93d69d4c4e6d; bytes=79022; viewport=1440; documentWidth=1440
+  visible keyboard-focus checks=26; failures=0
+
+Reduced motion: {"requested":true,"transition":"0s","animation":"none","scroll":"auto"}
+Drafts filter with no matching agents
+The server denied an out-of-scope/nonexistent knowledge-document lookup; Reload view repeated only that read
+Dismissing the error preserves its retry action: true
+The images were captured by this run. Source and image byte consistency is checked by scripts/verify-browser-proof.mjs.

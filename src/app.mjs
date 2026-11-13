@@ -40,6 +40,7 @@ import {catalog as defaultCatalog} from './workspace/catalog.mjs';
 import { fingerprint,ContractError } from './contracts.mjs';
 import {createNearIntegrations,readIntegrationFacts} from './integrations/index.mjs';
 import {createAiDemo,readAiDemoFacts} from './demo/ai.mjs';
+import {createAuditBusinessControl} from './business/control.mjs';
 
 const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 export async function createApp(options={}) {
@@ -164,8 +165,10 @@ export async function createApp(options={}) {
   const creditReadAdapter=options.creditReadAdapter??createCloudFundingAdapter({mode:creditOrganizationId&&creditSessionSecretRef?'live':'unavailable',clock,resolveSecret:providers.resolveSecret,transport:options.cloudCreditTransport});
   const creditReadiness=createCreditReadiness({journal,rules,adapter:creditReadAdapter,organizationId:creditOrganizationId,sessionSecretRef:creditSessionSecretRef,keySecretRef:providers.cloudSecretRef});
   nearIntegrations=createNearIntegrations({journal,rules,treasury,providers,dispatchAuthorized,companyId,autonomy,clock,technical:{ledgerBinding},transport:options.integrationTransport});
-  const web=createWeb({aiDemo,fundedLoop,companyId,demoControl,localDemoContext,demoFacts:()=>({companyId,sessionId:localDemoContext?.sessionId,agentCount:journal.list('agents').length,documentCount:journal.list('companyKnowledgeDocuments').length,serviceCount:journal.list('supportServices').length,conversationCount:journal.list('supportConversations').length,ticketCount:journal.list('supportTickets').length,replyCount:journal.list('supportMessages').filter(m=>m.role==='assistant').length,eventCount:journal.events().length,providerOperations:Object.keys(journal.snapshot().operations).length,financialVersion:treasury.snapshot().version}),nearIntegrations,onchainLedger,customerCare,creditReadiness,runtime,components,cloudProducts,autonomy,workflow,ledger,rules,readiness,workspace,knowledge,knowledgeImporter,ownerToken:providers.ownerToken});
+  const auditBinding=options.localDemoContext?{}:options.auditBusinessBinding??{contractId:process.env.SHOP_AUDIT_BUSINESS_CONTRACT_ID,credentialFile:process.env.SHOP_AUDIT_BUSINESS_OWNER_FILE};
+  const auditBusiness=await createAuditBusinessControl({journal,...auditBinding,expectedCodeHash:JSON.parse(readFileSync(path.join(root,'artifacts/audit-business-revocation/manifest.json'),'utf8')).codeHash});
+  const web=createWeb({aiDemo,fundedLoop,auditBusiness,companyId,demoControl,localDemoContext,demoFacts:()=>({companyId,sessionId:localDemoContext?.sessionId,agentCount:journal.list('agents').length,documentCount:journal.list('companyKnowledgeDocuments').length,serviceCount:journal.list('supportServices').length,conversationCount:journal.list('supportConversations').length,ticketCount:journal.list('supportTickets').length,replyCount:journal.list('supportMessages').filter(m=>m.role==='assistant').length,eventCount:journal.events().length,providerOperations:Object.keys(journal.snapshot().operations).length,financialVersion:treasury.snapshot().version}),nearIntegrations,onchainLedger,customerCare,creditReadiness,runtime,components,cloudProducts,autonomy,workflow,ledger,rules,readiness,workspace,knowledge,knowledgeImporter,ownerToken:providers.ownerToken});
   await initialize();
-  return {aiDemo,fundedLoop,demoControl,localDemoContext,nearIntegrations,onchainLedger,customerCare,rules,journal,treasury,custody,payments,funding,inference,research,payouts,workflow,ledger,web,readiness,workspace,knowledge,providers,runtime,components,cloudProducts,creditReadiness,autonomy,internalWork,close:async()=>{await autonomy.close();await journal.close();}};
+  return {aiDemo,fundedLoop,auditBusiness,demoControl,localDemoContext,nearIntegrations,onchainLedger,customerCare,rules,journal,treasury,custody,payments,funding,inference,research,payouts,workflow,ledger,web,readiness,workspace,knowledge,providers,runtime,components,cloudProducts,creditReadiness,autonomy,internalWork,close:async()=>{await autonomy.close();await journal.close();}};
   } catch(error) {await journal.close();throw error;}
 }

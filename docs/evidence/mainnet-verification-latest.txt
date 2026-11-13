@@ -1,0 +1,41 @@
+PASS  [LIVE_PUBLIC] ledger contract account exists — code_hash GnfHJq4kXk5e
+PASS  [LIVE_PUBLIC] ledger code_hash matches manifest — GnfHJq4kXk5eLNNSvez2ue7BCHDEaGyZSTXrGzqaZ27g
+PASS  [LIVE_PUBLIC] ledger companyHash matches — 9f83bd560581
+PASS  [LIVE_PUBLIC] ledger writer is the Agent API agent account — b2c5b8f31edf4dfb2560eb14397c8d61656c9f34c4f644077ed08a991fd9fc75
+PASS  [LIVE_PUBLIC] ledger head sequence >= 6 — sequence 33
+PASS  [LIVE_PUBLIC] ledger has hash-chained records — 20 records
+PASS  [LIVE_PUBLIC] record previousHash chain is intact
+PASS  [LIVE_PUBLIC] tx FINAL success: deploy (DP64fpGTGL…) — {"SuccessValue":""}
+PASS  [LIVE_PUBLIC] tx FINAL success: set_writer (Cmh2zL2SWh…) — {"SuccessValue":""}
+PASS  [LIVE_PUBLIC] tx FINAL success: owner append (5Xg6uasjZW…) — {"SuccessValue":"eyJjb21wYW55SGFzaCI6IjlmODNiZDU2MDU4MTk5ZmF
+PASS  [LIVE_PUBLIC] tx FINAL success: add scoped key (DUPtojtZt7…) — {"SuccessValue":""}
+PASS  [LIVE_PUBLIC] tx FINAL success: delete full key (FPVgbFSQ6C…) — {"SuccessValue":""}
+PASS  [LIVE_PUBLIC] tx FINAL success: scoped append (GsQhBsCknF…) — {"SuccessValue":"eyJjb21wYW55SGFzaCI6IjlmODNiZDU2MDU4MTk5ZmF
+PASS  [LIVE_PUBLIC] tx FINAL success: agent-api append (B5uKmgFDs8…) — {"SuccessValue":"eyJjb21wYW55SGFzaCI6IjlmODNiZDU2MDU4MTk5ZmF
+PASS  [LOCAL_ARTIFACT] marketplace artifacts report completed tasks — 2 completed: c41a599b, 0de69385
+PASS  [LOCAL_ARTIFACT] cloud artifact reports answered inference — answered
+PASS  [LOCAL_ARTIFACT] cloud artifact reports verified wire signature
+PASS  [LOCAL_ARTIFACT] cloud artifact reports original-call plaintext verification
+PASS  [LOCAL_ARTIFACT] cloud artifact records no offline plaintext recovery (route b)
+PASS  [LOCAL_ARTIFACT] cloud artifact reports reconciled cost — 632050 nanoUSD
+PASS mainnet FINAL success 44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L
+  https://nearblocks.io/txns/44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L
+PASS mainnet FINAL success 9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6
+  https://nearblocks.io/txns/9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6
+PASS mainnet FINAL success 6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz
+  https://nearblocks.io/txns/6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz
+PASS mainnet FINAL success GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms
+  https://nearblocks.io/txns/GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms
+PASS mainnet FINAL success HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ
+  https://nearblocks.io/txns/HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ
+5/5 original transaction references verified. Expected historical failures are checked as failures, not promoted to success.
+PASS  [LIVE_PUBLIC] restored transaction FINAL and exact signer/receiver: 44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L — https://nearblocks.io/txns/44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L
+PASS  [LIVE_PUBLIC] restored transaction FINAL and exact signer/receiver: 9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6 — https://nearblocks.io/txns/9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6
+PASS  [LIVE_PUBLIC] restored transaction FINAL and exact signer/receiver: 6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz — https://nearblocks.io/txns/6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz
+PASS  [LIVE_PUBLIC] restored transaction FINAL and exact signer/receiver: GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms — https://nearblocks.io/txns/GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms
+PASS  [LIVE_PUBLIC] restored transaction FINAL and exact signer/receiver: HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ — https://nearblocks.io/txns/HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ
+
+25/25 passed
+LIVE_PUBLIC: 19/19 passed
+LOCAL_ARTIFACT: 6/6 passed
+Local artifact checks are recorded assertions, not independent provider verification. 1Click swap settlement is not checked.

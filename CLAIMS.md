@@ -42,7 +42,7 @@ Redacted historical records describe: A real testnet audit-service cycle receive
 - **LIVE_PAID**: [business-decision](docs/evidence/business-decision-attempt-2.json)
 - **LIVE_PAID**: [business-decision-failure](docs/evidence/business-decision-failure.txt)
 
-Evidence scope: Maintainer-controlled customer and vendor; test tokens have no claimed USD value. Cloud uses owner-prepaid credit. Independent customers, USD profit and a self-funded mainnet business are not established. The initial empty-output decision failed before any vendor spend and its exact cost was not retained. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.
+Evidence scope: Maintainer-controlled customer and vendor; test tokens have no claimed USD value. Cloud uses owner-prepaid credit. Independent customers, USD profit and a self-funded mainnet business are not established. The initial empty-output decision failed before any vendor spend and its exact cost was not retained. The 17 November testnet transaction identifiers are withheld at the owner’s request; committed files do not provide complete transaction-level reproduction.
 
 <!-- claim:agent-swarm-testnet:RECORDED_HASHES_WITHHELD -->
 ## agent-swarm-testnet — RECORDED_HASHES_WITHHELD
@@ -56,7 +56,7 @@ Redacted historical records describe: Five recovery agents signed six hash-linke
 - **LIVE_LOCAL**: [swarm-contract-tests](docs/evidence/swarm-contract-tests.txt)
 - **CONTROLLED**: [swarm-recovery-tests](docs/evidence/swarm-recovery-tests.txt)
 
-Evidence scope: Configured recovery roles only; not automatic provisioning of every future profile. Cloud uses owner-prepaid credit. Historical SDK plaintext acceptance is not independently replayed by the public-chain verifier. Original rejected publication/read failures remain in the retained history. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.
+Evidence scope: Configured recovery roles only; not automatic provisioning of every future profile. Cloud uses owner-prepaid credit. Historical SDK plaintext acceptance is not independently replayed by the public-chain verifier. Original rejected publication/read failures remain in the retained history. The 17 November testnet transaction identifiers are withheld at the owner’s request; committed files do not provide complete transaction-level reproduction.
 
 <!-- claim:readable-regression:OBSERVED -->
 ## readable-regression — OBSERVED
@@ -76,17 +76,19 @@ Redacted historical records describe: The second recovery retains six original l
 - **LIVE_PAID**: [second-recovery-log](docs/evidence/recovery-missing-address.txt)
 - **LIVE_PUBLIC**: [second-recovery-anchor](docs/evidence/recovery-anchor.json)
 
-Evidence scope: The original run was off-chain. The later testnet anchor commits its retained bytes, not independent revalidation of historical Cloud plaintext or remote evaluator execution. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.
+Evidence scope: The original run was off-chain. The later testnet anchor commits its retained bytes, not independent revalidation of historical Cloud plaintext or remote evaluator execution. The 17 November testnet transaction identifiers are withheld at the owner’s request; committed files do not provide complete transaction-level reproduction.
 
-<!-- claim:nanogpt-purchase:RECORDED_HASHES_WITHHELD -->
-## nanogpt-purchase — RECORDED_HASHES_WITHHELD
+<!-- claim:nanogpt-purchase:OBSERVED -->
+## nanogpt-purchase — OBSERVED
 
-Redacted historical records describe: The recorded mainnet run received 0.35 NEAR and paid 0.340779 NEAR to NanoGPT invoice 498165652, followed by inference and ledger commitments.
+The recorded mainnet run received 0.35 NEAR and paid 0.340779 NEAR to NanoGPT invoice 498165652, followed by inference and ledger commitments.
 
 - **LIVE_PAID**: [nanogpt-live-run](artifacts/mainnet-proof/nanogpt-loop-2.json)
 - **LIVE_PUBLIC**: [nanogpt-live-verification](docs/evidence/nanogpt-live-verification.txt)
 
-Evidence scope: Company-wallet signing through a standalone runner; not grant-bound spending, an independent customer, TEE inference or a self-sustaining business. Public transactions and the current authenticated invoice status are verified separately from retained balance observations. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.
+Verify/reproduce: `node scripts/verify-nanogpt-loop.mjs artifacts/mainnet-proof/nanogpt-loop-2.json`
+
+Evidence scope: Company-wallet signing through a standalone runner; not grant-bound spending, an independent customer, TEE inference or a self-sustaining business. Public transactions and the current authenticated invoice status are verified separately from retained balance observations.
 
 <!-- claim:quote-signature:OBSERVED -->
 ## quote-signature — OBSERVED
@@ -251,3 +253,68 @@ An owner-funded 0.10 USDC checkout test has recorded settlement and ledger refer
 Verify/reproduce: `node scripts/verify-funded-loop.mjs`
 
 Evidence scope: The deployment-owner wallet supplied the checkout payment. Retained provider records describe settlement and billing; the public verifier checks the settlement leg, ledger appends and recorded accounting.
+
+<!-- claim:contract-grant-revocation:OBSERVED -->
+## contract-grant-revocation — OBSERVED
+
+The rebuilt audit-business WASM enforces owner-only grant revocation before outgoing spends, records an event, preserves existing state on upgrade, and is called by the verified-owner app action.
+
+- **LIVE_LOCAL**: [grant-revocation-build](artifacts/audit-business-revocation/manifest.json)
+- **LIVE_LOCAL**: [grant-revocation-wasm](artifacts/audit-business-revocation/audit-business.wasm)
+- **LIVE_LOCAL**: [grant-revocation-tests](docs/evidence/grant-revocation-tests.txt)
+- **LIVE_LOCAL**: [grant-revocation-scope](docs/evidence/grant-revocation-scope.json)
+
+Verify/reproduce: `node --test test/business/revocation-contract.test.mjs`
+
+Evidence scope: Actual local nearcore Sandbox and owner-app execution, including direct-call rejection. The historical public deployment remains the prior build until explicitly upgraded. Revocation cannot recall already dispatched payments.
+
+<!-- claim:restored-public-evidence:OBSERVED -->
+## restored-public-evidence — OBSERVED
+
+The five older NanoGPT mainnet transaction references are retained with explorer links and actual FINAL RPC responses.
+
+- **LIVE_PUBLIC**: [restored-transactions](docs/evidence/restored-transactions.json)
+- **LIVE_PUBLIC**: [restored-rpc](docs/evidence/transactions-rpc.json)
+- **LIVE_PUBLIC**: [restored-rpc-output](docs/evidence/restored-transactions-verification.txt)
+- **LIVE_PUBLIC**: [mainnet-latest](docs/evidence/mainnet-verification-latest.txt)
+- **LIVE_PUBLIC**: [nanogpt-latest](docs/evidence/nanogpt-verification-latest.txt)
+
+Verify/reproduce: `node scripts/verify-restored-transactions.mjs`
+
+Evidence scope: The 33 testnet transaction identifiers created on 17 November are withheld at owner request. Those testnet runs do not have complete transaction-level public proof. No replacement public transaction was submitted.
+
+<!-- claim:fresh-workspace-browser:OBSERVED -->
+## fresh-workspace-browser — OBSERVED
+
+One fresh actual browser run captured nine new desktop/mobile and empty/error/focus images, navigated 26 views, checked visible keyboard focus and respected reduced-motion preferences.
+
+- **LIVE_LOCAL**: [fresh-browser-proof](artifacts/companyos/browser-proof.json)
+- **LIVE_LOCAL**: [fresh-browser-sources](artifacts/companyos/source-manifest.json)
+- **LIVE_LOCAL**: [fresh-browser-output](artifacts/companyos/browser.log)
+- **LIVE_LOCAL**: [fresh-browser-readable](docs/evidence/browser-proof-run.txt)
+- **LIVE_LOCAL**: [fresh-browser-verification](docs/evidence/browser-proof-verification.txt)
+- **LIVE_LOCAL**: [fresh-image-operations-desktop](artifacts/companyos/operations-desktop.png)
+- **LIVE_LOCAL**: [fresh-image-setup-desktop](artifacts/companyos/setup-desktop.png)
+- **LIVE_LOCAL**: [fresh-image-operations-mobile](artifacts/companyos/operations-mobile.png)
+- **LIVE_LOCAL**: [fresh-image-agents-mobile](artifacts/companyos/agents-mobile.png)
+- **LIVE_LOCAL**: [fresh-image-ledger-mobile](artifacts/companyos/ledger-mobile.png)
+- **LIVE_LOCAL**: [fresh-image-setup-mobile](artifacts/companyos/setup-mobile.png)
+- **LIVE_LOCAL**: [fresh-image-empty-agents-desktop](artifacts/companyos/empty-agents-desktop.png)
+- **LIVE_LOCAL**: [fresh-image-keyboard-focus-desktop](artifacts/companyos/keyboard-focus-desktop.png)
+- **LIVE_LOCAL**: [fresh-image-error-knowledge-desktop](artifacts/companyos/error-knowledge-desktop.png)
+
+Verify/reproduce: `node scripts/verify-browser-proof.mjs`
+
+Evidence scope: Local application behavior over fictional QA data, not another live model/payment run. The source commit is the base; retained file hashes identify the actual tested uncommitted build. Each image belongs to this run.
+
+<!-- claim:current-swarms-hardening-checks:OBSERVED -->
+## current-swarms-hardening-checks — OBSERVED
+
+The current working-tree hardening changes passed all 642 regression tests, all 15 evidence-index checks and syntax checks for 230 JavaScript files.
+
+- **CONTROLLED**: [swarms-hardening-tests](docs/evidence/swarms-hardening-tests.txt)
+- **LIVE_LOCAL**: [swarms-hardening-validation](docs/evidence/swarms-hardening-validation.txt)
+
+Verify/reproduce: `npm test; npm run check; node --test scripts/evidence/checks.test.mjs; node scripts/verify-browser-proof.mjs; node scripts/evidence/verify.mjs`
+
+Evidence scope: Working-tree verification, including uncommitted changes; no commit, push, new public deployment or paid provider request. Historical 618-test evidence remains separately retained.

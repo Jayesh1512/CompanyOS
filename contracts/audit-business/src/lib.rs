@@ -59,6 +59,24 @@ impl AuditBusiness {
         self.grant = Some(grant.clone()); grant
     }
 
+    /// Separate storage keeps the original Borsh state and grant layout upgrade-compatible.
+    pub fn is_grant_revoked(&self, grant_id: String) -> bool {
+        near_sdk::require!(valid_hash(&grant_id), "INVALID_GRANT_ID");
+        env::storage_has_key(format!("audit-business:revoked:{grant_id}").as_bytes())
+    }
+
+    pub fn revoke_grant(&mut self, grant_id: String) -> bool {
+        near_sdk::require!(env::predecessor_account_id() == self.owner_id, "OWNER_REQUIRED");
+        let grant = self.grant.as_ref().expect("GRANT_REQUIRED").clone();
+        near_sdk::require!(grant.id == grant_id, "GRANT_MISMATCH");
+        if self.is_grant_revoked(grant_id.clone()) { return false; }
+        env::storage_write(format!("audit-business:revoked:{grant_id}").as_bytes(), b"1");
+        let data = json!({"grantId":grant_id,"agentId":grant.agent_id,"vendorId":grant.vendor_id});
+        self.record("grant.revoked", env::predecessor_account_id(), "", data.to_string());
+        env::log_str(&format!("EVENT_JSON:{}", json!({"standard":"companyos_audit","version":"1.0.0","event":"grant_revoked","data":[data]})));
+        true
+    }
+
     #[payable]
     pub fn buy_audit(&mut self, order_id: String, task_hash: String) -> Order {
         near_sdk::require!(!order_id.is_empty() && order_id.len() <= 80 && valid_hash(&task_hash), "INVALID_ORDER");
@@ -74,6 +92,7 @@ impl AuditBusiness {
         let mut grant = self.grant.clone().expect("GRANT_REQUIRED");
         near_sdk::require!(env::predecessor_account_id() == grant.agent_id, "AGENT_REQUIRED");
         near_sdk::require!(grant.id == grant_id, "GRANT_MISMATCH");
+        near_sdk::require!(!self.is_grant_revoked(grant_id.clone()), "GRANT_REVOKED");
         near_sdk::require!(env::block_timestamp() < grant.expires_at_ns.parse::<u64>().unwrap(), "GRANT_EXPIRED");
         let remaining = grant.remaining_yocto.parse::<u128>().unwrap();
         near_sdk::require!(remaining >= NOTARY_FEE, "GRANT_EXHAUSTED");

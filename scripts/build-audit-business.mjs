@@ -2,7 +2,8 @@ import {spawnSync} from 'node:child_process';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {wasmCodeHash} from '../src/onchain/rpc.mjs';
-const crate='contracts/audit-business',out='artifacts/audit-business';
+// Keep the historical deployed build intact for transaction verification.
+const crate='contracts/audit-business',out=process.argv[2]??'artifacts/audit-business-revocation';
 const run=(cmd,args,extra={})=>{const r=spawnSync(cmd,args,{stdio:'inherit',...extra});if(r.status!==0)throw Error('BUILD_FAILED');};
 run('cargo',['build','--locked','--manifest-path',crate+'/Cargo.toml','--target','wasm32-unknown-unknown','--release'],{env:{...process.env,RUSTFLAGS:'--cfg near -C target-feature=-bulk-memory,-sign-ext,-reference-types,-multivalue,-nontrapping-fptoint'}});
 await mkdir(out,{recursive:true});

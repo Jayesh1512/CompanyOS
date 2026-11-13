@@ -1,16 +1,172 @@
 {
-  "checkedAt": "2026-11-13T22:45:35.124Z",
+  "viewCoverage": [
+    {
+      "route": "setup/org",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "setup/brain",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "setup/boundaries",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "setup/review",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "setup/profiles",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "autonomy/setup?step=1",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "autonomy/improvements",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "autonomy/purchases",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "autonomy/services",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "agents",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "agents/new",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "overview",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "tasks",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "marketplace",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "knowledge",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "settings",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "owner",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "activity",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "payments",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "demo",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "ledger",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "service",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "care",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "support",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "order/needs-access",
+      "loadingObserved": true,
+      "contentPresent": true
+    },
+    {
+      "route": "setup",
+      "loadingObserved": true,
+      "contentPresent": true
+    }
+  ],
+  "runId": "browser-20261117124943549",
+  "startedAt": "2026-11-17T12:49:43.549Z",
+  "checkedAt": "2026-11-17T12:49:47.353Z",
+  "sourceCommit": "5736d7662f3b565919abc0310ccac7e83fed3bb4",
+  "sourceCommitScope": "Base commit; sourceFiles bind the actual tested working-tree bytes, including uncommitted changes.",
+  "workingTreeDirty": true,
+  "sourceManifest": "source-manifest.json",
+  "allScreenshotsFromThisRun": true,
+  "reducedMotion": {
+    "requested": true,
+    "transition": "0s",
+    "animation": "none",
+    "scroll": "auto"
+  },
+  "errorDismissKeepsRetry": true,
+  "actualEmptyState": "Drafts filter with no matching agents",
+  "actualErrorState": "The server denied an out-of-scope/nonexistent knowledge-document lookup; Reload view repeated only that read",
   "mode": "isolated actual HTTP/browser setup",
-  "functionalOnly": true,
-  "screenshotsFromPriorVisualPass": true,
+  "demoMode": false,
+  "exampleDraftsOnly": false,
+  "autoSeededRecords": 0,
+  "functionalOnly": false,
+  "screenshotsCaptured": true,
   "providerEffects": 0,
   "orders": 0,
   "financialVersion": 0,
   "agents": 2,
+  "defaultOperatingMode": "none",
+  "editableProfilesPersisted": true,
+  "reviewDoesNotStart": true,
+  "canonicalOrganizationAligned": true,
   "backlogItems": 1,
   "contextSelectionRoute": true,
   "refreshStable": true,
-  "anonymousStatus": 403,
+  "crossSiteStatus": 403,
+  "tokenEntryRequired": false,
   "consoleExceptions": [],
   "scans": [
     {
@@ -18,42 +174,153 @@
       "viewport": 1440,
       "documentWidth": 1440,
       "bodyWidth": 1440,
-      "heading": "Fictional operations QA"
+      "heading": "Fictional operations QA",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:45.344Z",
+      "image": "operations-desktop.png",
+      "sha256": "9d03b9dd0375b0fa9cbc5ddb3d2b1a5a3569e684298b97447bfbfb6210bd4ca1",
+      "bytes": 157952,
+      "focus": {
+        "checked": 39,
+        "failures": []
+      },
+      "loadingObserved": true
     },
     {
       "name": "setup-desktop",
       "viewport": 1440,
       "documentWidth": 1440,
       "bodyWidth": 1440,
-      "heading": "Company for none"
+      "heading": "Set up your organization",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:45.501Z",
+      "image": "setup-desktop.png",
+      "sha256": "cf7fda1cc33510eb232b307480e59903dba83c88a3c07687d195219135c99d3c",
+      "bytes": 201882,
+      "focus": {
+        "checked": 43,
+        "failures": []
+      },
+      "loadingObserved": true
     },
     {
       "name": "operations-mobile",
       "viewport": 390,
       "documentWidth": 390,
       "bodyWidth": 390,
-      "heading": "Fictional operations QA"
+      "heading": "Fictional operations QA",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:45.609Z",
+      "image": "operations-mobile.png",
+      "sha256": "0505cf91b04a2b5e2ecb6bf82e7c0d67135c36eb6774b6524398b712c286fa7c",
+      "bytes": 87954,
+      "focus": {
+        "checked": 36,
+        "failures": []
+      },
+      "loadingObserved": true
     },
     {
       "name": "agents-mobile",
       "viewport": 390,
       "documentWidth": 390,
       "bodyWidth": 390,
-      "heading": "Fictional operations QA"
+      "heading": "Fictional operations QA",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:45.689Z",
+      "image": "agents-mobile.png",
+      "sha256": "69991396fe52cac9941aa7858b7c3ad3bfa42a957877ac89f891e048752b6e0e",
+      "bytes": 50104,
+      "focus": {
+        "checked": 33,
+        "failures": []
+      },
+      "loadingObserved": true
     },
     {
       "name": "ledger-mobile",
       "viewport": 390,
       "documentWidth": 390,
       "bodyWidth": 390,
-      "heading": "Fictional operations QA"
+      "heading": "Fictional operations QA",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:45.773Z",
+      "image": "ledger-mobile.png",
+      "sha256": "c5b865f14efaf44187e2b43d528bb2a0eff2ea06afd3af2f2503a1e8c27ac5ff",
+      "bytes": 301365,
+      "focus": {
+        "checked": 34,
+        "failures": []
+      },
+      "loadingObserved": true
     },
     {
       "name": "setup-mobile",
       "viewport": 390,
       "documentWidth": 390,
       "bodyWidth": 390,
-      "heading": "Company for none"
+      "heading": "Set up your organization",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:45.874Z",
+      "image": "setup-mobile.png",
+      "sha256": "69a5c52e59e3207bd1e62b0a146c906fcc6c1b211870735bfbc7038ad5ac82e6",
+      "bytes": 141524,
+      "focus": {
+        "checked": 40,
+        "failures": []
+      },
+      "loadingObserved": true
+    },
+    {
+      "name": "empty-agents-desktop",
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "heading": "Agents",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:46.976Z",
+      "image": "empty-agents-desktop.png",
+      "sha256": "471222184c9f5ee22f6201ff9131ee52625754357dc5aa1d70ae6c65b8aa1215",
+      "bytes": 101212,
+      "focus": {
+        "checked": 34,
+        "failures": []
+      },
+      "loadingObserved": true
+    },
+    {
+      "name": "keyboard-focus-desktop",
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "heading": "Agents",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:47.025Z",
+      "image": "keyboard-focus-desktop.png",
+      "sha256": "167c6df30dd6882c081c388e2eb6d10181764a1229cc295de1abdc139ee5fa81",
+      "bytes": 102663,
+      "focus": {
+        "checked": 34,
+        "failures": []
+      },
+      "loadingObserved": true
+    },
+    {
+      "name": "error-knowledge-desktop",
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "heading": "Company knowledge",
+      "runId": "browser-20261117124943549",
+      "capturedAt": "2026-11-17T12:49:47.233Z",
+      "image": "error-knowledge-desktop.png",
+      "sha256": "7a78de82261c669bdda96215f8ce1b2de48a5e3f1bd5e1b3f5ae93d69d4c4e6d",
+      "bytes": 79022,
+      "focus": {
+        "checked": 26,
+        "failures": []
+      },
+      "loadingObserved": true
     }
   ]
 }

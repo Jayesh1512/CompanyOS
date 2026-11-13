@@ -1,3 +1,5 @@
+Sandbox receipt identifiers from 17 November were removed at the owner’s request. Test names, outcomes and execution dates remain unchanged.
+
 FINAL COMMITTED-SOURCE REGRESSION RUN
 Command: npm test (node --test --test-concurrency=4 over every discovered test/**/*.test.mjs)
 Run in an isolated snapshot; private credentials and pre-existing uncommitted edits excluded.
@@ -53,29 +55,29 @@ Complete output follows, without truncation.
 ✔ the spend command schema is exposed to the model (0.826875ms)
 ✔ manager panel identifies its own proposal, scope copy is precise and improvement diffs stay inert (1.114333ms)
 ✔ compiled business executes revenue, grant-bound service purchase, delivery and hash-chain commits (18205.99775ms)
-Receipt: 4A5WfSaDBuHZrPUpSdt4JLBtRCSZqfMCcUaNWLGKr3GU
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-28151-40544.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: AGENT_REQUIRED"}}}}
 ▶ compiled business rejects unauthorized and expired-grant spends before any external effect
   ✔ unauthorized signer cannot spend (1532.141708ms)
-Receipt: 94SeL2ZrLRhJzj7VDrqtmJFB5CY4zC5rgLfEd54bb7hz
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-28151-40544.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_MISMATCH"}}}}
   ✔ foreign grant cannot spend (2033.476958ms)
-Receipt: H5tTeQdHSsuwdZbWmF3decv8BGqLA4TmU5eRC9gwa3M6
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-28151-40544.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: DECISION_HASH_REQUIRED"}}}}
   ✔ invalid decision commitment cannot spend (2037.515792ms)
-Receipt: GQx2ii7XkhT5YuBdw6NtEwMrWMAC3GVu2Xo96PJFPthn
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-28151-40544.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: OWNER_REQUIRED"}}}}
   ✔ non-owner cannot widen the grant (1530.689292ms)
-Receipt: 8MnbskTYeUKEQXKPiBqMxwbnGffJNUqwj1p2StA6rJZ7
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-28151-40544.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: Method on_notarized is private"}}}}
   ✔ forged callback cannot manufacture completion (2037.624125ms)
-Receipt: 3b8EFAxuTSxiaXbJoeX3pbEe8wFn8UZTirRAsafN2JSd
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-28151-40544.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_EXPIRED"}}}}
   ✔ expired grant cannot spend or consume the order (3544.194375ms)
 ✔ compiled business rejects unauthorized and expired-grant spends before any external effect (27456.145834ms)
-Receipt: 6Wq7c6YJZvfX7VGQ6QkvUY81s7jY9EX6aL7J2s1QYJTK
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-55353-91584.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_EXHAUSTED"}}}}
-Receipt: 6aPPXEVksbV55kEaWtLDE789qs1ymoaPL9NAnVgtmuQ1
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-55353-91584.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: ORDER_NOT_SPENDABLE"}}}}
 ✔ compiled business cannot double-spend a delivered order or exceed a grant (24225.640625ms)
 ✔ the real retained business ledger verifies and rejects payload, signer, order, sequence and predecessor tampering (1.2455ms)
@@ -450,15 +452,15 @@ Receipt: 6aPPXEVksbV55kEaWtLDE789qs1ymoaPL9NAnVgtmuQ1
 ✔ tampered unsigned args and standalone success/tx IDs never become a chain confirmation (0.5345ms)
 ✔ read/export/reconcile remain separate from paid readiness, while current kill and all historical gates persist (16.643ms)
 ✔ owner-only deployment address/artifact projection never exposes secrets or becomes an operational writer binding (0.45975ms)
-Receipt: Yy2YeDVpPFS8E3fv2LFxzLYpixSoqDMLtaTCj7pR2ZZ
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-45520-99424.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: WRITER_REQUIRED"}}}}
-Receipt: 6o3w3zj2wQfJvvvbhDYfFUomCeb79okdYj9oHjjtWEDz
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-45520-99424.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: ACTOR_SIGNER_MISMATCH"}}}}
-Receipt: 6aW2pTBVAjEG48zqJ7ZE639s3wtrWufNhnJP9DcxZLc2
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-45520-99424.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: RECORD_HASH_MISMATCH"}}}}
-Receipt: 4wPSxpz8ce9KmwFfu5g8JWhmxzZijQ4UEfEbg8RNxF4p
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-45520-99424.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: OWNER_REQUIRED"}}}}
-Receipt: AgNprAPb7h8qvwNZWkekn5zvGBzVaE8osQGrkqFMEz3F
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-45520-99424.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: WRITER_REQUIRED"}}}}
 ✔ compiled swarm ledger binds each writer to its actor and rejects impersonation and revocation (42276.472375ms)
 ✔ generated wallet is network/company-bound, private, idempotent and never uses RPC (31.11125ms)

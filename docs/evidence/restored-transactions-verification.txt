@@ -1,0 +1,15 @@
+OLDER MAINNET TRANSACTION VERIFICATION
+Original RPC check: 2026-11-17T12:24:20.502Z
+17 November testnet transaction identifiers are withheld; those runs do not have complete transaction-level public proof.
+
+PASS mainnet FINAL success 44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L
+  https://nearblocks.io/txns/44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L
+PASS mainnet FINAL success 9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6
+  https://nearblocks.io/txns/9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6
+PASS mainnet FINAL success 6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz
+  https://nearblocks.io/txns/6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz
+PASS mainnet FINAL success GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms
+  https://nearblocks.io/txns/GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms
+PASS mainnet FINAL success HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ
+  https://nearblocks.io/txns/HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ
+5/5 retained older mainnet references verified. No replacement transaction was submitted.

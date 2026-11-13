@@ -1,10 +1,12 @@
-Receipt: 4ksQdCcFA5BLJoRfCLZdSAt3vJZh7ZEUMVDzi88dcdWT
+Sandbox receipt identifiers from 17 November were removed at the owner’s request. Test names, outcomes and execution dates remain unchanged.
+
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: WRITER_REQUIRED"}}}}
-Receipt: ByyugPYmMfD3QoxcULLMeSLR73UuuhcTAAgSoyAkLszW
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: ACTOR_SIGNER_MISMATCH"}}}}
-Receipt: 8Gx216B2HkGRPidMbzMD3pVnrc9uaSojiFedyxJLkW6x
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: OWNER_REQUIRED"}}}}
-Receipt: E7zXR6u2D3LTMh5xicFucZ3iY8MiMjG8LV1jCGFebXAv
+Receipt: [17 November Sandbox receipt identifier removed]
 	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: WRITER_REQUIRED"}}}}
 ✔ compiled swarm ledger binds each writer to its actor and rejects impersonation and revocation (39817.007209ms)
 ℹ tests 1

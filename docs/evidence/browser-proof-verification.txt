@@ -1,0 +1,10 @@
+PASS operations-desktop.png: same run, capture time, SHA-256, layout and 39 visible focus checks
+PASS setup-desktop.png: same run, capture time, SHA-256, layout and 43 visible focus checks
+PASS operations-mobile.png: same run, capture time, SHA-256, layout and 36 visible focus checks
+PASS agents-mobile.png: same run, capture time, SHA-256, layout and 33 visible focus checks
+PASS ledger-mobile.png: same run, capture time, SHA-256, layout and 34 visible focus checks
+PASS setup-mobile.png: same run, capture time, SHA-256, layout and 40 visible focus checks
+PASS empty-agents-desktop.png: same run, capture time, SHA-256, layout and 34 visible focus checks
+PASS keyboard-focus-desktop.png: same run, capture time, SHA-256, layout and 34 visible focus checks
+PASS error-knowledge-desktop.png: same run, capture time, SHA-256, layout and 26 visible focus checks
+Verified 9 fresh screenshots, 161 source files and 26 navigated views. No browser, provider or chain call was made by this verifier.

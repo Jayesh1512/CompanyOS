@@ -1,0 +1,52 @@
+WORKING-TREE HARDENING VALIDATION
+Base commit: 5736d7662f3b565919abc0310ccac7e83fed3bb4
+Scope: actual working-tree source, including uncommitted changes. No commit or push.
+
+
+> companyos@0.1.0 check
+> node scripts/check.mjs
+
+Syntax checked 230 JavaScript files.
+
+node --test scripts/evidence/checks.test.mjs
+✔ controlled evidence cannot be relabelled live or acquire a different provenance (1.90175ms)
+✔ held claims cannot be promoted by a manifest boolean or dropped from the index (0.198083ms)
+✔ bound artifact byte changes are rejected independently of claim labels (0.162541ms)
+✔ private paths, traversal and substituted artifact paths are rejected (0.110667ms)
+✔ secret scan catches private credentials without treating a public NEAR key or digest as a secret (0.579917ms)
+✔ evidence verification never grants spending authority (0.073084ms)
+✔ public NEAR block signatures are not secret keys, while private-key fields remain rejected (0.18625ms)
+✔ claim prose cannot silently promote a held outcome or change generated limitations (0.179833ms)
+✔ reindexing an altered original public response cannot replace its collection digest (0.094792ms)
+✔ reindexing tampered live business evidence cannot replace the committed proof pin (3.802625ms)
+✔ a paid_provider artifact carries LIVE_PAID scope and cannot masquerade as controlled (0.2165ms)
+✔ paid-inference cannot be OBSERVED without an indexed paid-run artifact (0.083333ms)
+✔ disabled paid evidence entry point never imports an app or reads credentials for any flag (113.288792ms)
+✔ actual AI public records are consistent without claiming offline private cryptographic replay (4.483083ms)
+✔ altered AI bill, identity, citation and durable-replay claims are rejected (1.039708ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 176.118917
+
+node scripts/verify-browser-proof.mjs
+PASS operations-desktop.png: same run, capture time, SHA-256, layout and 39 visible focus checks
+PASS setup-desktop.png: same run, capture time, SHA-256, layout and 43 visible focus checks
+PASS operations-mobile.png: same run, capture time, SHA-256, layout and 36 visible focus checks
+PASS agents-mobile.png: same run, capture time, SHA-256, layout and 33 visible focus checks
+PASS ledger-mobile.png: same run, capture time, SHA-256, layout and 34 visible focus checks
+PASS setup-mobile.png: same run, capture time, SHA-256, layout and 40 visible focus checks
+PASS empty-agents-desktop.png: same run, capture time, SHA-256, layout and 34 visible focus checks
+PASS keyboard-focus-desktop.png: same run, capture time, SHA-256, layout and 34 visible focus checks
+PASS error-knowledge-desktop.png: same run, capture time, SHA-256, layout and 26 visible focus checks
+Verified 9 fresh screenshots, 161 source files and 26 navigated views. No browser, provider or chain call was made by this verifier.
+
+node scripts/evidence/verify.mjs
+{"artifactsVerified":90,"claimsChecked":23,"publishedTextFilesScanned":91,"originalProductionQuote":"verified","journalReopened":true,"syntheticSignedAmountTamper":"rejected","aiDemo":{"scope":"sanitized-public-record-consistency-only","recordedPaidCalls":2,"recordedCostNanoUsd":"3221160","recordedEscalations":1,"acceptanceScope":"live-process-e2ee","privateCryptographyReverifiedOffline":false,"durablePlaintextRecovery":false,"sourceCitationBytesReverifiedOffline":false,"newPaidRequests":0},"networkIO":false,"teeReverifiedOffline":false,"secretScan":"heuristic-not-a-guarantee","grantsSpendingAuthority":false}
+Offline evidence verified. No provider call, funding, transaction or submission. Local Sandbox evidence is not public-chain execution.
+
+The evidence-index count above precedes indexing this validation log and the full 642-test output. Final offline verification is also rerun after those are indexed.

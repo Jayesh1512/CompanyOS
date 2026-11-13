@@ -1,0 +1,48 @@
+Sandbox receipt identifiers from 17 November were removed at the owner’s request. Test names, outcomes and execution dates remain unchanged.
+
+✔ compiled business executes revenue, grant-bound service purchase, delivery and hash-chain commits (17375.201334ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-46139-61536.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: AGENT_REQUIRED"}}}}
+▶ compiled business rejects unauthorized and expired-grant spends before any external effect
+  ✔ unauthorized signer cannot spend (2076.87375ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-46139-61536.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_MISMATCH"}}}}
+  ✔ foreign grant cannot spend (1543.30775ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-46139-61536.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: DECISION_HASH_REQUIRED"}}}}
+  ✔ invalid decision commitment cannot spend (2059.204167ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-46139-61536.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: OWNER_REQUIRED"}}}}
+  ✔ non-owner cannot widen the grant (1551.119708ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-46139-61536.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: Method on_notarized is private"}}}}
+  ✔ forged callback cannot manufacture completion (2050.957292ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-46139-61536.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_EXPIRED"}}}}
+  ✔ expired grant cannot spend or consume the order (3586.23675ms)
+✔ compiled business rejects unauthorized and expired-grant spends before any external effect (27195.89075ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-73329-95552.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_EXHAUSTED"}}}}
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-73329-95552.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: ORDER_NOT_SPENDABLE"}}}}
+✔ compiled business cannot double-spend a delivered order or exceed a grant (24010.349ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-30057-82816.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: OWNER_REQUIRED"}}}}
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-30057-82816.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_MISMATCH"}}}}
+Receipt: [17 November Sandbox receipt identifier removed]
+	Log [dev-30057-82816.test.near]: EVENT_JSON:{"standard":"companyos_audit","version":"1.0.0","event":"grant_revoked","data":[{"grantId":"e1404c5f871891a7e1f0f849e23f580094869fe8db2d566e8ef60bf33f96dd18","agentId":"buyer-agent.test.near","vendorId":"dev-32096-16160.test.near"}]}
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-30057-82816.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_REVOKED"}}}}
+✔ compiled WASM enforces owner revocation against direct calls, preserves state on upgrade and allows a new active grant (28476.270125ms)
+Receipt: [17 November Sandbox receipt identifier removed]
+	Failure [dev-57535-76288.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_REVOKED"}}}}
+✔ owner app action invokes real compiled revoke_grant and blocks a later direct spend (19248.056958ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72854.091208

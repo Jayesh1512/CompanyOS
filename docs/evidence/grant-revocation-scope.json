@@ -1,0 +1,19 @@
+{
+  "scope": "Actual compiled nearcore Sandbox contract and owner-app execution. No public deployment or paid provider call was made.",
+  "baseCommit": "5736d7662f3b565919abc0310ccac7e83fed3bb4",
+  "sourceFiles": {
+    "contracts/audit-business/src/lib.rs": "d8fe158f0c3c64fc36ecc7f15dd10a756e7e1af2e8afa558ddbf94ec9a17eaed",
+    "src/business/control.mjs": "2825770509307ac691fe9a255d67b23ce8d114e23ee6ad95c14986459fc055a4",
+    "src/app.mjs": "48d198b2b8c4742fdcef111aca63d5992ab3cb5532d5a8148081c18585a8c91c",
+    "src/web/index.mjs": "a24e6df1a5c2fdcafdcfc6e679e8d75dbe02643c8647c5fddd3baf345d7b7e95",
+    "test/business/revocation-contract.test.mjs": "20b4f31390760307de05e8b430326961a750699a230e2f066352fc5a262de356",
+    "test/business/cycle-contract.test.mjs": "a8daedf4695a3b60f9297f1584cf02993207a375041e0a7428f047adb3bee43d",
+    "test/business/fixture.mjs": "f90bf3f4510760b28524621eddc7438a1c58f7dd2111b181f4232c0c79bed3e0"
+  },
+  "buildManifest": "artifacts/audit-business-revocation/manifest.json",
+  "historicalDeploymentManifest": "artifacts/audit-business/manifest.json",
+  "testCommand": "node --test --test-concurrency=2 test/business/cycle-contract.test.mjs test/business/revocation-contract.test.mjs",
+  "testOutput": "docs/evidence/grant-revocation-tests.txt",
+  "completedAt": "2026-11-17T12:23:20.869853+00:00",
+  "newPublicTransactions": 0
+}

@@ -143,7 +143,7 @@ The verifier checks the public settlement leg and ledger appends, recomputes the
 
 ## 10. NanoGPT paid credit purchase
 
-The [retained run](../artifacts/mainnet-proof/nanogpt-loop-2.json) records a real 0.35 NEAR payment into the company wallet and a 0.340779 NEAR payment to invoice 498165652. The [historical verifier output](evidence/nanogpt-live-verification.txt) records the original FINAL, amount, payload and invoice checks. Transaction hashes are withheld from this run and log; transaction-by-transaction verification cannot be reproduced from the committed files. [Purchase implementation](../src/cloud-funding/nanogpt.mjs); [standalone runner](../scripts/demo-nanogpt-loop.mjs).
+The [retained run](../artifacts/mainnet-proof/nanogpt-loop-2.json) records a real 0.35 NEAR payment into the company wallet and a 0.340779 NEAR payment to invoice 498165652. The [historical verifier output](evidence/nanogpt-live-verification.txt) records the original FINAL, amount, payload and invoice checks. Original public references are restored. [Fresh read-only checks](evidence/nanogpt-verification-latest.txt) re-read those operations; [full RPC responses](evidence/transactions-rpc.json) are retained. [Purchase implementation](../src/cloud-funding/nanogpt.mjs); [standalone runner](../scripts/demo-nanogpt-loop.mjs).
 
 The company wallet signs directly. The customer wallet was supplied by the maintainer; independent third-party revenue and grant-bound purchase are not established. Inference cost is a retained balance delta and NanoGPT is not TEE-attested. The unit tests establish adapter behavior only.
 

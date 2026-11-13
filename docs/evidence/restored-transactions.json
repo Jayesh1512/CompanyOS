@@ -1,0 +1,61 @@
+{
+  "scope": "Original older mainnet references retained. The 33 testnet transaction identifiers created on 17 November 2026 are withheld at the owner\u2019s request.",
+  "transactions": [
+    {
+      "txHash": "44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L",
+      "network": "mainnet",
+      "signerId": "aa391dbb352351099858030f18680ffc5691feb5b86d27bc77554a0a6deaed60",
+      "receiverId": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+      "expectedOutcome": "success",
+      "nearblocks": "https://nearblocks.io/txns/44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L",
+      "sources": [
+        "artifacts/mainnet-proof/nanogpt-loop-2.json#sale.paymentTxHash"
+      ]
+    },
+    {
+      "txHash": "9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6",
+      "network": "mainnet",
+      "signerId": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+      "receiverId": "9196163df0cd4183a5bc10a38180e25db430c9e725c3622cdcda1f62290e0c82",
+      "expectedOutcome": "success",
+      "nearblocks": "https://nearblocks.io/txns/9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6",
+      "sources": [
+        "artifacts/mainnet-proof/nanogpt-loop-2.json#purchase.paymentTxHash"
+      ]
+    },
+    {
+      "txHash": "6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz",
+      "network": "mainnet",
+      "signerId": "b2c5b8f31edf4dfb2560eb14397c8d61656c9f34c4f644077ed08a991fd9fc75",
+      "receiverId": "755a0a4bb40161793c0a178c89b0ed1a876d8c0d0bbea8febecfe2a7d0d9662b",
+      "expectedOutcome": "success",
+      "nearblocks": "https://nearblocks.io/txns/6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz",
+      "sources": [
+        "artifacts/mainnet-proof/nanogpt-loop-2.json#ledgerCommits[0].txHash"
+      ]
+    },
+    {
+      "txHash": "GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms",
+      "network": "mainnet",
+      "signerId": "b2c5b8f31edf4dfb2560eb14397c8d61656c9f34c4f644077ed08a991fd9fc75",
+      "receiverId": "755a0a4bb40161793c0a178c89b0ed1a876d8c0d0bbea8febecfe2a7d0d9662b",
+      "expectedOutcome": "success",
+      "nearblocks": "https://nearblocks.io/txns/GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms",
+      "sources": [
+        "artifacts/mainnet-proof/nanogpt-loop-2.json#ledgerCommits[1].txHash"
+      ]
+    },
+    {
+      "txHash": "HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ",
+      "network": "mainnet",
+      "signerId": "b2c5b8f31edf4dfb2560eb14397c8d61656c9f34c4f644077ed08a991fd9fc75",
+      "receiverId": "755a0a4bb40161793c0a178c89b0ed1a876d8c0d0bbea8febecfe2a7d0d9662b",
+      "expectedOutcome": "success",
+      "nearblocks": "https://nearblocks.io/txns/HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ",
+      "sources": [
+        "artifacts/mainnet-proof/nanogpt-loop-2.json#ledgerCommits[2].txHash"
+      ]
+    }
+  ],
+  "excludedTestnetTransactions": 33
+}

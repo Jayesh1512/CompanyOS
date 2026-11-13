@@ -1,4 +1,5 @@
 import {renderLocalDemo} from './local-demo.js';
+import {renderLoadingState} from './view-state.js';
 import {renderCompanySetup} from './company-setup.js';
 import {renderOnchainLedger} from './onchain-ledger.js';
 import {renderLoopReceipt} from './loop-receipt.js';
@@ -32,7 +33,7 @@ function improvementTrace(state,item){
 function trace(state){const d=state.autonomy,w=d.work?.find(x=>x.id===state.route.params.get('work'));if(!w)return empty('Work not found','Open a task from the work list.');const actor=d.agents?.find(a=>a.id===w.actorId);return `<a class="back-link" href="#autonomy">Back to company work</a><div class="cfn-detail-heading"><h2>${e(w.topic)}</h2>${stateTag(w.state)}</div><dl class="cfn-properties"><div><dt>Responsible agent</dt><dd>${e(actor?.name??w.actorId)}</dd></div><div><dt>Parent task</dt><dd>${e(w.parentWorkId??'Company objective')}</dd></div><div><dt>Effect identity</dt><dd>${e(w.effectId??'Not prepared')}</dd></div><div><dt>Profile revision</dt><dd>${e(w.context?.profileRevision??'Not captured')}</dd></div></dl>${w.reasonCode?`<div class="cfn-scope-note"><strong>What this work needs</strong><p>${e(reason(w.reasonCode))}</p><a class="text-link" href="#settings">View execution readiness</a></div>`:''}<h3>Recorded activity</h3>${ledger({...d,events:d.events?.filter(ev=>ev.data?.workId===w.id||ev.data?.taskId===w.id)})}`;}
 
 export function renderAutonomy(state,icon){
- const d=state.autonomy;if(!d)return '<div class="loading-state"><p>Loading company operations…</p></div>';
+ const d=state.autonomy;if(!d)return renderLoadingState('Loading company operations…');
  if(state.localDemo?.active&&(!state.route.sub||['overview','setup','work','purchases','services'].includes(state.route.sub)))return renderLocalDemo(state);
  if(state.route.sub==='setup')return setup(state,icon);
  if(!d.company)return empty('Set up your organization','Describe your company and review its configured agent team.','<a class="button primary" href="#setup">Set up organization</a>');

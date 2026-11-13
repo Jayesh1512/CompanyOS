@@ -7,8 +7,9 @@
 //
 // Usage: node scripts/verify-mainnet-evidence.mjs
 import {readFile} from 'node:fs/promises';
+import {verifyRestoredTransactions} from './verify-restored-transactions.mjs';
 
-const RPC = 'https://free.rpc.fastnear.com';
+const RPC = 'https://archival-rpc.mainnet.fastnear.com';
 const LEDGER = '755a0a4bb40161793c0a178c89b0ed1a876d8c0d0bbea8febecfe2a7d0d9662b';
 const COMPANY_HASH = '9f83bd56058199fad25b2afbe9a452a01170dac5187f8546cf0d469278d962f9';
 const CODE_HASH = 'GnfHJq4kXk5eLNNSvez2ue7BCHDEaGyZSTXrGzqaZ27g';
@@ -103,6 +104,8 @@ try {
   artifactCheck('cloud inference evidence', false, String(error.message ?? error).slice(0, 60));
 }
 
+const restored=await verifyRestoredTransactions({network:'mainnet',write:false});
+for(const r of restored.transactions)check(`restored transaction FINAL and exact signer/receiver: ${r.txHash}`,r.ok,r.nearblocks);
 const failed = results.filter(r => !r.ok).length;
 console.log(`\n${results.length - failed}/${results.length} passed${failed ? `, ${failed} FAILED` : ''}`);
 for (const scope of ['LIVE_PUBLIC', 'LOCAL_ARTIFACT']) {

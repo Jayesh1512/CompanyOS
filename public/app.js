@@ -33,38 +33,44 @@ if(typeof document!=='undefined') {
   const render=()=>{root.innerHTML=state.route.page==='care'?renderCare(state):renderWorkspace(state);if(state.knowledgeFile){const input=root.querySelector('#knowledge-file');if(input&&typeof DataTransfer!=='undefined'){const files=new DataTransfer();files.items.add(state.knowledgeFile);input.files=files.files;}}if(state.busy)root.querySelectorAll('main button').forEach(b=>b.disabled=true);if(state.helpOpen){const d=root.querySelector('dialog');d.removeAttribute('open');d.showModal();}};
   const announce=msg=>{document.querySelector('#announcement').textContent=msg;};
   async function load() {
-    state.route=parseRoute(location.hash);
-    if(state.route.page==='care'){
+    const route=parseRoute(location.hash);state.route=route;
+    if(route.page==='care'){
       state.status=await api('/api/status');
       state.supportCatalog=await api('/api/support/services');
-      const serviceId=state.route.sub,session=serviceId?careSession(serviceId):null;
+      const serviceId=route.sub,session=serviceId?careSession(serviceId):null;
       state.careView=session?await api('/api/support/conversations/'+encodeURIComponent(session.id),{token:session.token}):null;
       return;
     }
-    if(state.route.page==='ledger'){state.ledgerUnavailable=null;try{state.ledger=await api('/api/ledger');}catch(error){if(!['COMMERCIAL_POLICY_REQUIRED','ACCESS_DENIED','INVALID_CONFIG'].includes(error.code))throw error;state.ledger=null;state.ledgerUnavailable={reasonCode:error.code};}return;}
-    if(['order','service'].includes(state.route.page)){state.status=await api('/api/status');state.data={agents:[],tasks:[],catalog:[],activity:[],workspace:{name:'Research service'}};if(state.route.page==='service'){state.services=(await api('/api/services')).services;return;}}
+    if(route.page==='ledger'){state.ledgerUnavailable=null;try{state.ledger=await api('/api/ledger');}catch(error){if(!['COMMERCIAL_POLICY_REQUIRED','ACCESS_DENIED','INVALID_CONFIG'].includes(error.code))throw error;state.ledger=null;state.ledgerUnavailable={reasonCode:error.code};}return;}
+    if(['order','service'].includes(route.page)){state.status=await api('/api/status');state.data={agents:[],tasks:[],catalog:[],activity:[],workspace:{name:'Research service'}};if(route.page==='service'){state.services=(await api('/api/services')).services;return;}}
     else {try{const [data,status]=await Promise.all([api('/api/workspace'),api('/api/status')]);state.data=data;state.status=status;state.workspaceAccessDenied=false;}catch(error){if(error.status!==403)throw error;state.workspaceAccessDenied=true;state.data={agents:[],tasks:[],catalog:[],activity:[]};state.status=await api('/api/status');state.operation=null;return;}}
     try{state.localDemo=await api('/api/workspace/local-demo');}catch(error){if(error.status!==404)throw error;state.localDemo={active:false};}
-    if(['payments','marketplace','demo'].includes(state.route.page)){
+    if(['payments','marketplace','demo'].includes(route.page)){
       state.customerPayments=null;state.customerPaymentsError=null;
       try{state.customerPayments=await api('/api/workspace/customer-payments');}catch(error){state.customerPaymentsError=error.message;}
     }
     if(state.localDemo?.active)state.supportCatalog=await api('/api/support/services');
-    if(state.route.page==='demo'&&!state.localDemo?.active)state.aiDemo=await api('/api/workspace/ai-demo');
-    if(['setup','autonomy'].includes(state.route.page)){state.autonomy=await api('/api/workspace/autonomy');if(state.route.page==='setup'||state.route.sub==='knowledge')state.autonomyKnowledge=await api('/api/knowledge');if(state.route.page==='autonomy'&&state.route.sub==='improvements')state.autonomyTrace=await api('/api/workspace/autonomy/trace');if(state.route.page==='autonomy'&&state.route.sub==='ledger'){state.ledgerChain=await api('/api/workspace/ledger-chain');state.loopReceipt=await fetch('/loop-receipt.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);}}
-    if(['marketplace','support'].includes(state.route.page))state.supportCatalog=await api('/api/support/services');
-    if(state.route.page==='support')state.supportOwner=await api('/api/workspace/support');
-    if(state.route.page==='marketplace'){state.marketKnowledge=await api('/api/knowledge');if(state.route.params.has('agent'))state.marketAgentId=state.route.params.get('agent');}
-    if(!state.localDemo?.active&&['setup','settings','marketplace'].includes(state.route.page))state.operation=await api('/api/workspace/operation');
-    if(!state.localDemo?.active&&['settings','owner'].includes(state.route.page)){state.cloudPlan=await api('/api/workspace/inference/plan');state.nearCloud=await api('/api/workspace/cloud');state.owner=await api('/api/owner/status');state.nearIntegrations=await api('/api/workspace/near-integrations');}
-    if(state.route.page==='setup'){state.setup=await api('/api/workspace/setup');if(state.exampleMode)state.companySetupDraft=setupDemoDraft(state);}
-    if(state.route.page==='agents'&&state.route.params.get('tab')==='settings')state.agentTab='settings';
-    if(state.route.page==='knowledge'){const source=state.route.params.get('source');if(['pdf','markdown','website'].includes(source))state.knowledgeSource=source;state.knowledge=await api('/api/knowledge');state.knowledgeDocument=null;if(state.route.sub&&state.route.sub!=='new')state.knowledgeDocument=await api('/api/knowledge/document?id='+encodeURIComponent(state.route.sub));}
-    if(state.exampleMode&&!state.localDemo?.active&&state.route.page==='knowledge'&&state.route.sub==='new'&&!state.knowledgeDraft)state.knowledgeDraft={...SETUP_DEMO_KNOWLEDGE,agentIds:[]};
-    if(state.route.page==='agents'&&state.route.action==='task')state.taskKnowledge=await api('/api/knowledge?agentId='+encodeURIComponent(state.route.sub));
-    if(state.route.page==='order') {const id=state.route.sub;if(!getToken(id)){state.order=null;return;}state.order=(await api(`/api/orders/${encodeURIComponent(id)}`,{token:getToken(id)})).order;if(state.order.reportAvailable)state.artifact=(await api(`/api/orders/${encodeURIComponent(id)}/report`,{token:getToken(id)})).artifact;}
+    if(route.page==='demo'&&!state.localDemo?.active)state.aiDemo=await api('/api/workspace/ai-demo');
+    if(['setup','autonomy'].includes(route.page)){state.autonomy=await api('/api/workspace/autonomy');if(route.page==='setup'||route.sub==='knowledge')state.autonomyKnowledge=await api('/api/knowledge');if(route.page==='autonomy'&&route.sub==='improvements')state.autonomyTrace=await api('/api/workspace/autonomy/trace');if(route.page==='autonomy'&&route.sub==='ledger'){state.ledgerChain=await api('/api/workspace/ledger-chain');state.loopReceipt=await fetch('/loop-receipt.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);}}
+    if(['marketplace','support'].includes(route.page))state.supportCatalog=await api('/api/support/services');
+    if(route.page==='support')state.supportOwner=await api('/api/workspace/support');
+    if(route.page==='marketplace'){state.marketKnowledge=await api('/api/knowledge');if(route.params.has('agent'))state.marketAgentId=route.params.get('agent');}
+    if(!state.localDemo?.active&&['setup','settings','marketplace'].includes(route.page))state.operation=await api('/api/workspace/operation');
+    if(!state.localDemo?.active&&['settings','owner'].includes(route.page)){state.cloudPlan=await api('/api/workspace/inference/plan');state.nearCloud=await api('/api/workspace/cloud');state.owner=await api('/api/owner/status');state.nearIntegrations=await api('/api/workspace/near-integrations');state.auditBusinessError=null;try{state.auditBusiness=await api('/api/workspace/audit-business');}catch(error){state.auditBusinessError=error.message;}}
+    if(route.page==='setup'){state.setup=await api('/api/workspace/setup');if(state.exampleMode)state.companySetupDraft=setupDemoDraft(state);}
+    if(route.page==='agents'&&route.params.get('tab')==='settings')state.agentTab='settings';
+    if(route.page==='knowledge'){const source=route.params.get('source');if(['pdf','markdown','website'].includes(source))state.knowledgeSource=source;state.knowledge=await api('/api/knowledge');state.knowledgeDocument=null;if(route.sub&&route.sub!=='new')state.knowledgeDocument=await api('/api/knowledge/document?id='+encodeURIComponent(route.sub));}
+    if(state.exampleMode&&!state.localDemo?.active&&route.page==='knowledge'&&route.sub==='new'&&!state.knowledgeDraft)state.knowledgeDraft={...SETUP_DEMO_KNOWLEDGE,agentIds:[]};
+    if(route.page==='agents'&&route.action==='task')state.taskKnowledge=await api('/api/knowledge?agentId='+encodeURIComponent(route.sub));
+    if(route.page==='order') {const id=route.sub;if(!getToken(id)){state.order=null;return;}state.order=(await api(`/api/orders/${encodeURIComponent(id)}`,{token:getToken(id)})).order;if(state.order.reportAvailable)state.artifact=(await api(`/api/orders/${encodeURIComponent(id)}/report`,{token:getToken(id)})).artifact;}
   }
-  async function task(work,{reload=true,toast}={}) {if(state.busy)return;state.error=null;state.busy=true;render();try {await work();if(reload)await load();if(toast)state.toast=toast;announce(toast??'Workspace updated.');}catch(error){state.error=error.message;announce(error.message);}finally{state.busy=false;render();}}
+  async function task(work,{reload=true,toast}={}) {
+    if(state.busy){if(work===load){state.reloadRequested=true;state.loading=true;render();}return;}
+    state.error=null;state.loadFailed=false;state.busy=true;state.loading=work===load;render();
+    try {await work();if(reload)await load();if(toast)state.toast=toast;announce(toast??'Workspace updated.');}
+    catch(error){state.error=error.message;state.loadFailed=state.loading;announce(error.message);}
+    finally {state.busy=false;state.loading=false;if(state.reloadRequested){state.reloadRequested=false;task(load,{reload:false});}else render();}
+  }
   function rememberKnowledgeDraft(){const form=root.querySelector('#knowledge-form');if(!form)return;const values=new FormData(form);state.knowledgeDraft={title:values.get('title')??'',body:values.get('body')??'',visibility:values.get('visibility')??'company',agentIds:values.getAll('agentIds')};const url=root.querySelector('#knowledge-url');if(url)state.knowledgeUrl=url.value;}
   function acceptKnowledgePreview(result){state.knowledgeDraft={...state.knowledgeDraft,title:state.knowledgeDraft?.title?.trim()||result.preview.title,body:result.preview.body};state.knowledgeImportPreview=result.preview;state.knowledgeKey=null;}
   function navigate(hash) {if(location.hash===`#${hash}`)return task(load,{reload:false});location.hash=hash;}
@@ -121,6 +127,9 @@ if(typeof document!=='undefined') {
     if(form.id==='restore-task-form'){saveToken(state.route.sub,values.token.trim());task(load,{reload:false});}
   });
   root.addEventListener('click',event=>{
+    const auditAction=event.target.closest('[data-action^="audit-grant-"]');
+    if(auditAction&&!auditAction.disabled){task(async()=>{if(auditAction.dataset.action==='audit-grant-revoke')state.auditBusiness=await api('/api/workspace/audit-business/revoke',{method:'POST',body:{grantId:state.auditBusiness.grant.id}});else state.auditBusiness=await api('/api/workspace/audit-business');state.auditBusinessError=null;},{reload:false,toast:'Contract grant checked on chain'});return;}
+
     const integrationButton=event.target.closest('[data-integration-execute],[data-integration-reconcile],[data-integration-verify],[data-integration-resource],[data-integration-cost]');
     if(integrationButton&&!integrationButton.disabled){const op=integrationButton.dataset.integrationExecute?'execute':integrationButton.dataset.integrationReconcile?'reconcile':integrationButton.dataset.integrationResource?'probe-resource':integrationButton.dataset.integrationCost?'cost':'verify-evaluation',planId=integrationButton.dataset.integrationExecute??integrationButton.dataset.integrationReconcile??integrationButton.dataset.integrationVerify??integrationButton.dataset.integrationResource??integrationButton.dataset.integrationCost;task(async()=>{state.integrationResult=await api('/api/workspace/near-integrations/'+op,{method:'POST',body:{planId}});},{toast:'Integration request checked against current authority'});return;}
     const reconcile=event.target.closest('[data-chain-reconcile]');if(reconcile){const key=state.chainReconcileKey??=crypto.randomUUID();task(async()=>{await api('/api/workspace/ledger-chain/reconcile',{method:'POST',body:{batchId:reconcile.dataset.chainReconcile},key});state.chainReconcileKey=null;},{toast:'Batch checked against final on-chain records'});return;}
@@ -182,6 +191,7 @@ if(typeof document!=='undefined') {
     if(action==='pause-company'){task(()=>api('/api/workspace/pause',{method:'POST',body:{version:state.operation.organization.version}}),{toast:'Company paused'});return;}
     if(action==='clear-market-search'){state.marketSearch='';render();return;}
     if(action==='reload-workspace'){task(load,{reload:false});return;}
+    if(action==='retry-view'){task(load,{reload:false});return;}
     if(action==='dismiss-error'){state.error=null;render();return;}
     if(['pause-agent','resume-agent'].includes(action)){const a=state.data.agents.find(x=>x.id===control.dataset.id);task(()=>api(`/api/agents/${a.id}/update`,{method:'POST',body:{status:action==='pause-agent'?'paused':'ready',version:a.version}}),{toast:action==='pause-agent'?'New tasks paused':'Agent ready'});return;}
     if(action==='setup-review'){const step=state.setup.progress.steps.find(x=>x.id===control.dataset.step),next=state.setup.progress.steps[step.number];task(async()=>{await api('/api/workspace/setup/review',{method:'POST',body:{stepId:step.id,version:state.setup.organization.version}});location.hash=next?`setup/${next.id}`:'setup/complete';},{toast:step.id==='brain'?'Organization setup complete':'Step reviewed'});return;}

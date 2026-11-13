@@ -1,0 +1,8 @@
+{
+  "nearSdk": "5.30.2",
+  "wasmBytes": 162349,
+  "wasmSha256": "70dd210b6b6d745f98de4da7287c0640a68995e97a839cace145a9c4c9fe11ca",
+  "codeHash": "8baEL9QRfk4Ukk6FoGUkt8DPUczxAudVT1xafXvauRtD",
+  "sourceSha256": "d8fe158f0c3c64fc36ecc7f15dd10a756e7e1af2e8afa558ddbf94ec9a17eaed",
+  "lockSha256": "e03ae9e4e6764c23c9336be2aa75d79c62ac677914937d75a30392df7e2bef0d"
+}

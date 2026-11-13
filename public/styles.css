@@ -26,3 +26,8 @@
 .cloud-model-list li>span{font-size:12px;line-height:1.6;color:var(--muted,#575b64)}.cloud-model-list dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 0;font-size:12px;font-variant-numeric:tabular-nums}
 .cloud-model-list dt{color:var(--muted,#575b64)}.cloud-model-list dd{margin:3px 0 0}.near-cloud-products .notice ul{padding-left:20px;line-height:1.6}
 @media(max-width:640px){.cloud-tool-row{align-items:flex-start;gap:12px}.cloud-tool-state{max-width:86px;white-space:normal;text-align:right;line-height:1.5}.cloud-model-list dl{grid-template-columns:1fr}.cloud-model-list dl>div{display:flex;justify-content:space-between;gap:16px}.cloud-model-list dd{text-align:right;margin:0}}
+
+/* Keep keyboard focus visible even where a component resets its outline. */
+:is(a,button,input,select,textarea,summary,[role="button"],[role="tab"],[contenteditable="true"],[tabindex]):focus-visible{outline:2px solid var(--focus)!important;outline-offset:3px}
+@media(forced-colors:active){:focus-visible{outline-color:Highlight!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

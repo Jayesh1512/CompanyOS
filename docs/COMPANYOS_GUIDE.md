@@ -74,7 +74,7 @@ The table records implemented behavior and the evidence supporting each scope.
 | Loop-driven spend | Provider record and public ledger commitment | 0.025 USDC confidential swap with recorded lifecycle events. |
 | Owner-funded checkout and answer | Retained run and public settlement/ledger references | 0.10 USDC test payment and a separately prepaid Cloud answer, linked by accounting attribution. |
 | Rust NEAR ledger | Local Sandbox and recorded mainnet verification | Deployed contract, hash-chained records and Agent API native-call writes through evidence scripts. |
-| NanoGPT purchase | Redacted historical mainnet run; transaction references withheld | [Run and verification](MAINNET_EVIDENCE.md#10-nanogpt-paid-credit-purchase); company-wallet signing, not grant-bound. |
+| NanoGPT purchase | Recorded mainnet payment and completed invoice | [Run and verification](MAINNET_EVIDENCE.md#10-nanogpt-paid-credit-purchase); company-wallet signing, not grant-bound. |
 
 [Mainnet evidence](MAINNET_EVIDENCE.md), [public-provider evidence](LIVE_EVIDENCE.md) and the [claim index](../CLAIMS.md) retain the references and verification scope. The [final committed-source regression run](evidence/tests-final-committed.txt) passed 618 tests. [Final validation](evidence/final-validation.txt) records the 15 evidence-index checks and 218 committed JavaScript syntax checks.
 

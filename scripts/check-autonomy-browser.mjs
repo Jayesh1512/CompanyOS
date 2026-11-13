@@ -1,7 +1,9 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,rm,writeFile} from 'node:fs/promises';
-import {randomBytes} from 'node:crypto';
+import {randomBytes,createHash} from 'node:crypto';
+import {readFile,readdir} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
 import {createApp} from '../src/app.mjs';
@@ -12,7 +14,9 @@ import {startServer} from '../server.mjs';
 const directory=await mkdtemp(path.join(os.tmpdir(),'near1-cfn-browser-'));
 const functionalOnly=process.argv.includes('--functional-only'),demoMode=process.argv.includes('--demo');
 const expectedCompanyName=demoMode?'Northstar Studio (Demo)':'Fictional operations QA';
-const artifactDir=path.resolve(demoMode?'artifacts/setup-demo':'artifacts/unified-company-setup');await mkdir(artifactDir,{recursive:true});
+const outputIndex=process.argv.indexOf('--output');
+const artifactDir=path.resolve(outputIndex>=0?process.argv[outputIndex+1]:demoMode?'artifacts/setup-demo':'artifacts/unified-company-setup');await mkdir(artifactDir,{recursive:true});
+const startedAt=new Date().toISOString(),runId='browser-'+startedAt.replace(/[^0-9]/g,'');
 const owner=randomBytes(32).toString('hex');
 const app=await createApp({directory,configPath:'',ownerToken:owner,companyId:'browser-company'});
 const runtime=await startServer({app,port:0});
@@ -22,6 +26,7 @@ try {
  const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];page.setDefaultTimeout(15000);
  page.on('response',async r=>{if(r.url().includes('/api/')&&r.status()>=400)console.error('API failure',r.status(),r.url(),await r.text());});
  page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{window.__loadingObserved=false;const watch=()=>{new MutationObserver(()=>{if(document.querySelector('.loading-state[role="status"]'))window.__loadingObserved=true;}).observe(document.documentElement,{subtree:true,childList:true});};if(document.documentElement)watch();else document.addEventListener('DOMContentLoaded',watch,{once:true});});
  const api=async(route,options={})=>{const response=await fetch(runtime.url+route,{...options,headers:{authorization:`Bearer ${owner}`,'content-type':'application/json','idempotency-key':randomBytes(8).toString('hex')}});return {status:response.status,body:await response.json()};};
  await page.goto(runtime.url+'/#setup');assert.equal(await page.locator('#owner-form').count(),0);
  await page.getByRole('heading',{name:'Set up your organization',exact:true}).waitFor();
@@ -86,13 +91,29 @@ try {
  await api('/api/workspace/autonomy/advance',{method:'POST',body:'{}'});
  await page.getByRole('button',{name:'Refresh company',exact:true}).click();
  const scans=[];
- async function capture(name,width,height,route){
-   await page.setViewportSize({width,height});await page.goto(runtime.url+'/#'+route);await page.locator('main h1').waitFor();
+ async function capture(name,width,height,route,focusSelector){
+   await page.setViewportSize({width,height});if(route!==undefined)await page.goto(runtime.url+'/#'+route);await page.locator('main h1').waitFor();
    await page.waitForFunction(()=>!document.querySelector('main[aria-busy="true"]'));
    if(route==='setup/agents')await page.locator('.configured-agent details').first().evaluate(d=>d.open=true);
    const measure=await page.evaluate(()=>({viewport:innerWidth,documentWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,heading:document.querySelector('main h1')?.textContent}));
    assert.ok(measure.documentWidth<=width+1,`${name} horizontal overflow ${JSON.stringify(measure)}`);
-   if(!functionalOnly)await page.screenshot({path:path.join(artifactDir,name+'.png'),fullPage:true});scans.push({name,...measure});
+   await page.keyboard.press('Tab');
+   const focus=await page.evaluate(()=>{
+     const failures=[];let checked=0;
+     for(const el of document.querySelectorAll('a[href],button,input,select,textarea,summary,[role="button"],[role="tab"],[contenteditable="true"],[tabindex]')){
+       if(el.disabled||el.tabIndex<0||!el.getClientRects().length)continue;
+       el.focus({preventScroll:true});if(document.activeElement!==el)continue;
+       checked++;const css=getComputedStyle(el);
+       if(!el.matches(':focus-visible')||css.outlineStyle==='none'||parseFloat(css.outlineWidth)<2)failures.push({tag:el.tagName,id:el.id,label:el.getAttribute('aria-label')??el.textContent.slice(0,70)});
+     }
+     document.activeElement?.blur();return {checked,failures};
+   });
+   assert.deepEqual(focus.failures,[],name+' focus coverage');
+   if(focusSelector){await page.locator(focusSelector).focus();assert.equal(await page.locator(focusSelector).evaluate(el=>el.matches(':focus-visible')),true);}
+   const capturedAt=new Date().toISOString(),image=name+'.png';
+   if(!functionalOnly)await page.screenshot({path:path.join(artifactDir,image),fullPage:true});
+   const bytes=functionalOnly?null:await readFile(path.join(artifactDir,image));
+   scans.push({name,...measure,runId,capturedAt,image:bytes?image:null,sha256:bytes?createHash('sha256').update(bytes).digest('hex'):null,bytes:bytes?.length??0,focus,loadingObserved:await page.evaluate(()=>window.__loadingObserved===true)});
  }
  await capture('operations-desktop',1440,1000,'autonomy');
  await page.goto(runtime.url+'/#autonomy');await page.getByRole('button',{name:'Pause company',exact:true}).click();
@@ -102,8 +123,9 @@ try {
  await capture('agents-mobile',390,844,'autonomy/agents');
  await capture('ledger-mobile',390,844,'autonomy/ledger');
  await capture('setup-mobile',390,844,'setup/agents');
- for(const route of ['setup/org','setup/brain','setup/boundaries','setup/review','setup/profiles','autonomy/setup?step=1','autonomy/improvements','autonomy/purchases','autonomy/services','agents','setup']){
-   await page.goto(runtime.url+'/#'+route);await page.waitForFunction(()=>!document.querySelector('main[aria-busy="true"]'));assert.equal(await page.locator('main [role="alert"]').count(),0,route);
+ const viewCoverage=[];
+ for(const route of ['setup/org','setup/brain','setup/boundaries','setup/review','setup/profiles','autonomy/setup?step=1','autonomy/improvements','autonomy/purchases','autonomy/services','agents','agents/new','overview','tasks','marketplace','knowledge','settings','owner','activity','payments','demo','ledger','service','care','support','order/needs-access','setup']){
+   await page.goto(runtime.url+'/#'+route);await page.waitForFunction(()=>!document.querySelector('main[aria-busy="true"]'));assert.equal(await page.locator('main [role="alert"]').count(),0,route);viewCoverage.push({route,loadingObserved:await page.evaluate(()=>window.__loadingObserved===true),contentPresent:!!(await page.locator('main').innerText()).trim()});
  }
  await page.goto(runtime.url+'/#autonomy/template');
  await page.getByLabel('Template name',{exact:true}).fill('Fictional sample names');
@@ -123,7 +145,29 @@ try {
  await page.getByRole('button',{name:'Save context selection',exact:true}).click();await page.getByRole('heading',{name:'The company’s team',exact:true}).waitFor();
  assert.equal((await fetch(runtime.url+'/api/workspace/autonomy',{headers:{'sec-fetch-site':'cross-site'}})).status,403);
  assert.equal(Object.keys(app.journal.snapshot().operations).length,0);assert.equal(app.journal.list('orders').length,0);assert.equal(app.treasury.snapshot().version,0);
+ await page.goto(runtime.url+'/#agents');await page.getByRole('tab',{name:/Drafts/}).click();
+ await page.getByRole('heading',{name:'No matching agents',exact:true}).waitFor();
+ await capture('empty-agents-desktop',1440,1000);
+ await capture('keyboard-focus-desktop',1440,1000,'agents','#agent-search');
+ await page.goto(runtime.url+'/#knowledge/does-not-exist');
+ await page.getByRole('heading',{name:'This view could not be loaded',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Reload view',exact:true}).click();
+ await page.getByRole('heading',{name:'This view could not be loaded',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Dismiss error',exact:true}).click();
+ assert.equal(await page.getByRole('button',{name:'Reload view',exact:true}).count(),1);
+ await page.getByRole('button',{name:'Reload view',exact:true}).click();
+ await page.getByRole('heading',{name:'This view could not be loaded',exact:true}).waitFor();
+ await capture('error-knowledge-desktop',1440,1000);
+ await page.emulateMedia({reducedMotion:'reduce'});
+ const motion=await page.evaluate(()=>({requested:matchMedia('(prefers-reduced-motion: reduce)').matches,transition:getComputedStyle(document.querySelector('main')).transitionDuration,animation:getComputedStyle(document.querySelector('main')).animationName,scroll:getComputedStyle(document.documentElement).scrollBehavior}));
+ assert.equal(motion.requested,true);assert.equal(motion.transition,'0s');assert.equal(motion.animation,'none');assert.equal(motion.scroll,'auto');
  assert.deepEqual(errors,[]);
- const proof={checkedAt:new Date().toISOString(),mode:'isolated actual HTTP/browser setup',demoMode,exampleDraftsOnly:demoMode,autoSeededRecords:0,functionalOnly,screenshotsCaptured:!functionalOnly,providerEffects:0,orders:0,financialVersion:0,agents:2,defaultOperatingMode:'none',editableProfilesPersisted:true,reviewDoesNotStart:true,canonicalOrganizationAligned:true,backlogItems:after.improvements.length,contextSelectionRoute:true,refreshStable:true,crossSiteStatus:403,tokenEntryRequired:false,consoleExceptions:errors,scans};
+ const sourceFiles={};
+ async function sourceTree(dir){for(const entry of await readdir(dir,{withFileTypes:true})){const name=path.join(dir,entry.name);if(entry.isDirectory())await sourceTree(name);else if(/\.(mjs|js|css|html|svg)$/.test(name))sourceFiles[name]=createHash('sha256').update(await readFile(name)).digest('hex');}}
+ await sourceTree('public');await sourceTree('src');
+ for(const name of ['server.mjs','scripts/check-autonomy-browser.mjs'])sourceFiles[name]=createHash('sha256').update(await readFile(name)).digest('hex');
+ const provenance={sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sourceCommitScope:'Base commit; sourceFiles bind the actual tested working-tree bytes, including uncommitted changes.',workingTreeDirty:!!execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim(),sourceFiles};
+ await writeFile(path.join(artifactDir,'source-manifest.json'),JSON.stringify(provenance,null,2)+'\n');
+ const proof={viewCoverage,runId,startedAt,checkedAt:new Date().toISOString(),sourceCommit:provenance.sourceCommit,sourceCommitScope:provenance.sourceCommitScope,workingTreeDirty:provenance.workingTreeDirty,sourceManifest:'source-manifest.json',allScreenshotsFromThisRun:!functionalOnly,reducedMotion:motion,errorDismissKeepsRetry:true,actualEmptyState:'Drafts filter with no matching agents',actualErrorState:'The server denied an out-of-scope/nonexistent knowledge-document lookup; Reload view repeated only that read',mode:'isolated actual HTTP/browser setup',demoMode,exampleDraftsOnly:demoMode,autoSeededRecords:0,functionalOnly,screenshotsCaptured:!functionalOnly,providerEffects:0,orders:0,financialVersion:0,agents:2,defaultOperatingMode:'none',editableProfilesPersisted:true,reviewDoesNotStart:true,canonicalOrganizationAligned:true,backlogItems:after.improvements.length,contextSelectionRoute:true,refreshStable:true,crossSiteStatus:403,tokenEntryRequired:false,consoleExceptions:errors,scans};
  await writeFile(path.join(artifactDir,'browser-proof.json'),JSON.stringify(proof,null,2)+'\n');console.log(JSON.stringify(proof,null,2));
 } finally {await browser?.close();await runtime.close();await rm(directory,{recursive:true,force:true});}

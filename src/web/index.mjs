@@ -44,7 +44,7 @@ export async function parseOrderRequest(request) {
 }
 
 /** HTTP mechanics and Rules access enforcement. No pricing or lifecycle decisions. */
-export function createWeb({ aiDemo,fundedLoop,workflow, ledger, rules, readiness, ownerToken, workspace, knowledge, knowledgeImporter, runtime, components, cloudProducts, creditReadiness, autonomy, customerCare, onchainLedger, nearIntegrations, demoControl, localDemoContext, demoFacts, companyId='local-workspace' }) {
+export function createWeb({ aiDemo,fundedLoop,auditBusiness,workflow, ledger, rules, readiness, ownerToken, workspace, knowledge, knowledgeImporter, runtime, components, cloudProducts, creditReadiness, autonomy, customerCare, onchainLedger, nearIntegrations, demoControl, localDemoContext, demoFacts, companyId='local-workspace' }) {
   const decideAccess = async (resource, access = {}, order) => {
     const decision = await rules.evaluate({ type: 'access', id: `access:${resource}:${order?.id || 'public'}`, resource }, { access, order });
     if (!isAllowed(decision)) throw error(decision?.reasonCode || 'ACCESS_DENIED', resource === 'report' ? 'The report is not available to this access context.' : 'This access context is not permitted.', decision?.status === 'hold' ? 409 : 403);
@@ -147,6 +147,19 @@ export function createWeb({ aiDemo,fundedLoop,workflow, ledger, rules, readiness
               return json(await demoControl.open(key));
             }
             throw error('NOT_FOUND','Local demo route not found.',404);
+          }
+          if(path==='/api/workspace/audit-business'||path==='/api/workspace/audit-business/revoke'){
+            const access=workspaceIdentity(request,transport);
+            if(!access.verified)throw error('ACCESS_DENIED','Owner access is required.',403);
+            await decideAccess('owner',access);
+            if(url.search)throw error('INVALID_INPUT','Use only the configured contract.');
+            if(request.method==='GET'&&path==='/api/workspace/audit-business')return json(await auditBusiness.view());
+            if(request.method==='POST'&&path.endsWith('/revoke')){
+              const input=await supportInput(request);
+              if(Object.keys(input).some(k=>k!=='grantId')||typeof input.grantId!=='string')throw error('INVALID_INPUT','Select the current grant.');
+              return json(await auditBusiness.revoke(input.grantId));
+            }
+            throw error('NOT_FOUND','Audit grant route not found.',404);
           }
           if(path==='/api/workspace/near-integrations'||path.startsWith('/api/workspace/near-integrations/')){
             if(!nearIntegrations)throw error('NOT_FOUND','NEAR integrations are unavailable.',404);
