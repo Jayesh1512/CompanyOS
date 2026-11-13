@@ -1,6 +1,6 @@
-# Judge's guide: verify first, execute only with approval
+# Mentor's guide: verify first, execute only with approval
 
-This is a short route through the submitted prototype. It separates public-chain verification, retained provider records and paid execution. No credential is needed for the public-only checks below.
+This guide gives mentors a short route through the CompanyOs prototype. It separates public-chain verification, retained provider records and paid execution. No credential is needed for the public-only checks below.
 
 ## 1. See the differentiated behavior
 
@@ -62,7 +62,7 @@ The verifier checks:
 - Recomputed inference-event payload binding to the retained sale/cost record.
 - Internal arithmetic and retained response-verification fields.
 
-It **does not** independently verify the customer's transfer into the deposit account, full end-to-end monetary movement, actual provider output/attestation, or billing. See [the full limits](MAINNET_EVIDENCE.md#9-customer-funded-service-loop).
+It **does not** independently verify the customer's transfer into the deposit account, full end-to-end monetary movement, actual provider output/attestation, or billing. See [the full limits](MAINNET_EVIDENCE.md#9-owner-funded-checkout-and-answer).
 
 The 202,710 nanoUSD bill is **$0.00020271**, paid from the owner-prepaid Cloud key. The sale did not purchase Cloud credits. The **$0.09979729** difference excludes gas, other provider attempts and other operating costs; it is an accounting remainder, not demonstrated profit or a payout.
 

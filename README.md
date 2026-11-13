@@ -1,5 +1,9 @@
 # CompanyOs
 
+**CompanyOs is an operating workspace for AI-agent organizations.** It gives an owner one place to define a company, configure agent roles, maintain approved shared knowledge, manage work and customer care, and review spending and operational history. The local product combines these capabilities in a persistent workspace. [Product guide](docs/COMPANYOS_GUIDE.md) and [local execution evidence](artifacts/local-real-demo/validation.json).
+
+An owner supplies the purpose, documents, operating boundaries and budget. Within configured workflows, a manager coordinates specialists, work produces results or reviewable exceptions, and observed gaps become backlog items. Supported knowledge and template repairs are evaluated and saved as revisions for later work. Owners retain control over permissions, budgets and exceptional decisions. [Operating loop](docs/COMPANYOS_GUIDE.md#the-operating-loop) and [work controls](docs/COMPANYOS_GUIDE.md#work-controls-and-recovery).
+
 **A gap becomes a tested revision that later work actually uses.** The backlog binds an observed failure to a target and base revision. A fixed evaluator compares baseline and candidate against the same frozen cases; Rules checks the evidence hashes and current head before promoting an immutable revision. Future permitted work resolves that revision. [Promotion checks](src/rules/autonomy.mjs#L301), [fixed evaluator](src/autonomy/evaluation.mjs#L1) and [recorded repair and retry](docs/LIVE_RECOVERY_DEMO.md).
 
 **Agent actions are bound to their signer and preceding commitment.** The NEAR ledger binds registered agent writers to actor hashes and checks sequence and previous hash before accepting an append. A separate evidence index pins retained artifact bytes and claim scopes, rejecting altered proof even when its manifest checksum is rebuilt. [Contract enforcement](contracts/company-ledger/src/lib.rs#L96), [record construction](src/rules/onchain-ledger.mjs#L27), [index checks](scripts/evidence/model.mjs#L61) and [tamper-rejection evidence](docs/evidence/critical-negative-tests.txt).
@@ -12,7 +16,7 @@ An owner defines the purpose, approved knowledge, operating policy and initial b
 
 Northstar Care, our fictional insurance customer-service organization, is the hackathon example. **CompanyOs is the platform; insurance is one instance.** Research services, document services and other customer-facing agent businesses are intended applications of the same operating model, not separate products already demonstrated.
 
-[Judge's guide](docs/JUDGE_GUIDE.md) · [Organization guide](docs/COMPANYOS_GUIDE.md) · [Local demo](docs/LOCAL_REAL_DEMO.md) · [Recovery evidence](docs/RECOVERY_EXECUTION.md) · [Claim-to-evidence index](CLAIMS.md)
+[Mentor's guide](docs/MENTOR_GUIDE.md) · [Organization guide](docs/COMPANYOS_GUIDE.md) · [Local demo](docs/LOCAL_REAL_DEMO.md) · [Recovery evidence](docs/RECOVERY_EXECUTION.md) · [Claim-to-evidence index](CLAIMS.md)
 
 ## How a living organization works
 
