@@ -6,6 +6,26 @@ Run `node scripts/evidence/verify.mjs` for offline integrity, scope consistency,
 
 Trust scopes: **LIVE_PUBLIC** = original public provider capture; **LIVE_PAID** = sanitized records of the approved actual owner-funded calls; **LIVE_LOCAL** = actual local execution; **CONTROLLED** = injected external facts. Each claim retains the provenance and verification scope of its supporting records.
 
+<!-- claim:readable-regression:OBSERVED -->
+## readable-regression — OBSERVED
+
+The original 512-test baseline and the 606-test committed regression run retain every test name and passing summary.
+
+- **CONTROLLED**: [baseline-512](docs/evidence/tests-baseline-512.txt)
+- **CONTROLLED**: [regression-item2](docs/evidence/tests-item2.txt)
+
+Evidence scope: Dated local regression outputs; tests exercise controlled inputs and do not establish a live integration.
+
+<!-- claim:second-recovery:RECORDED_HASHES_WITHHELD -->
+## second-recovery — RECORDED_HASHES_WITHHELD
+
+Redacted historical records describe: The second recovery retains six original live Cloud calls, local fixed evaluations, native JBrain revisions and a retrospective testnet artifact commitment.
+
+- **LIVE_PAID**: [second-recovery-log](docs/evidence/recovery-missing-address.txt)
+- **LIVE_PUBLIC**: [second-recovery-anchor](docs/evidence/recovery-anchor.json)
+
+Evidence scope: The original run was off-chain. The later testnet anchor commits its retained bytes, not independent revalidation of historical Cloud plaintext or remote evaluator execution. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.
+
 <!-- claim:nanogpt-purchase:RECORDED_HASHES_WITHHELD -->
 ## nanogpt-purchase — RECORDED_HASHES_WITHHELD
 

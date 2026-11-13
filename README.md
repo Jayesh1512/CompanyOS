@@ -71,7 +71,7 @@ node scripts/evidence/verify.mjs
 node scripts/verify-mainnet-evidence.mjs
 ```
 
-The **15 November documentation audit** recorded **650 passing regression tests** and syntax checks for **207 JavaScript files**. Its [retained regression log](artifacts/documentation-audit/tests.log) records the full suite. Offline evidence verification passed. Earlier logs retain their dated source scope. The [NanoGPT regression log](artifacts/nanogpt-agent-testing/tests.log) records its separate 79-check run.
+The original **512-test baseline** is readable in [the unabridged historical output](docs/evidence/tests-baseline-512.txt), including every test name and its pass count. After item 1, the [committed regression suite](docs/evidence/tests-item2.txt) passed **606 tests**. The [second recovery timeline](docs/evidence/recovery-missing-address.txt) lists all six original Cloud calls, revisions, evaluation results and bills, plus redacted metadata for the later testnet evidence anchor. The anchor commits the retained historical bytes; the original recovery ran off-chain. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
 Controlled-loop tests combine real application modules, Rules, Treasury, native JBrain and the fixed evaluator with injected SDK reasoning, proof, credit and billing inputs. Mainnet verification labels public RPC checks and retained artifact checks separately.
 

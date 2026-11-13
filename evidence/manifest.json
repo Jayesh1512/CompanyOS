@@ -1,9 +1,53 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-17T09:32:40.639Z",
+  "generatedAt": "2026-11-17T09:32:40.737Z",
   "grantsSpendingAuthority": false,
   "scope": "Evidence index; checksums and labels are not cryptographic proof of every claim.",
   "artifacts": [
+    {
+      "id": "baseline-512",
+      "path": "docs/evidence/tests-baseline-512.txt",
+      "kind": "controlled_test",
+      "command": "Historical npm test output copied from artifacts/onchain-ledger/full-tests.log",
+      "doesNotProve": "Original historical baseline, not the current test count or live provider execution.",
+      "trustScope": "CONTROLLED",
+      "bytes": 57463,
+      "sha256": "004e961035d7de3d5991d3f541ee92ab76884070ff994d6c95e744208a3f219f",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "regression-item2",
+      "path": "docs/evidence/tests-item2.txt",
+      "kind": "controlled_test",
+      "command": "node --test --test-reporter=spec <all git-tracked test/**/*.test.mjs>",
+      "doesNotProve": "606 local passing tests; pre-existing untracked tests excluded.",
+      "trustScope": "CONTROLLED",
+      "bytes": 67068,
+      "sha256": "36c0f42c9a5cb9806e1068d6164bd4c4b3eaa6d8956567522cdd598735922399",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "second-recovery-log",
+      "path": "docs/evidence/recovery-missing-address.txt",
+      "kind": "paid_provider",
+      "command": "node scripts/readable-recovery-evidence.mjs",
+      "doesNotProve": "Readable rendering of retained original-process Cloud verification, local evaluations and bills; no new model execution. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PAID",
+      "bytes": 36082,
+      "sha256": "7505bcb33a3665e8f2976e3d6b706d6f39c35faaa369c2a746c324985328a1e8",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "second-recovery-anchor",
+      "path": "docs/evidence/recovery-anchor.json",
+      "kind": "public_capture",
+      "command": "node scripts/anchor-recovery-evidence.mjs",
+      "doesNotProve": "Retrospective testnet commitment to the retained artifact; not on-chain execution of the recovery. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PUBLIC",
+      "bytes": 3221,
+      "sha256": "2dd58fe6a9c7e7affb00b94c27989469b3faf719192ae5b8b53505e052ffe060",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
     {
       "id": "nanogpt-live-run",
       "path": "artifacts/mainnet-proof/nanogpt-loop-2.json",
@@ -550,6 +594,27 @@
     }
   ],
   "claims": [
+    {
+      "id": "readable-regression",
+      "claim": "The original 512-test baseline and the 606-test committed regression run retain every test name and passing summary.",
+      "status": "OBSERVED",
+      "evidence": [
+        "baseline-512",
+        "regression-item2"
+      ],
+      "doesNotProve": "Dated local regression outputs; tests exercise controlled inputs and do not establish a live integration."
+    },
+    {
+      "id": "second-recovery",
+      "claim": "Redacted historical records describe: The second recovery retains six original live Cloud calls, local fixed evaluations, native JBrain revisions and a retrospective testnet artifact commitment.",
+      "status": "RECORDED_HASHES_WITHHELD",
+      "evidence": [
+        "second-recovery-log",
+        "second-recovery-anchor"
+      ],
+      "verify": null,
+      "doesNotProve": "The original run was off-chain. The later testnet anchor commits its retained bytes, not independent revalidation of historical Cloud plaintext or remote evaluator execution. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files."
+    },
     {
       "id": "nanogpt-purchase",
       "claim": "Redacted historical records describe: The recorded mainnet run received 0.35 NEAR and paid 0.340779 NEAR to NanoGPT invoice 498165652, followed by inference and ledger commitments.",
