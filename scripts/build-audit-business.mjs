@@ -1,0 +1,12 @@
+import {spawnSync} from 'node:child_process';
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {wasmCodeHash} from '../src/onchain/rpc.mjs';
+const crate='contracts/audit-business',out='artifacts/audit-business';
+const run=(cmd,args,extra={})=>{const r=spawnSync(cmd,args,{stdio:'inherit',...extra});if(r.status!==0)throw Error('BUILD_FAILED');};
+run('cargo',['build','--locked','--manifest-path',crate+'/Cargo.toml','--target','wasm32-unknown-unknown','--release'],{env:{...process.env,RUSTFLAGS:'--cfg near -C target-feature=-bulk-memory,-sign-ext,-reference-types,-multivalue,-nontrapping-fptoint'}});
+await mkdir(out,{recursive:true});
+run(process.execPath,['node_modules/binaryen/bin/wasm-opt',crate+'/target/wasm32-unknown-unknown/release/audit_business.wasm','--enable-bulk-memory','--enable-sign-ext','-Oz','--llvm-memory-copy-fill-lowering','--signext-lowering','--strip-debug','--strip-dwarf','-o',out+'/audit-business.wasm']);
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex'),bytes=await readFile(out+'/audit-business.wasm');
+const manifest={nearSdk:'5.30.2',wasmBytes:bytes.length,wasmSha256:sha(bytes),codeHash:wasmCodeHash(bytes),sourceSha256:sha(await readFile(crate+'/src/lib.rs')),lockSha256:sha(await readFile(crate+'/Cargo.lock'))};
+await writeFile(out+'/manifest.json',JSON.stringify(manifest,null,2)+'\n');console.log(JSON.stringify(manifest));

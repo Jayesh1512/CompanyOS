@@ -1,0 +1,12 @@
+Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt.
+Historical output below retains the original observation scope; removed references cannot be independently rechecked here.
+
+PASS both deployed contracts match the committed compiled WASM hash
+PASS 2 test NEAR revenue FINAL: [transaction hash removed]
+  [transaction link removed]
+PASS retained original SDK-verified Cloud decision selects the exact granted vendor and 1 test NEAR fee
+PASS agent-signed, grant-bound 1 test NEAR vendor call FINAL: [transaction hash removed]
+  [transaction link removed]
+PASS paid service stored the exact customer digest; callback marked order completed; grant allowance is exhausted
+PASS both on-chain hash chains recompute; sale, requested spend, completed spend and real vendor notarization are stored
+Scope: maintainer-controlled testnet accounts; no USD value, independent customers or self-funded mainnet business established. Cloud acceptance is retained original-process verification, not replayed plaintext verification.

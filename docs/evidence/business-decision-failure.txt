@@ -1,0 +1,16 @@
+Initial real Cloud decision attempt
+The original SDK call used max_tokens=2048. Verification returned, but the content string was empty and JSON.parse rejected it. No decision command was admitted and no vendor spend was sent.
+The original process did not retain its response ID or bill, so its exact cost is not claimed. Its pending operation remains in private run state. A second explicit request uses max_completion_tokens=4096 and saves the verified response before parsing.
+
+Original process error:
+<anonymous_script>:1
+
+
+SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>)
+    at decideAuditPurchase (file:///Users/jys/.t3/projects/near1/src/business/decision.mjs:15:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Object.once (file:///Users/jys/.t3/projects/near1/scripts/lib/testnet.mjs:28:18)
+    at async file:///Users/jys/.t3/projects/near1/scripts/run-business-cycle.mjs:15:16
+
+Node.js v26.12.1

@@ -3,7 +3,7 @@ import {Account, KeyPair, KeyPairSigner, JsonRpcProvider, actions} from 'near-ap
 
 // Dedicated testnet credentials only. This helper never reads .env/mainnet keys.
 export const DIRECTORY = '.runtime/hackathon-testnet';
-export const RPC = 'https://rpc.testnet.near.org';
+export const RPC = 'https://rpc.testnet.fastnear.com';
 export const provider = new JsonRpcProvider({url: RPC});
 export const near = value => BigInt(value) * 10n ** 24n;
 export const explorer = hash => `https://testnet.nearblocks.io/txns/${hash}`;
@@ -38,7 +38,7 @@ export async function createChild(run, parent, label, balanceYocto) {
   return {cred,receipt};
 }
 export async function call(cred, receiverId, methodName, args, deposit=0n) {
-  return finalReceipt(await account(cred).signAndSendTransaction({receiverId,actions:[actions.functionCall(methodName,args,100_000_000_000_000n,deposit)],waitUntil:'FINAL'}));
+  return finalReceipt(await account(cred).signAndSendTransaction({receiverId,actions:[actions.functionCall(methodName,args,50_000_000_000_000n,deposit)],waitUntil:'FINAL',retries:0}));
 }
 export async function view(contractId,methodName,args={}) {
   const r=await provider.query({request_type:'call_function',finality:'final',account_id:contractId,method_name:methodName,args_base64:Buffer.from(JSON.stringify(args)).toString('base64')});

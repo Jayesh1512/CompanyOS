@@ -6,6 +6,21 @@ Run `node scripts/evidence/verify.mjs` for offline integrity, scope consistency,
 
 Trust scopes: **LIVE_PUBLIC** = original public provider capture; **LIVE_PAID** = sanitized records of the approved actual owner-funded calls; **LIVE_LOCAL** = actual local execution; **CONTROLLED** = injected external facts. Each claim retains the provenance and verification scope of its supporting records.
 
+<!-- claim:testnet-business-cycle:RECORDED_HASHES_WITHHELD -->
+## testnet-business-cycle — RECORDED_HASHES_WITHHELD
+
+Redacted historical records describe: A real testnet audit-service cycle received 2 test NEAR, admitted a verified Cloud decision, spent 1 test NEAR through an expiring recipient-bound agent grant, delivered a stored digest and committed the business hash chain.
+
+- **LIVE_PUBLIC**: [business-setup](docs/evidence/business-setup.json)
+- **LIVE_PAID**: [business-cycle](docs/evidence/business-cycle.json)
+- **LIVE_PAID**: [business-execution](docs/evidence/business-execution.txt)
+- **LIVE_PUBLIC**: [business-verification](docs/evidence/business-verification.txt)
+- **LIVE_LOCAL**: [business-contract-tests](docs/evidence/business-contract-tests.txt)
+- **LIVE_PAID**: [business-decision](docs/evidence/business-decision-attempt-2.json)
+- **LIVE_PAID**: [business-decision-failure](docs/evidence/business-decision-failure.txt)
+
+Evidence scope: Maintainer-controlled customer and vendor; test tokens have no claimed USD value. Cloud uses owner-prepaid credit. Independent customers, USD profit and a self-funded mainnet business are not established. The initial empty-output decision failed before any vendor spend and its exact cost was not retained. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.
+
 <!-- claim:agent-swarm-testnet:RECORDED_HASHES_WITHHELD -->
 ## agent-swarm-testnet — RECORDED_HASHES_WITHHELD
 

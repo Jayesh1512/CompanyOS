@@ -1,9 +1,86 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-17T09:32:40.832Z",
+  "generatedAt": "2026-11-17T09:32:40.931Z",
   "grantsSpendingAuthority": false,
   "scope": "Evidence index; checksums and labels are not cryptographic proof of every claim.",
   "artifacts": [
+    {
+      "id": "business-setup",
+      "path": "docs/evidence/business-setup.json",
+      "kind": "public_capture",
+      "command": "node scripts/setup-business-testnet.mjs",
+      "doesNotProve": "Actual testnet account, deployment, upgrade, faucet and on-chain grant transactions; all accounts maintainer-controlled. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PUBLIC",
+      "bytes": 2405,
+      "sha256": "35f7ce22c5ea4362ffabd953f21b70e49b99b025726269a2e36d95ff091fcba1",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "business-cycle",
+      "path": "docs/evidence/business-cycle.json",
+      "kind": "paid_provider",
+      "command": "node scripts/run-business-cycle.mjs 2",
+      "doesNotProve": "Actual customer and agent transactions, original SDK decision, public delivery and hash-chain records; not independent commercial demand. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PAID",
+      "bytes": 9097,
+      "sha256": "3392a339460aabaf97995728a7bd37edb8f20d668db8b701bb3c9ebc06ee475c",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "business-execution",
+      "path": "docs/evidence/business-execution.txt",
+      "kind": "paid_provider",
+      "command": "node scripts/readable-business-evidence.mjs",
+      "doesNotProve": "Readable rendering of the actual testnet cycle; no USD value claimed. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PAID",
+      "bytes": 4433,
+      "sha256": "b356a0d990c48538e1d54f9c84943836906fd7bc9d7fbde18ed4a36aa02f672c",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "business-verification",
+      "path": "docs/evidence/business-verification.txt",
+      "kind": "public_capture",
+      "command": "node scripts/verify-business-cycle.mjs",
+      "doesNotProve": "Checks deployed WASM, FINAL transfer/call receipts, exact supplier deposit, grant exhaustion, delivered digest and both on-chain hash chains. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PUBLIC",
+      "bytes": 1110,
+      "sha256": "3d1cedc272985c66ab917c2439dff5a9f5bef722f12f358f99140cabd2b02c8f",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "business-contract-tests",
+      "path": "docs/evidence/business-contract-tests.txt",
+      "kind": "local_execution",
+      "command": "node --test test/business/cycle-contract.test.mjs",
+      "doesNotProve": "Actual compiled contract revenue, purchase, callback and delivery in local nearcore Sandbox; not a public-chain run.",
+      "trustScope": "LIVE_LOCAL",
+      "bytes": 236,
+      "sha256": "d90fdde1e60d5c029086e5760330966adff78c4d3744825a9411c482d6f0601b",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "business-decision",
+      "path": "docs/evidence/business-decision-attempt-2.json",
+      "kind": "paid_provider",
+      "command": "Explicit second decision request in node scripts/run-business-cycle.mjs 2",
+      "doesNotProve": "Original-process SDK verification and actual model output; not offline revalidation of historical plaintext.",
+      "trustScope": "LIVE_PAID",
+      "bytes": 9377,
+      "sha256": "bf7309f00af2f2c717e98eaf28ec10d82b48b4032372d5caa932eca952de9610",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "business-decision-failure",
+      "path": "docs/evidence/business-decision-failure.txt",
+      "kind": "paid_provider",
+      "command": "Retained first decision failure before any vendor spend",
+      "doesNotProve": "The first output was empty; its provider request ID and exact bill were not retained. It is not presented as a successful decision.",
+      "trustScope": "LIVE_PAID",
+      "bytes": 982,
+      "sha256": "20e82b2c362cf6fe22e698275645133506e3e9a013064ac5553e53cb6c302b94",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
     {
       "id": "swarm-accounts",
       "path": "docs/evidence/swarm-accounts.json",
@@ -660,6 +737,22 @@
     }
   ],
   "claims": [
+    {
+      "id": "testnet-business-cycle",
+      "claim": "Redacted historical records describe: A real testnet audit-service cycle received 2 test NEAR, admitted a verified Cloud decision, spent 1 test NEAR through an expiring recipient-bound agent grant, delivered a stored digest and committed the business hash chain.",
+      "status": "RECORDED_HASHES_WITHHELD",
+      "evidence": [
+        "business-setup",
+        "business-cycle",
+        "business-execution",
+        "business-verification",
+        "business-contract-tests",
+        "business-decision",
+        "business-decision-failure"
+      ],
+      "verify": null,
+      "doesNotProve": "Maintainer-controlled customer and vendor; test tokens have no claimed USD value. Cloud uses owner-prepaid credit. Independent customers, USD profit and a self-funded mainnet business are not established. The initial empty-output decision failed before any vendor spend and its exact cost was not retained. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files."
+    },
     {
       "id": "agent-swarm-testnet",
       "claim": "Redacted historical records describe: Five recovery agents signed six hash-linked work commitments through distinct NEAR testnet subaccounts during six real Cloud calls; ledger reads use the official NEAR MCP server with a CompanyOS tool.",
