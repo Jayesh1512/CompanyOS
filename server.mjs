@@ -36,11 +36,11 @@ export async function startServer(options={}) {
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(options.port??Number(process.env.PORT??4173),options.host??process.env.HOST??'127.0.0.1',resolve);});
   const address=server.address(),url=`http://127.0.0.1:${address.port}`;
   let localDemo=null,demoLoading=null,closing=false;
-  if(options.enableLocalDemo!==false&&!app.localDemoContext&&app.demoControl)app.demoControl.open=async()=>{
+  if(options.enableLocalDemo!==false&&!app.localDemoContext&&app.demoControl)app.demoControl.open=async key=>{
     if(closing)throw Object.assign(Error('Workspace closing'),{code:'LOCAL_DEMO_CLOSING'});
     demoLoading??=(async()=>{const {createLocalDemoLauncher}=await import('./src/demo/local.mjs');return localDemo=createLocalDemoLauncher({directory:options.demoDirectory??path.join(root,'.runtime/local-real-demo-v1'),binary:options.demoBinary??process.env.SHOP_JBRAIN_BINARY??path.join(root,'.runtime/dependencies/jbrain/target/release/jbrain'),returnUrl:url,serve:startServer});})();
     await demoLoading;if(closing)throw Object.assign(Error('Workspace closing'),{code:'LOCAL_DEMO_CLOSING'});
-    return localDemo.open();
+    return localDemo.open(key);
   };
   return {app,server,url,close:async()=>{closing=true;await demoLoading?.catch(()=>{});await localDemo?.close();await new Promise((resolve,reject)=>server.close(error=>error?reject(error):resolve()));await app.close();}};
 }

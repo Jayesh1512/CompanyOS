@@ -135,7 +135,9 @@ export function createWeb({ aiDemo,fundedLoop,workflow, ledger, rules, readiness
               const input=await supportInput(request),d=rules.evaluate({id:'local-demo:open',type:'local_demo_open'},{access,input});if(!isAllowed(d))throw error(d.reasonCode,'Use the fixed local demo action.',403);
               if(localDemoContext)throw error('LOCAL_DEMO_ALREADY_OPEN','This is already the isolated local demo.',409);
               if(typeof demoControl?.open!=='function')throw error('LOCAL_DEMO_UNAVAILABLE','Start the workspace server to open its local demo.',503);
-              return json(await demoControl.open());
+              const key=request.headers.get('idempotency-key')??undefined;
+              if(key!==undefined&&(!key.trim()||key.length>160))throw error('IDEMPOTENCY_KEY_REQUIRED','Use a valid demo launch identity.');
+              return json(await demoControl.open(key));
             }
             throw error('NOT_FOUND','Local demo route not found.',404);
           }

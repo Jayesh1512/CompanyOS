@@ -141,7 +141,15 @@ if(typeof document!=='undefined') {
     if(action==='support-demo'){const key=state.supportDemoKey??=crypto.randomUUID();task(async()=>{await api('/api/workspace/support/demo',{method:'POST',body:{},key});state.supportDemoKey=null;},{toast:'Fictional policies saved to JBrain and support agents published'});return;}
     if(action==='care-escalate'){const session=careSession(state.route.sub);if(!session)return;const key=state.careEscalationKey??=crypto.randomUUID();task(async()=>{await api('/api/support/conversations/'+encodeURIComponent(session.id)+'/escalate',{method:'POST',body:{},token:session.token,key});state.careEscalationKey=null;},{toast:'Review request recorded in the company inbox'});return;}
     if(action==='setup-demo'){
-     task(async()=>{if(state.localDemo?.active){location.assign(state.localDemo.returnUrl+'/#autonomy');return;}location.hash=state.route.page==='demo'?'#autonomy':'#demo';},{reload:false});return;
+     if(state.localDemo?.active){location.assign(state.localDemo.returnUrl+'/#autonomy');return;}
+     const key=state.demoLaunchKey??=crypto.randomUUID();
+     state.demoLaunching=true;
+     task(async()=>{
+      const demo=await api('/api/workspace/local-demo/open',{method:'POST',body:{},key});
+      const target=new URL(demo.url);
+      if(target.protocol!=='http:'||target.hostname!=='127.0.0.1'||target.username||target.password)throw Error('The demo returned an invalid local workspace URL.');
+      state.demoLaunchKey=null;location.assign(target.href);
+     },{reload:false}).finally(()=>{state.demoLaunching=false;render();});return;
     }
     if(action==='setup-example'){
      const form=root.querySelector('#company-brief-form'),values=form?Object.fromEntries(new FormData(form)):{};

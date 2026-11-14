@@ -3,17 +3,17 @@ import {AUTONOMY_INTENT} from './autonomy-intent.js';
 // Explicit UI sample input only. No API calls, provider fixtures, saved records,
 // permissions, funds or execution state are created by enabling Demo mode.
 export const SETUP_DEMO_BRIEF=Object.freeze({
- name:'Northstar Studio (Demo)',
- purpose:'Help independent businesses make clearer market decisions through sourced research. This is a fictional company for exploring setup.',
- industry:'Research & strategy',
- customer:'Independent bookshops and small business owners',
- outcome:'Research briefs that separate evidence, assumptions and practical next steps',
- objective:'Identify what an independent bookshop should validate before offering a monthly reading subscription.',
+ name:'Northstar Care (Demo)',
+ purpose:'Run a customer-care agency for fictional Harbor Mutual Insurance using approved policy knowledge and owner-reviewed escalations.',
+ industry:'Customer care · fictional insurance',
+ customer:'Harbor Mutual Insurance — fictional customer-care client',
+ outcome:'Cited policy replies, claims guidance and owner-review tickets',
+ objective:'Set up policy and claims guides, publish their customer-care services, and answer a policy question from approved knowledge.',
 });
 export const SETUP_DEMO_KNOWLEDGE=Object.freeze({
- title:'Northstar Studio · fictional company brief',
+ title:'Northstar Care · fictional company brief',
  visibility:'company',
- body:'# Northstar Studio — fictional example\n\nThese company details are fictional. There are no real customers, revenue or results.\n\n## Purpose\nHelp independent bookshops assess market questions through sourced research.\n\n## Working approach\nThe manager coordinates approved work. The backlog tracks process gaps and requests evaluated improvements. Specialists can be requested when permitted. Cite dated sources and separate evidence from assumptions.\n\n## First objective\nAssess audience needs, alternatives and a small validation experiment for a monthly reading subscription.\n\n## Execution\nThis sample does not configure providers, credit, spending authority or accepted model-output proof. Saving it stores real local company knowledge; document grants and selected agent context still apply.\n',
+ body:'# Northstar Care — fictional example\n\nThese company details are fictional. There are no real customers, revenue or results.\n\n## Purpose\nHelp fictional Harbor Mutual customers understand the published auto, home, travel and claims policies.\n\n## Working approach\nThe manager coordinates approved work. The backlog tracks process gaps and requests evaluated improvements. Specialists can be requested when permitted. Use exact approved policy excerpts and escalate unsupported or individual claim decisions.\n\n## First objective\nConfigure the agency team and publish policy and claims guides in the local marketplace.\n\n## Execution\nThis sample does not configure providers, credit, spending authority or accepted model-output proof. Saving it stores real local company knowledge; document grants and selected agent context still apply.\n',
 });
 export function setupDemoDraft(state,form={}){
  const company=state.autonomy?.company,organization=state.setup?.organization??state.data?.organization??{},draft=state.companySetupDraft??{};

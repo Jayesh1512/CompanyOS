@@ -1,0 +1,129 @@
+{
+  "at": "2026-11-14T19:04:04.357Z",
+  "mode": "fresh isolated customer-care organization; real native JBrain and local service publication",
+  "browser": "T3 collaborative preview",
+  "firstLaunch": {
+    "demo": {
+      "kind": "local_demo_status",
+      "active": true,
+      "returnUrl": "http://127.0.0.1:4196",
+      "grantsSpendingAuthority": false,
+      "providerCalled": false,
+      "companyId": "real-local-demo-0c5a6b29-54e6-40e6-85c5-4cc9f7714be8",
+      "sessionId": "0c5a6b29-54e6-40e6-85c5-4cc9f7714be8",
+      "agentCount": 4,
+      "documentCount": 4,
+      "serviceCount": 2,
+      "conversationCount": 0,
+      "ticketCount": 0,
+      "replyCount": 0,
+      "eventCount": 12,
+      "providerOperations": 0,
+      "financialVersion": 0,
+      "knowledgeStatus": "connected"
+    },
+    "agents": [
+      {
+        "id": "real-local-demo-0c5a6b29-54e6-40e6-85c5-4cc9f7714be8:manager",
+        "name": "Northstar Care Manager",
+        "status": "ready"
+      },
+      {
+        "id": "real-local-demo-0c5a6b29-54e6-40e6-85c5-4cc9f7714be8:backlog",
+        "name": "Northstar Care Backlog",
+        "status": "ready"
+      },
+      {
+        "id": "d0852ab8-4b70-489a-8cd2-91f66102a1a1",
+        "name": "Harbor Mutual Policy Guide",
+        "status": "ready"
+      },
+      {
+        "id": "bd65df84-a8e0-432e-975d-370d560c94fa",
+        "name": "Harbor Mutual Claims Guide",
+        "status": "ready"
+      }
+    ],
+    "organization": {
+      "id": "real-local-demo-0c5a6b29-54e6-40e6-85c5-4cc9f7714be8",
+      "setupReviews": {},
+      "name": "Northstar Care · Demo",
+      "purpose": "Run a customer-care agency for fictional Harbor Mutual Insurance, answering policy questions from approved sources and escalating individual claims for owner review.",
+      "industry": "Customer care · fictional insurance",
+      "version": 1,
+      "updatedAt": "2026-11-14T18:59:53.384Z"
+    }
+  },
+  "customerFlow": {
+    "companyId": "real-local-demo-0c5a6b29-54e6-40e6-85c5-4cc9f7714be8",
+    "replies": 2,
+    "tickets": 1,
+    "financialVersion": 0,
+    "providerOperations": 0,
+    "citations": 1
+  },
+  "secondLaunch": {
+    "demo": {
+      "kind": "local_demo_status",
+      "active": true,
+      "returnUrl": "http://127.0.0.1:4196",
+      "grantsSpendingAuthority": false,
+      "providerCalled": false,
+      "companyId": "real-local-demo-a2f99fec-da62-4f53-8bf9-3c8e3cde6e88",
+      "sessionId": "a2f99fec-da62-4f53-8bf9-3c8e3cde6e88",
+      "agentCount": 4,
+      "documentCount": 4,
+      "serviceCount": 2,
+      "conversationCount": 0,
+      "ticketCount": 0,
+      "replyCount": 0,
+      "eventCount": 12,
+      "providerOperations": 0,
+      "financialVersion": 0,
+      "knowledgeStatus": "connected"
+    },
+    "agents": [
+      {
+        "id": "real-local-demo-a2f99fec-da62-4f53-8bf9-3c8e3cde6e88:manager",
+        "name": "Northstar Care Manager",
+        "status": "ready"
+      },
+      {
+        "id": "real-local-demo-a2f99fec-da62-4f53-8bf9-3c8e3cde6e88:backlog",
+        "name": "Northstar Care Backlog",
+        "status": "ready"
+      },
+      {
+        "id": "b7ede43d-c76b-4b3e-b8a9-4bc545404d52",
+        "name": "Harbor Mutual Policy Guide",
+        "status": "ready"
+      },
+      {
+        "id": "eb3559f0-e5ad-4211-bdb5-62bd4c539e6f",
+        "name": "Harbor Mutual Claims Guide",
+        "status": "ready"
+      }
+    ]
+  },
+  "checks": [
+    "Start demo creates a fresh organization and four new customer-care agent profiles",
+    "Policy and claims services appear in the agency marketplace",
+    "Marketplace links open real private customer conversations",
+    "Policy response includes the actual approved source citation",
+    "Claim approval request creates an owner-review ticket",
+    "Exit and relaunch creates a different organization with no old replies or tickets",
+    "Desktop 1440 and mobile 390 layout has no horizontal overflow",
+    "No browser errors observed in inspected pages"
+  ],
+  "layout": [
+    {
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390
+    }
+  ],
+  "paidCalls": 0
+}

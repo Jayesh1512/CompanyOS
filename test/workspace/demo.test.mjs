@@ -47,5 +47,5 @@ test('explicit setup demo drafts keep entered and saved company data and contain
 
 test('demo control and fictional notice use the existing workspace and do not imply running agents or provider readiness',async t=>{
  const app=await fixture(t),state={data:app.workspace.view(),autonomy:{company:null},setup:await app.workspace.setup(),route:parseRoute('#setup/org'),exampleMode:true};
- const html=renderWorkspace(state);assert.match(html,/data-action="setup-example" aria-pressed="true"/);assert.match(html,/Example setup text/);assert.match(html,/Execution and spending stay unchanged/);assert.match(html,/Open AI demo/);assert.doesNotMatch(html,/data-action="load-demo"|data-action="approve-run"/);
+ const html=renderWorkspace(state);assert.match(html,/data-action="setup-example" aria-pressed="true"/);assert.match(html,/Example setup text/);assert.match(html,/Execution and spending stay unchanged/);assert.match(html,/Start demo/);assert.doesNotMatch(html,/data-action="load-demo"|data-action="approve-run"/);
 });
