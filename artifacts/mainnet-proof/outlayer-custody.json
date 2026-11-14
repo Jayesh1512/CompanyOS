@@ -1,0 +1,22 @@
+{
+  "kind": "outlayer-custody",
+  "note": "The Agent API agent wallet is custodied by OutLayer. Policy changes that alter the wallet's native rules are stored on-chain as a delegate action calling store_wallet_policy on outlayer.near, relayed by the Agent API. The on-chain version counts stored policies; the API revision also counts changes that needed no on-chain write (revision 2 reported no transaction hash and is not listed).",
+  "companyWallet": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+  "walletNearAccount": "b2c5b8f31edf4dfb2560eb14397c8d61656c9f34c4f644077ed08a991fd9fc75",
+  "txs": [
+    {
+      "hash": "8oW3JamN6wEuHnykukZ1rkesR5sMtGRdt1RgnjAW6Wp9",
+      "relayer": "cf4f467b64a329d8bf6bbde033d4d0d9ac3c19a4e8c3ec85554a660fb24327ae",
+      "purpose": "agent_create: initial policy",
+      "policyRevision": 1,
+      "onchainVersion": 1
+    },
+    {
+      "hash": "6bSAwbcuAWu264iW48dTvQ5rSM3tL8c7D5Y8KrSDPtjr",
+      "relayer": "cf4f467b64a329d8bf6bbde033d4d0d9ac3c19a4e8c3ec85554a660fb24327ae",
+      "purpose": "policy_update: native.evm.sign_intent for the Chain Signatures proof",
+      "policyRevision": 3,
+      "onchainVersion": 2
+    }
+  ]
+}

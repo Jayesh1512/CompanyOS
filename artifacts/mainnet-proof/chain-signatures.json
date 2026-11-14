@@ -1,0 +1,25 @@
+{
+  "kind": "chain-signatures",
+  "at": "2026-11-14T22:39:51.511Z",
+  "route": "agent-api native/evm/sign-intent (NEAR MPC-managed key)",
+  "correlationId": "op_HRXY9lpamYdF7As18n98vUSCyks0T0JdINVMa33_RIM",
+  "accountId": "0x7b6313d0e2abd1a4b8dd83019e285a64748648e2",
+  "agentEvmAccount": "0x7b6313d0e2abd1a4b8dd83019e285a64748648e2",
+  "policyRevision": 3,
+  "signIntentRules": {
+    "receivers": [
+      "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4"
+    ],
+    "one_click_deposits": false
+  },
+  "signedData": {
+    "standard": "erc191",
+    "payload": "{\"signer_id\":\"0x7b6313d0e2abd1a4b8dd83019e285a64748648e2\",\"verifying_contract\":\"intents.near\",\"deadline\":\"2026-11-14T22:43:49.877Z\",\"nonce\":\"rzJ/od/25ouCG+YD/xEFHhzTtzkt6gxZqPmw52zfw3Y=\",\"intents\":[{\"intent\":\"transfer\",\"receiver_id\":\"e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4\",\"tokens\":{\"nep141:wrap.near\":\"1\"}}]}",
+    "signature": "secp256k1:M5t93i55HdDiNaqRTBipJfZmiAbccRMvHHkeB5PCg4FsivgddR6pa9KEVyr51ZbEZJzM6Dn7hQjsy2ykAXRwuAVfE"
+  },
+  "recoveredAddress": "0x7b6313d0e2abd1a4b8dd83019e285a64748648e2",
+  "signerMatches": true,
+  "published": false,
+  "deadline": "2026-11-14T22:43:49.877Z",
+  "label": "One signed 1-yocto wNEAR transfer intent to the company wallet. Never submitted to intents.near, 1Click or a solver; it expires at its deadline. Signing is not a fund movement."
+}

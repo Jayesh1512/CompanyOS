@@ -188,6 +188,61 @@ An independent third-party customer paid, delivery, refund/payout and supplier a
 
 Limit: Not established. The only recorded checkout is owner-funded (see owner-funded-checkout). No independent customer paid us, no refund/payout ran and no supplier was acquired by the loop. The loop-spend, marketplace and swap records show outbound spending only; provider SUCCESS, signed quotes and task artifacts cannot stand in for monetary finality or reusable licences.
 
+<!-- claim:chain-signatures:OBSERVED -->
+## chain-signatures — OBSERVED
+
+The agent's NEAR-MPC-managed EVM key signed one NEAR Intents transfer intent under an owner-signed policy rule, and the signature recovers to the agent's EVM account.
+
+- **LIVE_LOCAL**: [chain-signatures](artifacts/mainnet-proof/chain-signatures.json)
+
+Verify/reproduce: `node scripts/chain-signatures-proof.mjs verify`
+
+Limit: The signed intent was never published, so no funds moved and no Chain Signatures-driven transaction exists. Verification is a local signature recovery plus the agent's EVM address read from the Agent API; the MPC path itself is the provider's. The policy rule that enabled signing is a narrow authority widening whose limits do not cover sign_intent.
+
+<!-- claim:nanogpt-credit-purchase:OBSERVED -->
+## nanogpt-credit-purchase — OBSERVED
+
+An owner-wallet sale, an Agent API funding withdrawal, a 0.340423 NEAR payment to a NanoGPT invoice (credited $0.7768), and an inference answer on that credit are all committed to the mainnet ledger.
+
+- **LIVE_LOCAL**: [nanogpt-loop](artifacts/mainnet-proof/nanogpt-loop.json)
+
+Verify/reproduce: `node scripts/verify-nanogpt-loop.mjs`
+
+Limit: The customer is the owner wallet. The purchase exceeded the sale; the shortfall came from the agent balance plus the company wallet prior balance. NanoGPT conversion cost 24.6%. A script, not an LLM, triggered it, and the company wallet key (not the Agent API grant) signed the NanoGPT payment. The purchase record was recovered after a case-sensitivity bug; balanceBefore is derived. The inference cost is a balance delta, and NanoGPT is not TEE-attested.
+
+<!-- claim:outlayer-custody:OBSERVED -->
+## outlayer-custody — OBSERVED
+
+The Agent API agent wallet policy is stored on OutLayer: two owner-signed policy installs are FINAL delegate actions calling store_wallet_policy on outlayer.near, and the outlayer.near receipts succeeded.
+
+- **LIVE_LOCAL**: [outlayer-custody](artifacts/mainnet-proof/outlayer-custody.json)
+
+Verify/reproduce: `node scripts/verify-outlayer-custody.mjs`
+
+Limit: The stored policy is encrypted and not decrypted here: this shows OutLayer accepted each policy, not its contents. It is not the OutLayer evaluator proof (outlayer-production-proof).
+
+<!-- claim:marketplace-ledger-record:OBSERVED -->
+## marketplace-ledger-record — OBSERVED
+
+Two completed market.near.ai x402 purchases (0.5 USDC each) were re-verified on chain and committed to the mainnet ledger as procurement.confirmed.
+
+- **LIVE_LOCAL**: [marketplace-ledger-record](artifacts/marketplace/ledger-record.json)
+
+Verify/reproduce: `node scripts/record-marketplace-payments.mjs verify`
+
+Limit: The payments were signed by the owner wallet and the company wallet, not by the Agent API agent. Task completion is the marketplace API response saved in a local artifact. A ledger commitment proves the record existed, not that the business event is true.
+
+<!-- claim:mcp-server:OBSERVED -->
+## mcp-server — OBSERVED
+
+A read-only MCP server over the Agent API served initialize, tools/list, get_balances and get_policy against the live agent, and refused an attempt to call a money-moving tool.
+
+- **LIVE_LOCAL**: [mcp-session](artifacts/mainnet-proof/mcp-session.json)
+
+Verify/reproduce: `node --test test/integrations-adapters/mcp-server.test.mjs`
+
+Limit: Our own minimal stdio server, not the hosted OAuth MCP endpoint; it has no authentication of its own and was driven by a scripted client, not a model-driven agent. The recorded balances and policy are a point-in-time read.
+
 <!-- claim:outlayer-production-proof:NOT_IMPLEMENTED -->
 ## outlayer-production-proof — NOT_IMPLEMENTED
 

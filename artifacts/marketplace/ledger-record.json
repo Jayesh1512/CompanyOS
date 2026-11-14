@@ -1,0 +1,41 @@
+{
+  "kind": "marketplace-ledger-record",
+  "at": "2026-11-14T22:47:32.184Z",
+  "events": [
+    {
+      "type": "procurement.confirmed",
+      "data": {
+        "companyId": "local-workspace",
+        "actorId": "company",
+        "kind": "marketplace_task",
+        "provider": "market.near.ai",
+        "taskId": "c41a599b-87a3-42cd-a70b-d35ad0d9babd",
+        "asset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+        "amountAtomic": "500000",
+        "payTo": "ea667f5f496e60033bf8075cce4793efdeba28d74d116ef95848324347f539fc",
+        "payer": "755a0a4bb40161793c0a178c89b0ed1a876d8c0d0bbea8febecfe2a7d0d9662b",
+        "paymentTxHash": "7jhLczFqN8kr4PSKg1gTEdYEPj1fBwxyHkSMJyVTpZqr",
+        "relayer": "x402-relayer.fadeevab.near"
+      }
+    },
+    {
+      "type": "procurement.confirmed",
+      "data": {
+        "companyId": "local-workspace",
+        "actorId": "company",
+        "kind": "marketplace_task",
+        "provider": "market.near.ai",
+        "taskId": "0de69385-54a4-4e1f-bd34-c4155f532242",
+        "asset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+        "amountAtomic": "500000",
+        "payTo": "ea667f5f496e60033bf8075cce4793efdeba28d74d116ef95848324347f539fc",
+        "payer": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+        "paymentTxHash": "BBKtuiWMrkKwNPFc5pk3Si6juam4fsS2NsbBdomd59Uz",
+        "relayer": "x402-relayer.fadeevab.near"
+      }
+    }
+  ],
+  "ledgerTx": "FLw2qoxftWGKkNDvoK6etXXMCAYvvj5ixQCnSXJF1NPp",
+  "correlationId": "op_Ycx0FBT-0hzbp00QkUUwfDhAblzEbTfEo6Mq6QVOg5E",
+  "label": "Two wallet-signed x402 payments (owner wallet, company wallet), re-verified on chain before recording. Not paid by the Agent API agent."
+}

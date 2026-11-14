@@ -164,63 +164,99 @@ node scripts/verify-funded-loop.mjs                                         # re
 - The billed cost is the provider's report, not on-chain.
 - The paid-answer gate exists in the server route (`POST /api/workspace/ai-demo/run` with `saleId`, enabled by `SHOP_FUNDED_LOOP_FILE`) and is unit-tested, but the live answer was run through the script: the preview store is bound to a different provider identity (`ECONOMIC_IDENTITY_MISMATCH`), so the full server was not started for this evidence.
 
-## 10. Agent-bought inference credit (NanoGPT): built, not yet run live
+## 10. Agent-bought inference credit (NanoGPT): run once on mainnet
 
-**Status: unit-tested; manually tested by the maintainer; no live run is recorded in this repository.**
+**Status: one scripted run, verified by `scripts/verify-nanogpt-loop.mjs` (17/17 at last run). Read the caveats: the customer is the owner wallet, the purchase exceeded the sale, and NanoGPT's conversion cost 24.6%.**
 
-- **Automated:** the NanoGPT client and purchase logic have 5 unit tests with a mocked transport, plus tests for the related funded-loop, marketplace and adapter modules (coverage table below).
-- **Manual, maintainer-reported:** the maintainer reports having tested the NanoGPT flow by hand and that it works. No transaction hash, invoice ID or artifact from that test is retained here, so it is **not independently verifiable** and the automated verifier has nothing to check. The project's configured NanoGPT key showed a $0.00 balance when read on 15 November.
-- **Not recorded:** a scripted end-to-end run with ledger events. Once one is run, this section will be filled with transaction references and `scripts/verify-nanogpt-loop.mjs` results.
+NEAR AI Cloud has no API to buy credit (section 9 limits), so the credit purchase uses a provider that does: [NanoGPT](https://docs.nano-gpt.com/api-reference/endpoint/crypto-deposits.md) creates a crypto deposit invoice from an API key.
 
-NEAR AI Cloud has no API to buy credit (section 9 limits), so the agent's credit purchase uses a provider that does: [NanoGPT](https://docs.nano-gpt.com/api-reference/endpoint/crypto-deposits.md) creates a crypto deposit invoice from an API key (ticker `near`, minimum about $1) and credits the account when the invoice reaches `Completed`.
-
-| Step | Code | Status |
+| Step | Reference | Label |
 | --- | --- | --- |
-| Customer pays NEAR into the company wallet `e17d480f…`; `sale.confirmed` on the ledger | `scripts/demo-nanogpt-loop.mjs customer-pay` | No run recorded |
-| Agent creates an invoice and pays that exact amount once from the company wallet; waits for `Completed`; `procurement.confirmed` on the ledger only if the NanoGPT balance rose | `buy-credits`, `src/cloud-funding/nanogpt.mjs` | Unit-tested (invoice safety checks, single payment, no ledger event on failure); manual test maintainer-reported only |
-| Agent runs inference on that credit; cost is the balance change around the call; `inference.consumed` on the ledger | `answer` | No run recorded |
-| Read-only verification against mainnet and NanoGPT | `scripts/verify-nanogpt-loop.mjs` | Written; nothing to verify yet |
+| Sale: 0.1376 NEAR (about $0.40) from the owner wallet `755a0a4b…` to the company wallet `e17d480f…`; `sale.confirmed` committed | payment [`4oZ2ftSU…`](https://nearblocks.io/txns/4oZ2ftSUsqnJvxBjTDoSpLk5ZJghPGX22529MUBDky7h), ledger [`4zb8wxXH…`](https://nearblocks.io/txns/4zb8wxXH52BM3mj1T1SLfhZKQSZeXpwJz9YfXbR4Afkc) | LIVE_PUBLIC |
+| Agent funds the shortfall: owner-signed policy revision 2 allows the company wallet as the one withdraw destination; the agent withdraws 0.19 NEAR from its own wNEAR balance; `spend.completed` committed | Agent API operation `op_PoedhtJV…`, ledger [`9iHLviUE…`](https://nearblocks.io/txns/9iHLviUEhmEeRncsutSNCEXjLYZiLGtq5SAa9zC7JTyh) | LIVE_PUBLIC (ledger), LOCAL_ARTIFACT (operation) |
+| Company wallet pays NanoGPT invoice `497954145`: 0.340423 NEAR to the deposit address | payment [`AMDMhVLQ…`](https://nearblocks.io/txns/AMDMhVLQ9yWPowrNcARrvCMZg4gBejFPCx3sCqX6hwqi) | LIVE_PUBLIC |
+| NanoGPT reports the invoice `COMPLETED`, names our payment as `payinHash`, and credits **$0.77676626** | re-read by the verifier with the NanoGPT key | LIVE_AUTHED |
+| `procurement.confirmed` committed | ledger [`F4kRdyuL…`](https://nearblocks.io/txns/F4kRdyuLX8ombLuyP57BWVK7GLs51uwNZvDu1Qo5SrTm) | LIVE_PUBLIC |
+| Inference on the credit (`minimax/minimax-m2.7`): cost **$0.00026397** as a balance delta; `inference.consumed` committed | ledger [`EiEdtj6q…`](https://nearblocks.io/txns/EiEdtj6qcYE6Qp5Zc5wZXEhfCnGrk4C59t8ot6CdfuY2) | LIVE_PUBLIC (ledger), cost LOCAL_ARTIFACT |
 
-```sh
-node scripts/demo-nanogpt-loop.mjs preflight   # read-only; shows what is missing
-```
+Artifact: [`nanogpt-loop.json`](../artifacts/mainnet-proof/nanogpt-loop.json). Re-check with `node scripts/verify-nanogpt-loop.mjs` (the NanoGPT checks need `NANOGPT_API_KEY`).
 
-**Test coverage for the agent-funded credit flow (unit level; no live run)**
+**What this run does and does not show**
+- **The customer is the owner wallet.** The payer is not an independent third party.
+- **The purchase exceeded the sale.** NanoGPT's minimum deposit is about $1; the sale was about $0.40. The shortfall came from the agent's own balance (0.19 NEAR, on the ledger) plus the company wallet's prior balance. The verifier requires that any shortfall be disclosed and ledger-recorded, and prints the numbers.
+- **NanoGPT's conversion cost is 24.6%.** A deposit worth $1.0000 credited $0.7768 (provider `creditQuote`: `conversionCostUsd` 0.246, `bonusUsd` 0.023). This is not a cheap route.
+- **The script triggered the purchase.** It is not an LLM decision, and the autonomy loop's `spend` command is not wired to it. The company wallet's own key signed the NanoGPT payment, not the Agent API grant; the Agent API agent made the 0.19 NEAR funding withdrawal.
+- **The purchase record was recovered, not first-pass.** The original wait compared the provider status case-sensitively (`Completed` vs the real `COMPLETED`), timed out, and left a payment unrecorded. The credit was then confirmed from the saved invoice (`recover-purchase`, which cannot pay again). `balanceBefore` in that record is derived (balance minus the provider-reported credit). Both defects are fixed and tested: case-insensitive status matching, and the invoice id is now saved at payment time.
+- **The ledger ran out of storage deposit mid-run.** The ledger contract lives on the owner account `755a0a4b…`, whose balance only just covered its storage; further appends failed with `LackBalanceForState`. The agent withdrew a further 0.10 wNEAR to the company wallet (`op_8sGG3X6Q…`), which sent 0.05 NEAR to the ledger account ([`DHiqkWLg…`](https://nearblocks.io/txns/DHiqkWLg8Hy4C4ysqQMMV5e6vMutfoZgDqYgB7VG9R2o)). Ledger writes need that account kept funded.
+- NanoGPT is not TEE-attested. Private, verified inference stays on NEAR AI Cloud (section 7), which remains funded by the owner's prepaid key.
+- The measured inference cost is a balance delta, not a provider receipt.
+- An earlier manual test by the maintainer remains maintainer-reported and has no retained trace; this scripted run is separate and does not rely on it.
+- The marketplace listing "NanoGPT (agent-bought credit)" is a display listing ("Setup required"). The purchase does not run through the marketplace and the listing grants no spending authority.
+
+**Test coverage for the agent-funded credit flow (unit level; the live run is above)**
 
 | Module | Tests | What they establish | What they cannot establish |
 | --- | --- | --- | --- |
-| `src/cloud-funding/nanogpt.mjs` | 5 | Exact NEAR/yocto conversion; the invoice is paid once, in the exact amount, only after safety checks (address shape, no memo/tag, not near expiry, amount within budget and above the minimum); the credit is recorded on the ledger only when the invoice reaches `Completed` and the balance rose; a paid-but-unconfirmed purchase is reported, not hidden; requests match NanoGPT's documented endpoints and headers | Behaviour of the live NanoGPT service, real settlement time, whether a real NEAR deposit address needs a memo |
+| `src/cloud-funding/nanogpt.mjs` | 8 | Exact NEAR/yocto conversion; the invoice is paid once, in the exact amount, only after safety checks (address shape, no memo/tag, not near expiry, amount within budget and above the minimum); the credit is recorded on the ledger only when the invoice reaches `Completed` and the balance rose; a paid-but-unconfirmed purchase is reported, not hidden; requests match NanoGPT's documented endpoints and headers | Behaviour of the live NanoGPT service, real settlement time, whether a real NEAR deposit address needs a memo |
 | `src/cloud-funding/purchase.mjs` (NEAR AI credit transfer design) | 5 | A payment must be a terminal success before credit is requested; delivery is idempotent on the payment; cap and amount validation precede any payment | Any real NEAR AI organization transfer (not run) |
 | `src/payments/funded-loop.mjs` | 6 | One sale pays for one answer; cost, surplus and ledger event arithmetic; a run that sent no completion releases the sale; purchases never exceed the sale and are reserved before money moves | Concurrent writers (single-file state) |
 | `src/payments/incoming.mjs` | 1 | A payment counts only with provider `SUCCESS` and a balance increase | A real Agent API deposit |
-| `src/integrations/chain-signatures.mjs` | 5 | Request construction, chain routing, response validation | A real signature (policy does not enable it) |
+| `src/integrations/chain-signatures.mjs` | 5 | Request construction, chain routing, response validation | A real signature: see section 11 for the one live signature |
 | Marketplace listings | 5 | Inference listings show "Setup required" and grant no spending authority | The purchase running through the marketplace (it does not) |
 
 Whole suite on 14 November in the maintainer's checkout: 635 pass, 10 fail. The 10 are pre-existing and unrelated (pinned NEAR AI SDK attestation helper tests). A clean checkout without local runtime files fails 60, the same 60 without these commits.
 
-**What is deliberately not claimed:** these are mocked-transport unit tests. They check our logic, ordering and refusals, not that NanoGPT, NEAR or the Agent API behave as we assume. The agent cannot fund the purchase under its current policy (`destinations: only []`), so the flow is not run end to end.
+**What the unit tests do not claim:** they use a mocked transport, so they check our logic, ordering and refusals, not that NanoGPT, NEAR or the Agent API behave as we assume. The live run above is what exercised the real providers once.
 
-**What this does and does not claim**
-- The purchase is triggered by the script under owner authorization. It is **not** an LLM decision, and the autonomy loop's `spend` command is not wired to it.
-- The marketplace listing "NanoGPT (agent-bought credit)" is a display listing ("Setup required"). The purchase does not run through the marketplace and the listing grants no spending authority.
-- When run, the "customer" is the owner's wallet: a real on-chain payment, not a third-party buyer.
-- NanoGPT is not TEE-attested. Private, verified inference stays on NEAR AI Cloud (section 7), which remains funded by the owner's prepaid key.
-- The measured cost is a balance delta, not a provider receipt.
-- Preflight on 14 November showed the company wallet holds 0.041 NEAR and 0 USDC, so the run needs the owner wallet's approval to move about 0.73 NEAR.
+## 11. Chain Signatures: one signed intent (not published)
+
+The agent's EVM key is NEAR MPC-managed. After an owner-signed policy change (policy revision 3, `native.evm.sign_intent` with the company wallet as the only receiver, `one_click_deposits: false`; on-chain policy store transaction `6bSAwbcuAWu264iW48dTvQ5rSM3tL8c7D5Y8KrSDPtjr`), the agent signed one NEAR Intents `transfer` payload (1 yocto wNEAR to the company wallet) through `nativeEvmSignIntent`.
+
+| Check | Result |
+| --- | --- |
+| Signature recovers (ethers `verifyMessage`) to the agent's EVM account `0x7b6313d0e2abd1a4b8dd83019e285a64748648e2` | pass |
+| Payload is a single transfer to the company wallet, signed for the agent's EVM account | pass |
+
+Reference: [`chain-signatures.json`](../artifacts/mainnet-proof/chain-signatures.json), correlation `op_HRXY9lpamYdF7As18n98vUSCyks0T0JdINVMa33_RIM`. Re-check: `node scripts/chain-signatures-proof.mjs verify` (reads the agent's EVM address from the Agent API).
+
+**Not proven:** the signed intent was never submitted to `intents.near`, 1Click or a solver and expired at its deadline, so no funds moved and no Chain Signatures-driven transaction exists. The signature is verified locally; the NEAR MPC contract path behind it is the provider's. The policy change widened the agent's authority by one narrow rule; limits, budget and destinations do not apply to `sign_intent`, but the EVM Intents account held no funds when this was run.
+
+## 12. OutLayer custody of the agent wallet
+
+The Agent API agent's wallet is custodied by OutLayer. Each owner-signed policy change that touches the wallet's native rules is stored on-chain as a delegate action from the company wallet calling `store_wallet_policy` on `outlayer.near`, relayed by the Agent API.
+
+| Check (`node scripts/verify-outlayer-custody.mjs`, public RPC) | Result |
+| --- | --- |
+| Two transactions FINAL and successful: [`8oW3JamN…`](https://nearblocks.io/txns/8oW3JamN6wEuHnykukZ1rkesR5sMtGRdt1RgnjAW6Wp9) (policy revision 1, on-chain version 1) and [`6bSAwbcu…`](https://nearblocks.io/txns/6bSAwbcuAWu264iW48dTvQ5rSM3tL8c7D5Y8KrSDPtjr) (revision 3, on-chain version 2) | 8/8 checks pass |
+| Delegate sender is the company wallet, receiver is `outlayer.near`, the only call is `store_wallet_policy`, it names this agent wallet's key, and the `outlayer.near` receipt succeeded | pass |
+
+**Not proven:** the stored policy is encrypted and is not decrypted here, so this shows that OutLayer received and accepted each policy, not its contents. The separate OutLayer *evaluator* proof (claim `outlayer-production-proof`) remains NOT_IMPLEMENTED. Revision 2 reported no transaction hash and is not listed.
+
+## 13. Read-only MCP server over the Agent API
+
+`scripts/mcp-server.mjs` (logic in `src/integrations/mcp-server.mjs`) is a small stdio MCP server (JSON-RPC 2.0, MCP 2025-06-18 tool subset, no extra dependency) with two read-only tools: `get_balances` (the agent's confidential balance) and `get_policy` (the owner-signed policy, revision and budget usage). No tool can move money, sign or change policy; asking for another tool such as `transfer` is a JSON-RPC error. Connect it with `claude mcp add companyos-agent -- node scripts/mcp-server.mjs`.
+
+Evidence: 4 unit tests, and one recorded live session ([`mcp-session.json`](../artifacts/mainnet-proof/mcp-session.json)): `initialize`, `tools/list`, both tools against the live Agent API (policy revision 3), and a refused `transfer` call.
+
+**Not claimed:** this is our own minimal server, not the Agent API demo's hosted OAuth MCP endpoint, and it has no authentication of its own (it relies on the local process and the credentials in `.env`). It was exercised with a scripted client, not a model-driven agent.
 
 ## Payment inventory: what moved and how to check it
 
 | Movement | Amount | Counterparty | Publicly checkable? |
 | --- | --- | --- | --- |
-| Marketplace x402 task `c41a599b…` | 0.5 USDC | market.near.ai | Chain tx not retained in artifact; task completion is a LOCAL_ARTIFACT |
-| Marketplace x402 task `0de69385…` | 0.5 USDC | market.near.ai | Same |
+| Marketplace x402 task `c41a599b…` | 0.5 USDC | market.near.ai | Yes: [`7jhLczFq…`](https://nearblocks.io/txns/7jhLczFqN8kr4PSKg1gTEdYEPj1fBwxyHkSMJyVTpZqr) (owner wallet signed); on the ledger since 14 November (`ledger-record.json`); task completion is a LOCAL_ARTIFACT |
+| Marketplace x402 task `0de69385…` | 0.5 USDC | market.near.ai | Yes: [`BBKtuiWM…`](https://nearblocks.io/txns/BBKtuiWMrkKwNPFc5pk3Si6juam4fsS2NsbBdomd59Uz) (company wallet signed); same ledger record |
 | Agent API confidential swap (allowed case) | 0.1 USDC → wNEAR | Intents | No: confidential, no public tx |
 | Loop-driven confidential swap | 0.025 USDC → wNEAR | Intents | No; only its ledger commitment is public |
 | 1Click NEAR→USDC swap | ~2.33 USDC received | Intents | No artifact retained (section 5) |
 | **Customer sale (revenue in)** | **+0.10 USDC** (paid as ~0.0327 wNEAR) | 1Click deposit → treasury | Settlement leg yes (FINAL tx); see section 9 |
+| Owner wallet top-up of the company wallet (recorded as the NanoGPT-run sale) | 0.1376 NEAR | company wallet | Yes (section 10) |
+| Agent withdrawal to the company wallet | 0.19 NEAR | company wallet | Operation `op_PoedhtJV…`; ledger commitment public (section 10) |
+| NanoGPT credit purchase | 0.340423 NEAR for $0.7768 of credit | NanoGPT deposit address | Yes: [`AMDMhVLQ…`](https://nearblocks.io/txns/AMDMhVLQ9yWPowrNcARrvCMZg4gBejFPCx3sCqX6hwqi) |
+| Ledger storage top-up (agent withdrawal 0.10 wNEAR, then company wallet to the ledger account) | 0.05 NEAR | ledger account | Yes: [`DHiqkWLg…`](https://nearblocks.io/txns/DHiqkWLg8Hy4C4ysqQMMV5e6vMutfoZgDqYgB7VG9R2o) |
 | Ledger `append()` calls | gas only | the ledger contract | Yes, FINAL txs |
 
-**One customer payment was received (section 9); every other row is outbound spending by us.** Provider `SUCCESS` and a ledger commitment are not monetary finality.
+**The only customer-labelled payments are owner-wallet payments (the 0.10 USDC checkout in section 9, and the 0.1376 NEAR recorded as a sale in section 10); every other row is outbound spending or internal funding by us.** Provider `SUCCESS` and a ledger commitment are not monetary finality.
 
 ## What each item does **not** prove
 

@@ -26,6 +26,26 @@ test('paid but not Completed, or balance did not rise: no ledger event, payment 
   let m = make({statuses: ['Failed']}); await assert.rejects(m.buyer.purchase({maxYocto: nearToYocto('0.5').toString()}), e => e.code === 'CREDIT_NOT_COMPLETED' && e.payment.txHash === 'H'); assert.equal(m.log.ledger.length, 0);
   m = make({bal: ['1.0', '1.0']}); await assert.rejects(m.buyer.purchase({maxYocto: nearToYocto('0.5').toString()}), {code: 'BALANCE_DID_NOT_RISE'}); assert.equal(m.log.ledger.length, 0);
 });
+test('the invoice id is persisted right after payment, even if the provider never confirms', async () => {
+  const saved = [], nano = {limits: async () => ({minimum: 0.326862}), createInvoice: async () => ({txId: 't9', address: 'a'.repeat(64), amount: 0.326862, expiresAt: new Date(NOW + 3600000).toISOString()}), status: async () => ({status: 'Processing'}), balance: async () => ({usd: '1'})};
+  let t = NOW; const buyer = createNanoGptPurchase({nano, sendNear: async () => ({txHash: 'H9'}), onPayment: async p => { saved.push(p); }, clock: () => new Date(t), sleep: async () => { t += 30 * 60000; }, timeoutMs: 60000});
+  await assert.rejects(buyer.purchase({maxYocto: nearToYocto('0.5').toString()}), {code: 'CREDIT_NOT_COMPLETED'});
+  assert.deepEqual(saved, [{invoiceTxId: 't9', address: 'a'.repeat(64), paymentTxHash: 'H9', yocto: nearToYocto('0.326862').toString()}]);
+});
+test('the provider status is matched case-insensitively (it returns COMPLETED)', async () => {
+  const {buyer, log} = make({statuses: ['PROCESSING', 'COMPLETED']});
+  assert.equal((await buyer.purchase({maxYocto: nearToYocto('0.5').toString(), saleId: 's'})).status, 'purchased'); assert.equal(log.ledger.length, 1);
+});
+test('recover re-checks the saved invoice, never pays, and refuses unconfirmed or mismatched payments', async () => {
+  const payment = {txHash: 'H9', invoiceTxId: 't9', address: 'a'.repeat(64), yocto: '340423000000000000000000'}, ledger = [];
+  const mk = (inv, usd = '0.77') => createNanoGptPurchase({nano: {status: async () => inv, balance: async () => ({usd})}, sendNear: () => { throw new Error('must not pay'); }, committer: {append: async e => { ledger.push(...e); return {txHash: 'L'}; }}, clock: () => new Date(NOW)});
+  const ok = await mk({status: 'COMPLETED', payinHash: 'H9', amountFiat: '0.77', creditQuote: {conversionCostPercent: 24.6}}).recover({payment, saleId: 's'});
+  assert.deepEqual([ok.status, ok.creditedUsd, ok.balanceBeforeUsd, ok.balanceBeforeDerived, ok.ledgerTx, ledger[0].type], ['purchased', '0.77', '0.00000000', true, 'L', 'procurement.confirmed']);
+  await assert.rejects(mk({status: 'PROCESSING', payinHash: 'H9', amountFiat: '0.77'}).recover({payment}), {code: 'CREDIT_NOT_COMPLETED'});
+  await assert.rejects(mk({status: 'COMPLETED', payinHash: 'OTHER', amountFiat: '0.77'}).recover({payment}), {code: 'PAYIN_MISMATCH'});
+  await assert.rejects(mk({status: 'COMPLETED', payinHash: 'H9', amountFiat: '0.77'}, '0.10').recover({payment}), {code: 'CREDIT_NOT_VISIBLE_IN_BALANCE'});
+  assert.equal(ledger.length, 1);
+});
 test('client sends the documented requests with the key', async () => {
   const seen = []; const transport = async (url, init) => { seen.push({url, init}); return new Response(JSON.stringify({usd_balance: '1.5', txId: 'x'}), {status: 200}); };
   const n = createNanoGpt({apiKey: 'k', transport}); await n.balance(); await n.createInvoice(0.4); await n.chat({model: 'm', messages: []});

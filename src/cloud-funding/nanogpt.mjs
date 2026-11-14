@@ -30,8 +30,22 @@ export function createNanoGpt({apiKey, transport = fetch, origin = 'https://nano
 
 /** Agent buys credit: validate invoice -> pay exact amount once -> wait for Completed. Never pays twice, never records an unconfirmed credit.
  *  @param sendNear async ({to, yocto}) => {txHash} (signs with the company wallet) */
-export function createNanoGptPurchase({nano, sendNear, committer = null, companyId = 'local-workspace', clock = () => new Date(), sleep = ms => new Promise(r => setTimeout(r, ms)), pollMs = 15000, timeoutMs = 25 * 60000}) {
+export function createNanoGptPurchase({nano, sendNear, committer = null, companyId = 'local-workspace', clock = () => new Date(), sleep = ms => new Promise(r => setTimeout(r, ms)), onPayment = null, pollMs = 15000, timeoutMs = 25 * 60000}) {
   return Object.freeze({
+    /** A payment already made but never recorded (timeout, crash, status mismatch): check the SAME invoice, never pay again. */
+    async recover({payment, saleId = null}) {
+      const inv = await nano.status(payment.invoiceTxId);
+      if (String(inv.status).toLowerCase() !== 'completed') fail('CREDIT_NOT_COMPLETED', {status: inv.status, payment});
+      if (inv.payinHash !== payment.txHash) fail('PAYIN_MISMATCH', {payment});               // the provider must name OUR payment transaction
+      const credited = String(inv.amountFiat), after = await nano.balance();
+      if (!(Number(credited) > 0) || Number(after.usd) < Number(credited)) fail('CREDIT_NOT_VISIBLE_IN_BALANCE', {credited, balance: after.usd, payment});
+      const receipt = {status: 'purchased', provider: 'nanogpt', companyId, saleId, invoiceTxId: payment.invoiceTxId, address: payment.address, paidYocto: payment.yocto, paymentTxHash: payment.txHash,
+        creditedUsd: credited, balanceBeforeUsd: (Number(after.usd) - Number(credited)).toFixed(8), balanceBeforeDerived: true, balanceAfterUsd: after.usd, creditQuote: inv.creditQuote ?? null, at: clock().toISOString(), recovered: true,
+        label: 'recovered from the saved invoice after the original wait missed COMPLETED; balanceBefore is derived (balance minus the provider-reported credit); NanoGPT is not TEE-attested'};
+      if (committer) receipt.ledgerTx = (await committer.append([{type: 'procurement.confirmed', data: {companyId, actorId: 'agent', kind: 'inference_credit', provider: 'nanogpt', saleId, invoiceTxId: payment.invoiceTxId,
+        paidYocto: payment.yocto, paymentTxHash: payment.txHash, balanceBeforeUsd: receipt.balanceBeforeUsd, balanceAfterUsd: after.usd, creditedUsd: credited, recovered: true}}])).txHash;
+      return receipt;
+    },
     async purchase({maxYocto, saleId = null}) {
       const cap = BigInt(maxYocto), lim = await nano.limits();
       const min = nearToYocto((Math.ceil(lim.minimum * 1e6) / 1e6).toFixed(6));
@@ -44,13 +58,15 @@ export function createNanoGptPurchase({nano, sendNear, committer = null, company
       if (!(Date.parse(inv.expiresAt) - clock().getTime() > 5 * 60000)) fail('INVOICE_EXPIRING');
       const pay = nearToYocto(String(inv.amount)); if (pay > cap || pay < min) fail('INVOICE_AMOUNT_UNEXPECTED', {amount: inv.amount});
       const sent = await sendNear({to: inv.address, yocto: pay});                        // the ONLY money movement; no retry
+      // Persist the invoice id the moment money has left, so a provider delay or crash cannot lose the only handle needed to check or finish this payment.
+      await onPayment?.({invoiceTxId: inv.txId, address: inv.address, paymentTxHash: sent.txHash, yocto: pay.toString()});
       const deadline = clock().getTime() + timeoutMs; let status = inv.status;
       while (clock().getTime() < deadline) {
-        status = (await nano.status(inv.txId)).status;
-        if (['Completed', 'Failed', 'Expired'].includes(status)) break;
+        status = String((await nano.status(inv.txId)).status);
+        if (['completed', 'failed', 'expired'].includes(status.toLowerCase())) break;   // the provider returns COMPLETED; never compare case-sensitively
         await sleep(pollMs);
       }
-      if (status !== 'Completed') fail('CREDIT_NOT_COMPLETED', {status, payment: {txHash: sent.txHash, invoiceTxId: inv.txId, address: inv.address, yocto: pay.toString()}});
+      if (status.toLowerCase() !== 'completed') fail('CREDIT_NOT_COMPLETED', {status, payment: {txHash: sent.txHash, invoiceTxId: inv.txId, address: inv.address, yocto: pay.toString()}});
       const after = await nano.balance();
       const receipt = {status: 'purchased', provider: 'nanogpt', companyId, saleId, invoiceTxId: inv.txId, address: inv.address, paidYocto: pay.toString(), paymentTxHash: sent.txHash,
         balanceBeforeUsd: before.usd, balanceAfterUsd: after.usd, at: clock().toISOString(),

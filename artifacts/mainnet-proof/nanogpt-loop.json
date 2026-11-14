@@ -1,0 +1,166 @@
+{
+  "kind": "nanogpt-loop",
+  "at": "2026-11-14T22:46:51.988Z",
+  "companyWallet": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+  "sale": {
+    "id": "sale:11ee744fa8c6281d810fb1de",
+    "customer": "755a0a4bb40161793c0a178c89b0ed1a876d8c0d0bbea8febecfe2a7d0d9662b",
+    "companyWallet": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+    "amountYocto": "137587568120027129252605",
+    "paymentTxHash": "4oZ2ftSUsqnJvxBjTDoSpLk5ZJghPGX22529MUBDky7h",
+    "at": "2026-11-14T22:19:52.976Z",
+    "asset": "near:native",
+    "customerIsOwnerWallet": true,
+    "ledgerTx": "4zb8wxXH52BM3mj1T1SLfhZKQSZeXpwJz9YfXbR4Afkc"
+  },
+  "funding": {
+    "correlationId": "op_PoedhtJVBCpXELNf1jAfPWWelTMqSGGJVEQZGpGerT4",
+    "fundedYocto": "190000000000000000000000",
+    "capYocto": "350000000000000000000000",
+    "ledgerTx": "9iHLviUEhmEeRncsutSNCEXjLYZiLGtq5SAa9zC7JTyh",
+    "note": "purchase exceeds the recorded sale; the difference is treasury money (owner top-up plus agent balance)"
+  },
+  "purchase": {
+    "status": "purchased",
+    "provider": "nanogpt",
+    "companyId": "local-workspace",
+    "saleId": "sale:11ee744fa8c6281d810fb1de",
+    "invoiceTxId": "497954145",
+    "address": "455dc1242dfdc0bb050f33af6b2265636175ffa833ff967d16353c135300f6d5",
+    "paidYocto": "340423000000000000000000",
+    "paymentTxHash": "AMDMhVLQ9yWPowrNcARrvCMZg4gBejFPCx3sCqX6hwqi",
+    "creditedUsd": "0.77676626",
+    "balanceBeforeUsd": "0.00000000",
+    "balanceBeforeDerived": true,
+    "balanceAfterUsd": "0.77676626",
+    "creditQuote": {
+      "receivedUsd": 0.753763,
+      "bonusUsd": 0.02261289,
+      "creditedUsd": 0.77637589,
+      "bonusRate": 0.03,
+      "marketValueUsd": 1.00000209,
+      "conversionCostUsd": 0.24623909,
+      "conversionCostPercent": 24.62385753613775
+    },
+    "at": "2026-11-14T22:46:17.048Z",
+    "recovered": true,
+    "label": "recovered from the saved invoice after the original wait missed COMPLETED; balanceBefore is derived (balance minus the provider-reported credit); NanoGPT is not TEE-attested",
+    "ledgerTx": "F4kRdyuLX8ombLuyP57BWVK7GLs51uwNZvDu1Qo5SrTm"
+  },
+  "answer": {
+    "model": "minimax/minimax-m2.7",
+    "question": "What is the collision deductible on the auto policy?",
+    "answer": "\n\nThe collision deductible on the fictional auto policy is **500 demo dollars per incident**.",
+    "balanceBeforeUsd": "0.77676626",
+    "balanceAfterUsd": "0.77650229",
+    "costUsd": "0.00026397",
+    "usage": {
+      "prompt_tokens": 881,
+      "completion_tokens": 94,
+      "total_tokens": 975,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "cache_read_input_tokens": 0,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "citation_tokens": 0,
+      "num_search_queries": 0,
+      "cache_creation_input_tokens": 0,
+      "input_tokens": 881,
+      "cost": 0.00026397000000000004,
+      "currency": "USD"
+    },
+    "at": "2026-11-14T22:46:37.928Z",
+    "ledgerTx": "EiEdtj6qcYE6Qp5Zc5wZXEhfCnGrk4C59t8ot6CdfuY2"
+  },
+  "ledgerCommits": [
+    {
+      "events": [
+        {
+          "type": "sale.confirmed",
+          "data": {
+            "companyId": "local-workspace",
+            "actorId": "customer",
+            "saleId": "sale:11ee744fa8c6281d810fb1de",
+            "asset": "near:native",
+            "amountYocto": "137587568120027129252605",
+            "paymentTxHash": "4oZ2ftSUsqnJvxBjTDoSpLk5ZJghPGX22529MUBDky7h",
+            "receivedBy": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4"
+          }
+        }
+      ],
+      "txHash": "4zb8wxXH52BM3mj1T1SLfhZKQSZeXpwJz9YfXbR4Afkc"
+    },
+    {
+      "events": [
+        {
+          "type": "spend.completed",
+          "data": {
+            "companyId": "local-workspace",
+            "actorId": "agent",
+            "spendId": "op_PoedhtJVBCpXELNf1jAfPWWelTMqSGGJVEQZGpGerT4",
+            "asset": "nep141:wrap.near",
+            "amount": "190000000000000000000000",
+            "purpose": "withdraw native NEAR to the company wallet to fund an inference-credit purchase that exceeds the recorded sale",
+            "recipient": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+            "txHash": null
+          }
+        }
+      ],
+      "txHash": "9iHLviUEhmEeRncsutSNCEXjLYZiLGtq5SAa9zC7JTyh"
+    },
+    {
+      "events": [
+        {
+          "type": "procurement.confirmed",
+          "data": {
+            "companyId": "local-workspace",
+            "actorId": "agent",
+            "kind": "inference_credit",
+            "provider": "nanogpt",
+            "saleId": "sale:11ee744fa8c6281d810fb1de",
+            "invoiceTxId": "497954145",
+            "paidYocto": "340423000000000000000000",
+            "paymentTxHash": "AMDMhVLQ9yWPowrNcARrvCMZg4gBejFPCx3sCqX6hwqi",
+            "balanceBeforeUsd": "0.00000000",
+            "balanceAfterUsd": "0.77676626",
+            "creditedUsd": "0.77676626",
+            "recovered": true
+          }
+        }
+      ],
+      "txHash": "F4kRdyuLX8ombLuyP57BWVK7GLs51uwNZvDu1Qo5SrTm"
+    },
+    {
+      "events": [
+        {
+          "type": "inference.consumed",
+          "data": {
+            "companyId": "local-workspace",
+            "actorId": "agent",
+            "provider": "nanogpt",
+            "model": "minimax/minimax-m2.7",
+            "saleId": "sale:11ee744fa8c6281d810fb1de",
+            "invoiceTxId": "497954145",
+            "costUsd": "0.00026397",
+            "balanceBeforeUsd": "0.77676626",
+            "balanceAfterUsd": "0.77650229",
+            "funding": "credit bought by the agent from customer revenue (native NEAR)"
+          }
+        }
+      ],
+      "txHash": "EiEdtj6qcYE6Qp5Zc5wZXEhfCnGrk4C59t8ot6CdfuY2"
+    }
+  ],
+  "labels": [
+    "customer is the owner wallet (real on-chain payment)",
+    "NanoGPT is not TEE-attested",
+    "cost is measured as the NanoGPT USD balance delta around the call",
+    "purchase exceeds the recorded sale: the shortfall was funded by an Agent API withdrawal from the agent balance plus an owner top-up, not by customer revenue"
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "kind": "mcp-session",
+  "at": "2026-11-14T22:49:22.661404Z",
+  "server": "scripts/mcp-server.mjs (read-only, stdio)",
+  "requests": [
+    {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "initialize",
+      "params": {
+        "protocolVersion": "2025-06-18",
+        "capabilities": {},
+        "clientInfo": {
+          "name": "session-recorder",
+          "version": "1"
+        }
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "method": "notifications/initialized"
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "method": "tools/list"
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "get_balances"
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 4,
+      "method": "tools/call",
+      "params": {
+        "name": "get_policy"
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 5,
+      "method": "tools/call",
+      "params": {
+        "name": "transfer"
+      }
+    }
+  ],
+  "responses": [
+    {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": {
+        "protocolVersion": "2025-06-18",
+        "capabilities": {
+          "tools": {}
+        },
+        "serverInfo": {
+          "name": "companyos-agent-readonly",
+          "version": "1.0.0"
+        }
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "result": {
+        "tools": [
+          {
+            "name": "get_balances",
+            "description": "The agent's confidential balances (asset, symbol, balance, available). Read-only.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "get_policy",
+            "description": "The agent's current owner-signed policy revision, allowed actions, assets, limits, destinations and budget usage. Read-only.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"near_account_id\": \"b2c5b8f31edf4dfb2560eb14397c8d61656c9f34c4f644077ed08a991fd9fc75\",\n  \"source\": \"confidential\",\n  \"balances\": [\n    {\n      \"asset_id\": \"nep141:wrap.near\",\n      \"symbol\": \"wNEAR\",\n      \"decimals\": 24,\n      \"blockchain\": \"near\",\n      \"price\": 2.96,\n      \"price_updated_at\": \"2026-11-14T22:48:31.000Z\",\n      \"price_expires_at\": \"2026-11-14T22:58:31.000Z\",\n      \"balance_raw\": \"25525185227912914394057\",\n      \"balance\": \"0.025525185227912914394057\",\n      \"available_raw\": \"25525185227912914394057\",\n      \"available\": \"0.025525185227912914394057\"\n    }\n  ]\n}"
+          }
+        ]
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 4,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"revision\": 3,\n  \"policy\": {\n    \"frozen\": false,\n    \"actions\": [\n      \"swap\",\n      \"transfer\",\n      \"withdraw\"\n    ],\n    \"confidential\": true,\n    \"owner_approval\": false,\n    \"assets\": [\n      \"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1\",\n      \"nep141:wrap.near\"\n    ],\n    \"limits\": {\n      \"per_transaction\": {\n        \"nep141:wrap.near\": \"500000000000000000000000\",\n        \"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1\": \"2000000\"\n      }\n    },\n    \"max_actions_per_hour\": null,\n    \"destinations\": {\n      \"mode\": \"only\",\n      \"list\": [\n        {\n          \"action\": \"withdraw\",\n          \"chain\": \"near\",\n          \"address\": \"e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4\",\n          \"memo\": null\n        }\n      ]\n    },\n    \"budget\": {\n      \"daily_usd\": \"2\",\n      \"weekly_usd\": null,\n      \"monthly_usd\": null\n    },\n    \"timelock_ms\": 0,\n    \"native\": {\n      \"near\": {\n        \"sign_message\": [],\n        \"transfer\": false,\n        \"call\": [\n          \"755a0a4bb40161793c0a178c89b0ed1a876d8c0d0bbea8febecfe2a7d0d9662b\"\n        ]\n      },\n      \"evm\": {\n        \"sign_typed_data\": [],\n        \"sign_message\": false,\n        \"sign_intent\": {\n          \"receivers\": [\n            \"e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4\"\n          ],\n          \"one_click_deposits\": false\n        },\n        \"sign_transaction\": false\n      },\n      \"solana\": {\n        \"sign_message\": false,\n        \"sign_transaction\": false\n      }\n    }\n  },\n  \"usage\": {\n    \"budget\": {\n      \"daily\": {\n        \"limit_usd\": \"2.00\",\n        \"spent_usd\": \"1.852355\",\n        \"remaining_usd\": \"0.147645\",\n        \"resets_at\": \"2026-11-15T14:24:20.333Z\"\n      },\n      \"weekly\": {\n        \"limit_usd\": null,\n        \"spent_usd\": null,\n        \"remaining_usd\": null,\n        \"resets_at\": null\n      },\n      \"monthly\": {\n        \"limit_usd\": null,\n        \"spent_usd\": null,\n        \"remaining_usd\": null,\n        \"resets_at\": null\n      }\n    },\n    \"timelock\": {\n      \"delay_ms\": 0,\n      \"scheduled_count\": 0\n    }\n  }\n}"
+          }
+        ]
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 5,
+      "error": {
+        "code": -32602,
+        "message": "Unknown tool: transfer"
+      }
+    }
+  ],
+  "label": "One real stdio session against the live Agent API: initialize, tools/list, two read-only tool calls, and a refused attempt to call a money-moving tool. Read-only; no funds moved."
+}
