@@ -26,7 +26,7 @@ try {
  await page.goto(runtime.url+'/#setup');assert.equal(await page.locator('#owner-form').count(),0);
  await page.getByRole('heading',{name:'Set up your organization',exact:true}).waitFor();
  assert.equal(await page.locator('.company-mode-choice').count(),0);
- await page.getByText('Company for none · default',{exact:true}).waitFor();
+ await page.getByText('Agent-managed · default',{exact:true}).waitFor();
  if(demoMode){
   await page.waitForFunction(()=>!document.querySelector('main[aria-busy="true"]'));
   const version=app.journal.snapshot().version;

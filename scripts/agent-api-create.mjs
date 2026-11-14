@@ -71,7 +71,7 @@ if (step === 'create') {
   };
 
   const generated = await api.generateIntent(
-    {type: 'agent_create', name: 'Company for None ledger writer', external_user_id: 'company-for-none', owner: {type: 'near', account_id: payerId, public_key: ownerPublicKey}, policy},
+    {type: 'agent_create', name: 'CompanyOs ledger writer', external_user_id: 'company-for-none', owner: {type: 'near', account_id: payerId, public_key: ownerPublicKey}, policy},
     {idempotencyKey: createIdempotencyKey()},
   );
   console.log('correlation_id:', generated.correlation_id, '| agent_id:', generated.agent_id, '| standard:', generated.intent.standard);
@@ -118,7 +118,7 @@ if (step === 'grant') {
   if (!agentId) throw new Error('NEAR_AGENT_ID empty in .env');
   const {token, commitment} = createGrantCredential();
   const generated = await api.generateIntent(
-    {type: 'grant_issue', agent_id: agentId, label: 'Company for None ledger writer', credential: commitment, expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()},
+    {type: 'grant_issue', agent_id: agentId, label: 'CompanyOs ledger writer', credential: commitment, expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()},
     {idempotencyKey: createIdempotencyKey()},
   );
   console.log('grant correlation_id:', generated.correlation_id, '| standard:', generated.intent.standard);

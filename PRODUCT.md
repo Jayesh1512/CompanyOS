@@ -1,4 +1,4 @@
-# Product
+# CompanyOs · Product
 
 <!-- impeccable:product-schema 1 -->
 
@@ -22,7 +22,7 @@ The [mentor implementation increment](docs/MENTOR_IMPLEMENTATION.md) adds real p
 
 **Let an owner define a company once, then supervise its results and exceptions instead of assigning each routine task.** The intended loop is brief/objective → manager and permanent backlog → scoped specialist/executive or developer → JBrain-backed work and delivery → observed gap → deduplicated backlog → proposed improvement → fixed baseline/candidate evaluation → scoped version promotion → future tasks use the current effective head. Rollback preserves history.
 
-Company for none is the default for new companies. Company for one keeps owner-managed team assembly and work. “None” means bounded agent operation; the owner remains responsible for policy, budget, client authority and exceptional decisions. Neither mode selection nor a saved role gives an agent arbitrary permission.
+Agent-managed operation is the default for new companies. Owner-managed operation keeps owner-managed team assembly and work. “None” means bounded agent operation; the owner remains responsible for policy, budget, client authority and exceptional decisions. Neither mode selection nor a saved role gives an agent arbitrary permission.
 
 The [current product guide](docs/COMPANY_FOR_NONE_GUIDE.md) explains the day-to-day flow, roles, healing, upgrades, buying and owner actions. Its [capability/status table](docs/COMPANY_FOR_NONE_GUIDE.md#current-capability-and-status) is the concise current boundary. Historical plans remain review records.
 

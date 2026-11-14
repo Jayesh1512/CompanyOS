@@ -1,8 +1,8 @@
-# Company for None — Near Agent Workspace
+# CompanyOs
 
-**Start with [How Company for None works](docs/COMPANY_FOR_NONE_GUIDE.md).** It explains the operating loop, a fictional insurance day-in-the-life, healing, upgrades, resource buying, current capability status and the owner setup checklist.
+**Start with [How CompanyOs works](docs/COMPANY_FOR_NONE_GUIDE.md).** It explains the operating loop, a fictional insurance day-in-the-life, healing, upgrades, resource buying, current capability status and the owner setup checklist.
 
-The product turns a company brief into a managed agent workspace. The intended routine is manager → scoped specialists → delivery → observed gaps → permanent backlog → developer → tested improvement → future work uses the new version. The owner sets purpose, knowledge, policy and budget. Company for none is the default for new companies; Company for one retains owner-managed work.
+The product turns a company brief into a managed agent workspace. The intended routine is manager → scoped specialists → delivery → observed gaps → permanent backlog → developer → tested improvement → future work uses the new version. The owner sets purpose, knowledge, policy and budget. Agent-managed operation is the default for new companies; Owner-managed operation retains owner-managed work.
 
 The local workspace, native JBrain knowledge and fictional customer-care service work now. The complete reasoning/improvement loop has controlled test evidence. **Real funded operations are demonstrated on mainnet** (see below); a single loop-driven mainnet spend is also evidenced; the remaining gap is the autonomous sale-to-payout loop where customer revenue funds the agent's own inference. The guide’s [single status table](docs/COMPANY_FOR_NONE_GUIDE.md#current-capability-and-status) separates local evidence, controlled tests, required inputs and remaining implementation.
 

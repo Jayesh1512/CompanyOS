@@ -1,5 +1,5 @@
 ---
-name: Near Agent Workspace
+name: CompanyOs
 description: A familiar workspace for managing agents and adding expertise.
 colors:
   primary: "#c64b2c"
@@ -53,7 +53,7 @@ components:
     padding: "7px 12px"
 ---
 
-# Design System: Near Agent Workspace
+# Design System: CompanyOs
 
 ## Overview
 
@@ -133,9 +133,9 @@ Demo and live states stay explicit. Owner limits display as USD amounts, while
 server accounting retains integer nanoUSD. Provider proof, capital and credit
 observations are not described as cryptographically verified.
 
-## Company for none operations extension
+## CompanyOs operations extension
 
-The autonomous company uses the same Paperclip-inspired Operate workspace. Organization setup now has one flow. Company for none is the default for new companies. Its five visible steps are Define company, Review agents, Company brain, Boundaries & infra, and Review & finish. Saving the brief creates the real, paused manager/backlog profiles. Inline profile edits show their actual persisted names, role descriptions, instructions and written skills. Existing manual profiles remain available. Operations leads with the current objective and a factual work list beside a narrow manager/blocker panel. Work, Agents, Improvements, Purchases, Services & sales and Company ledger are direct tabs. Agent profile state is distinct from execution state; blocked work has a concrete reason and readiness link.
+The autonomous company uses the same Paperclip-inspired Operate workspace. Organization setup now has one flow. Agent-managed operation is the default for new companies. Its five visible steps are Define company, Review agents, Company brain, Boundaries & infra, and Review & finish. Saving the brief creates the real, paused manager/backlog profiles. Inline profile edits show their actual persisted names, role descriptions, instructions and written skills. Existing manual profiles remain available. Operations leads with the current objective and a factual work list beside a narrow manager/blocker panel. Work, Agents, Improvements, Purchases, Services & sales and Company ledger are direct tabs. Agent profile state is distinct from execution state; blocked work has a concrete reason and readiness link.
 
 The team lane identifies the manager/backlog roles. Improvement detail shows before/candidate revisions and actual evaluation state. Resource installs, blocked purchases, service drafts and original orders remain separate. Company ledger is an authenticated causal timeline with wrapped IDs and exact per-asset amounts; public accounting remains separate. Context selection explains document grants versus a role's selected inputs.
 

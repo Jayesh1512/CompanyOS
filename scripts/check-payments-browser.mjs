@@ -14,7 +14,7 @@ const app=await createApp({directory:path.join(dir,'company'),companyId:'payment
 const main=await startServer({app,port:0,demoDirectory:path.join(dir,'demo')});let browser;
 try{
  browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],checks=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(main.url+'/#payments');await page.getByRole('heading',{name:'Customer payments',exact:true}).waitFor();
+ await page.goto(main.url+'/#payments');await page.getByRole('heading',{name:'Customer payments',exact:true}).waitFor();assert.match(await page.title(),/^CompanyOs/);await page.getByText('CompanyOs',{exact:true}).waitFor();
  await page.getByRole('heading',{name:'No customer payments received',exact:true}).waitFor();await page.getByRole('heading',{name:'Recorded mainnet payment',exact:true}).waitFor();assert.equal(await page.getByText('0.1 USDC',{exact:true}).count(),1);checks.push('prior mainnet sale is displayed separately from empty current company receipts');
  const historical=await page.evaluate(async()=>await(await fetch('/api/workspace/customer-payments')).json());assert.equal(historical.receipts.length,0);assert.equal(historical.recordedReceipt.amount.amount,'100000');assert.ok(historical.recordedReceipt.depositTxs.length);assert.ok(historical.recordedReceipt.ledgerTx);
  const links=await page.locator('.customer-payment-links a').evaluateAll(as=>as.map(a=>a.href));assert.ok(links.every(h=>h.startsWith('https://nearblocks.io/txns/')));checks.push('real saved settlement and ledger transaction references are linked');

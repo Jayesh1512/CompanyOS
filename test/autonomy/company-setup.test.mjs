@@ -11,7 +11,7 @@ const brief={name:'Owner Company',purpose:'Improve scoped business operations.',
 async function fixture(t){const directory=await mkdtemp('/tmp/near-unified-');let app;const options={directory,companyId,configPath:null,resolveSecret:async()=>{throw Error('No provider I/O authorized');}};app=await createApp(options);t.after(async()=>{await app.close();await rm(directory,{recursive:true,force:true});});return {get app(){return app;},async restart(){await app.close();app=await createApp(options);}};}
 const input=(version=0,organizationVersion=0)=>({version,organizationVersion,brief,intent:AUTONOMY_INTENT});
 
-test('one atomic setup defaults to Company for none, aligns organization and creates editable real core agents without starting work',async t=>{
+test('one atomic setup defaults to agent-managed operation, aligns organization and creates editable real core agents without starting work',async t=>{
  const f=await fixture(t);await f.app.workspace.create({name:'Existing analyst',role:'Research',instructions:'Keep this existing profile.',skillIds:[]},owner);
  const result=await f.app.autonomy.onboard(input(),owner,'first-brief');assert.equal(result.company.operatingMode,'none');assert.equal(result.company.started,false);assert.equal(result.company.state,'paused');assert.equal(f.app.workspace.view().organization.name,brief.name);
  const agents=f.app.journal.list('agents'),core=agents.filter(a=>a.autonomyRole);assert.equal(core.length,2);assert.equal(agents.length,3);assert.ok(agents.find(a=>a.name==='Existing analyst'));assert.deepEqual(core.map(a=>a.autonomyRole).sort(),['backlog','manager']);
@@ -51,7 +51,7 @@ test('unified API rejects authority/actor fields and preserves existing objectiv
 
 test('one setup surface shows configured editable agents, optional brain and canonical legacy links without a mode-choice fork',async t=>{
  const f=await fixture(t);let d=await f.app.autonomy.view(owner),setup=await f.app.workspace.setup(owner),data=f.app.workspace.view();
- let state={autonomy:d,setup,data,route:parseRoute('#setup')};let html=renderWorkspace(state);assert.match(html,/Company for none · default/);assert.doesNotMatch(html,/company-mode-choice|Set up an agentic company/);assert.match(html,/Configure agent team/);
+ let state={autonomy:d,setup,data,route:parseRoute('#setup')};let html=renderWorkspace(state);assert.match(html,/Agent-managed · default/);assert.doesNotMatch(html,/company-mode-choice|Set up an agentic company/);assert.match(html,/Configure agent team/);
  await f.app.autonomy.onboard(input(),owner,'brief');d=await f.app.autonomy.view(owner);data=f.app.workspace.view();setup=await f.app.workspace.setup(owner);
  state={...state,autonomy:d,data,setup,route:parseRoute('#setup/agents')};html=renderCompanySetup(state,icon);assert.match(html,/Your configured agent team/);assert.match(html,/Company manager/);assert.match(html,/Company backlog/);assert.match(html,/data-setup-agent=/);assert.match(html,/name="instructions"/);assert.match(html,/Save agent/);
  assert.equal(parseRoute('#autonomy/setup?step=0').page,'setup');assert.equal(parseRoute('#autonomy/setup?step=2').sub,'boundaries');

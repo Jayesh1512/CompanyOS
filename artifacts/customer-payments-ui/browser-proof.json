@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14T20:31:32.782Z",
+  "at": "2026-11-14T20:59:14.321Z",
   "checks": [
     "prior mainnet sale is displayed separately from empty current company receipts",
     "real saved settlement and ledger transaction references are linked",
