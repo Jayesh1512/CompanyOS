@@ -164,9 +164,9 @@ node scripts/verify-funded-loop.mjs                                         # re
 - The billed cost is the provider's report, not on-chain.
 - The paid-answer gate exists in the server route (`POST /api/workspace/ai-demo/run` with `saleId`, enabled by `SHOP_FUNDED_LOOP_FILE`) and is unit-tested, but the live answer was run through the script: the preview store is bound to a different provider identity (`ECONOMIC_IDENTITY_MISMATCH`), so the full server was not started for this evidence.
 
-## 10. Agent-bought inference credit (NanoGPT): run once on mainnet
+## 10. Agent-bought inference credit (NanoGPT): run twice on mainnet
 
-**Status: one scripted run, verified by `scripts/verify-nanogpt-loop.mjs` (17/17 at last run). Read the caveats: the customer is the owner wallet, the purchase exceeded the sale, and NanoGPT's conversion cost 24.6%.**
+**Status: two scripted runs, each verified by `scripts/verify-nanogpt-loop.mjs` (17/17 and 15/15). Run 1: owner-wallet customer, purchase exceeded the sale, recovered after a status bug. Run 2: a separate maintainer-controlled wallet, sale covered the purchase, first pass. NanoGPT's conversion cost is about 24.6% both times.**
 
 NEAR AI Cloud has no API to buy credit (section 9 limits), so the credit purchase uses a provider that does: [NanoGPT](https://docs.nano-gpt.com/api-reference/endpoint/crypto-deposits.md) creates a crypto deposit invoice from an API key.
 
@@ -192,6 +192,27 @@ Artifact: [`nanogpt-loop.json`](../artifacts/mainnet-proof/nanogpt-loop.json). R
 - The measured inference cost is a balance delta, not a provider receipt.
 - An earlier manual test by the maintainer remains maintainer-reported and has no retained trace; this scripted run is separate and does not rely on it.
 - The marketplace listing "NanoGPT (agent-bought credit)" is a display listing ("Setup required"). The purchase does not run through the marketplace and the listing grants no spending authority.
+
+### Run 2: the sale covers the purchase (first pass, no recovery)
+
+A second scripted run used a **separate wallet** (`aa391dbb…`, a fresh NEAR account whose key the maintainer holds) as the customer. The maintainer funded it from their own money (0.35 NEAR via `intents.near`, [`A2okbPgr…`](https://nearblocks.io/txns/A2okbPgrqr4Z7Lj6jt1goLwxLEAWHUFJ6kjAKSdVDN5k)); the company wallet created the empty account first ([`9HTwxBV9…`](https://nearblocks.io/txns/9HTwxBV9KscsNXvdEhXh7A44KpszQpUTrukq8g8DnEFN), 0.01 NEAR) because near.com rejects accounts that do not exist yet.
+
+| Step | Reference | Label |
+| --- | --- | --- |
+| Sale: **0.35 NEAR** from `aa391dbb…` to the company wallet; `sale.confirmed` committed | payment [`44qgjo3F…`](https://nearblocks.io/txns/44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L), ledger [`6D2v9qpR…`](https://nearblocks.io/txns/6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz) | LIVE_PUBLIC |
+| Company wallet pays NanoGPT invoice `498165652`: **0.340779 NEAR** (at most the sale amount) | payment [`9UXaxvcH…`](https://nearblocks.io/txns/9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6) | LIVE_PUBLIC |
+| NanoGPT reports `COMPLETED`, names our payment as `payinHash`, credits **$0.77726581** (balance $0.77650229 to $1.55376810) | re-read by the verifier | LIVE_AUTHED |
+| `procurement.confirmed` committed on the first pass | ledger [`GwFwDosU…`](https://nearblocks.io/txns/GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms) | LIVE_PUBLIC |
+| Inference on the credit: cost **$0.00036372** (balance delta); `inference.consumed` committed | ledger [`HHMxuLZ1…`](https://nearblocks.io/txns/HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ) | LIVE_PUBLIC (ledger), cost LOCAL_ARTIFACT |
+
+Artifact: [`nanogpt-loop-2.json`](../artifacts/mainnet-proof/nanogpt-loop-2.json); re-check with `node scripts/verify-nanogpt-loop.mjs artifacts/mainnet-proof/nanogpt-loop-2.json` (15/15 at last run). Run 1's artifact is unchanged.
+
+**What run 2 shows and does not show**
+- **Revenue covered the purchase in NEAR terms:** 0.340779 NEAR spent against a 0.35 NEAR sale, with no agent top-up needed and no recovery step.
+- **The payer is not independent.** The customer wallet is maintainer-controlled and its NEAR came from the maintainer. The label is "separate wallet supplied by the maintainer", not a third-party customer, and claim `independent-customer-payment` stays BLOCKED.
+- **Conversion cost again about 24.6%** ($1.0000 of NEAR credited $0.7773); the credit is worth less than the NEAR that paid for it, so the loop still loses money in dollar terms.
+- **A script triggered it**, not the autonomy loop (claim `autonomous-credit-purchase` stays NOT_IMPLEMENTED). The company wallet key signed the NanoGPT payment.
+- **Ledger storage again needed a top-up:** its headroom had fallen to 0.0092 NEAR, so the company wallet sent 0.05 NEAR to the ledger account first ([`FXrauc6U…`](https://nearblocks.io/txns/FXrauc6UEvqV8HHRQZQaPr8jCpvP2iHQY72ccP4LU1C2)). Each ledger record costs storage; keep that account funded.
 
 **Test coverage for the agent-funded credit flow (unit level; the live run is above)**
 
@@ -254,9 +275,13 @@ Evidence: 4 unit tests, and one recorded live session ([`mcp-session.json`](../a
 | Agent withdrawal to the company wallet | 0.19 NEAR | company wallet | Operation `op_PoedhtJV…`; ledger commitment public (section 10) |
 | NanoGPT credit purchase | 0.340423 NEAR for $0.7768 of credit | NanoGPT deposit address | Yes: [`AMDMhVLQ…`](https://nearblocks.io/txns/AMDMhVLQ9yWPowrNcARrvCMZg4gBejFPCx3sCqX6hwqi) |
 | Ledger storage top-up (agent withdrawal 0.10 wNEAR, then company wallet to the ledger account) | 0.05 NEAR | ledger account | Yes: [`DHiqkWLg…`](https://nearblocks.io/txns/DHiqkWLg8Hy4C4ysqQMMV5e6vMutfoZgDqYgB7VG9R2o) |
+| Second-run customer wallet funding (maintainer's own money, via near.com) | 0.35 NEAR | new wallet `aa391dbb…` | Yes (section 10, run 2) |
+| Second-run sale (new wallet to company wallet) | 0.35 NEAR | company wallet | Yes: [`44qgjo3F…`](https://nearblocks.io/txns/44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L) |
+| Second NanoGPT credit purchase | 0.340779 NEAR for $0.7773 of credit | NanoGPT deposit address | Yes: [`9UXaxvcH…`](https://nearblocks.io/txns/9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6) |
+| Second ledger storage top-up | 0.05 NEAR | ledger account | Yes: [`FXrauc6U…`](https://nearblocks.io/txns/FXrauc6UEvqV8HHRQZQaPr8jCpvP2iHQY72ccP4LU1C2) |
 | Ledger `append()` calls | gas only | the ledger contract | Yes, FINAL txs |
 
-**The only customer-labelled payments are owner-wallet payments (the 0.10 USDC checkout in section 9, and the 0.1376 NEAR recorded as a sale in section 10); every other row is outbound spending or internal funding by us.** Provider `SUCCESS` and a ledger commitment are not monetary finality.
+**The only customer-labelled payments are maintainer-controlled: owner-wallet payments (the 0.10 USDC checkout in section 9, the 0.1376 NEAR sale in section 10) and a separate maintainer-held wallet (the 0.35 NEAR sale in run 2); every other row is outbound spending or internal funding by us.** Provider `SUCCESS` and a ledger commitment are not monetary finality.
 
 ## What each item does **not** prove
 

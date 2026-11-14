@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-14T22:57:02.011Z",
+  "generatedAt": "2026-11-14T23:21:25.194Z",
   "grantsSpendingAuthority": false,
   "scope": "Evidence index; checksums and labels are not cryptographic proof of every claim.",
   "artifacts": [
@@ -369,6 +369,18 @@
       "trustScope": "LIVE_LOCAL",
       "bytes": 6218,
       "sha256": "0cdebbfcfd0b9cc522a9f4ae80c1649f11149646ad0921a438511a0f6ba0df1d",
+      "timestampBasis": "recorded-source-observation"
+    },
+    {
+      "id": "nanogpt-loop-2",
+      "path": "artifacts/mainnet-proof/nanogpt-loop-2.json",
+      "kind": "local_execution",
+      "command": "CUSTOMER_WALLET_DIR=<separate wallet> node scripts/demo-nanogpt-loop.mjs customer-pay|buy-credits|answer; NANOGPT_REPORT=<path> ... report; verify with node scripts/verify-nanogpt-loop.mjs <path>",
+      "observedAt": "2026-11-14T23:20:25.413Z",
+      "doesNotProve": "Maintainer-controlled payer; script-triggered; balance-delta cost; not TEE-attested.",
+      "trustScope": "LIVE_LOCAL",
+      "bytes": 4704,
+      "sha256": "37875020f27c21c40f0f18eaa506c5a10f3736147438e08f5d6f242ee2b14c66",
       "timestampBasis": "recorded-source-observation"
     },
     {
@@ -747,12 +759,22 @@
       "doesNotProve": "The paying customer is the deployment-owner wallet, not an independent third party. Settlement assurance is provider status SUCCESS plus final deposit transactions; no independent money-movement port is wired. The inference was paid from an owner-prepaid Cloud key and attributed to the sale in accounting only: no agent-initiated Cloud credit purchase happened. No NanoGPT purchase has run on mainnet."
     },
     {
+      "id": "nanogpt-revenue-funded-purchase",
+      "claim": "A 0.35 NEAR sale from a separate wallet covered a 0.340779 NEAR NanoGPT credit purchase on the first pass; the credit rose from $0.7765 to $1.5538 and an answer on it cost $0.00036372, all committed to the mainnet ledger.",
+      "status": "OBSERVED",
+      "evidence": [
+        "nanogpt-loop-2"
+      ],
+      "verify": "node scripts/verify-nanogpt-loop.mjs artifacts/mainnet-proof/nanogpt-loop-2.json",
+      "doesNotProve": "The paying wallet is maintainer-controlled and its NEAR came from the maintainer, so this is not an independent customer. NanoGPT converted the deposit at about 24.6% cost, so the credit is worth less than the NEAR paid and the loop loses money in dollar terms. A script, not the autonomy loop, triggered the purchase, and the company wallet key signed the NanoGPT payment. The inference cost is a balance delta, and NanoGPT is not TEE-attested."
+    },
+    {
       "id": "independent-customer-payment",
       "claim": "An independent third-party customer (a wallet outside the maintainer's control) paid for a service, and that revenue funded the agent's own inference or credit purchase.",
       "status": "BLOCKED",
       "evidence": [],
       "verify": null,
-      "doesNotProve": "Not established. Every recorded sale (the 0.10 USDC checkout and the 0.1376 NEAR sale) came from the deployment-owner wallet; see owner-funded-checkout and nanogpt-credit-purchase for what is real. The NanoGPT purchase (about $1) also exceeded its sale (about $0.40), with the shortfall funded from the agent balance and prior company funds."
+      "doesNotProve": "Not established. Every recorded sale came from a maintainer-controlled wallet: the owner wallet (the 0.10 USDC checkout and the 0.1376 NEAR sale) or a separate maintainer-held wallet (the 0.35 NEAR sale in nanogpt-revenue-funded-purchase). In the first NanoGPT run the purchase (about $1) exceeded its sale (about $0.40), with the shortfall funded from the agent balance and prior company funds."
     },
     {
       "id": "refund-payout",

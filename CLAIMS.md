@@ -179,6 +179,17 @@ Verify/reproduce: `node scripts/verify-funded-loop.mjs`
 
 Limit: The paying customer is the deployment-owner wallet, not an independent third party. Settlement assurance is provider status SUCCESS plus final deposit transactions; no independent money-movement port is wired. The inference was paid from an owner-prepaid Cloud key and attributed to the sale in accounting only: no agent-initiated Cloud credit purchase happened. No NanoGPT purchase has run on mainnet.
 
+<!-- claim:nanogpt-revenue-funded-purchase:OBSERVED -->
+## nanogpt-revenue-funded-purchase — OBSERVED
+
+A 0.35 NEAR sale from a separate wallet covered a 0.340779 NEAR NanoGPT credit purchase on the first pass; the credit rose from $0.7765 to $1.5538 and an answer on it cost $0.00036372, all committed to the mainnet ledger.
+
+- **LIVE_LOCAL**: [nanogpt-loop-2](artifacts/mainnet-proof/nanogpt-loop-2.json)
+
+Verify/reproduce: `node scripts/verify-nanogpt-loop.mjs artifacts/mainnet-proof/nanogpt-loop-2.json`
+
+Limit: The paying wallet is maintainer-controlled and its NEAR came from the maintainer, so this is not an independent customer. NanoGPT converted the deposit at about 24.6% cost, so the credit is worth less than the NEAR paid and the loop loses money in dollar terms. A script, not the autonomy loop, triggered the purchase, and the company wallet key signed the NanoGPT payment. The inference cost is a balance delta, and NanoGPT is not TEE-attested.
+
 <!-- claim:independent-customer-payment:BLOCKED -->
 ## independent-customer-payment — BLOCKED
 
@@ -186,7 +197,7 @@ An independent third-party customer (a wallet outside the maintainer's control) 
 
 - No established evidence for this outcome.
 
-Limit: Not established. Every recorded sale (the 0.10 USDC checkout and the 0.1376 NEAR sale) came from the deployment-owner wallet; see owner-funded-checkout and nanogpt-credit-purchase for what is real. The NanoGPT purchase (about $1) also exceeded its sale (about $0.40), with the shortfall funded from the agent balance and prior company funds.
+Limit: Not established. Every recorded sale came from a maintainer-controlled wallet: the owner wallet (the 0.10 USDC checkout and the 0.1376 NEAR sale) or a separate maintainer-held wallet (the 0.35 NEAR sale in nanogpt-revenue-funded-purchase). In the first NanoGPT run the purchase (about $1) exceeded its sale (about $0.40), with the shortfall funded from the agent balance and prior company funds.
 
 <!-- claim:refund-payout:NOT_IMPLEMENTED -->
 ## refund-payout — NOT_IMPLEMENTED

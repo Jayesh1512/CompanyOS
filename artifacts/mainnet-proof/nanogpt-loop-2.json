@@ -1,0 +1,127 @@
+{
+  "kind": "nanogpt-loop",
+  "at": "2026-11-14T23:20:25.413Z",
+  "companyWallet": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+  "sale": {
+    "id": "sale:92fb8045c3d138ef8af0ef23",
+    "customer": "aa391dbb352351099858030f18680ffc5691feb5b86d27bc77554a0a6deaed60",
+    "companyWallet": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4",
+    "amountYocto": "350000000000000000000000",
+    "paymentTxHash": "44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L",
+    "at": "2026-11-14T23:18:40.218Z",
+    "asset": "near:native",
+    "customerIsOwnerWallet": false,
+    "ledgerTx": "6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz"
+  },
+  "funding": null,
+  "purchase": {
+    "status": "purchased",
+    "provider": "nanogpt",
+    "companyId": "local-workspace",
+    "saleId": "sale:92fb8045c3d138ef8af0ef23",
+    "invoiceTxId": "498165652",
+    "address": "9196163df0cd4183a5bc10a38180e25db430c9e725c3622cdcda1f62290e0c82",
+    "paidYocto": "340779000000000000000000",
+    "paymentTxHash": "9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6",
+    "balanceBeforeUsd": "0.77650229",
+    "balanceAfterUsd": "1.55376810",
+    "at": "2026-11-14T23:19:37.165Z",
+    "label": "native NEAR paid from the company wallet to a NanoGPT deposit invoice; NanoGPT is not TEE-attested",
+    "ledgerTx": "GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms"
+  },
+  "answer": {
+    "model": "minimax/minimax-m2.7",
+    "question": "What is the claim reporting window for a water-damage claim on the home policy?",
+    "answer": "\n\nThe claims reporting window is 7 demo days, as described in the claims handling section. However, water damage claims require owner review to determine eligibility, and this demo cannot confirm actual coverage for any specific incident.",
+    "balanceBeforeUsd": "1.55376810",
+    "balanceAfterUsd": "1.55340438",
+    "costUsd": "0.00036372",
+    "usage": {
+      "prompt_tokens": 888,
+      "completion_tokens": 211,
+      "total_tokens": 1099,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "cache_read_input_tokens": 0,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "citation_tokens": 0,
+      "num_search_queries": 0,
+      "cache_creation_input_tokens": 0,
+      "input_tokens": 888,
+      "cost": 0.00036372,
+      "currency": "USD"
+    },
+    "at": "2026-11-14T23:20:14.720Z",
+    "ledgerTx": "HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ"
+  },
+  "ledgerCommits": [
+    {
+      "events": [
+        {
+          "type": "sale.confirmed",
+          "data": {
+            "companyId": "local-workspace",
+            "actorId": "customer",
+            "saleId": "sale:92fb8045c3d138ef8af0ef23",
+            "asset": "near:native",
+            "amountYocto": "350000000000000000000000",
+            "paymentTxHash": "44qgjo3F6swxTBYC7Zuqamy7bogg6eJi2kic98cbXX4L",
+            "receivedBy": "e17d480f28ef0c3f39c7b3a12bdf80acfa2e2282a5e7a2eae3f019510ce6e8d4"
+          }
+        }
+      ],
+      "txHash": "6D2v9qpR7LmC7yA6ovhr53pjtWNKPT46PYk4TR9wbbDz"
+    },
+    {
+      "events": [
+        {
+          "type": "procurement.confirmed",
+          "data": {
+            "companyId": "local-workspace",
+            "actorId": "agent",
+            "kind": "inference_credit",
+            "provider": "nanogpt",
+            "saleId": "sale:92fb8045c3d138ef8af0ef23",
+            "invoiceTxId": "498165652",
+            "paidYocto": "340779000000000000000000",
+            "paymentTxHash": "9UXaxvcHriehu4o6CyKnMyA1xpKffkPztrZnG45HSJE6",
+            "balanceBeforeUsd": "0.77650229",
+            "balanceAfterUsd": "1.55376810"
+          }
+        }
+      ],
+      "txHash": "GwFwDosU1K9aywonyeXTBpf7V4FcnQoy7y85EinCRmms"
+    },
+    {
+      "events": [
+        {
+          "type": "inference.consumed",
+          "data": {
+            "companyId": "local-workspace",
+            "actorId": "agent",
+            "provider": "nanogpt",
+            "model": "minimax/minimax-m2.7",
+            "saleId": "sale:92fb8045c3d138ef8af0ef23",
+            "invoiceTxId": "498165652",
+            "costUsd": "0.00036372",
+            "balanceBeforeUsd": "1.55376810",
+            "balanceAfterUsd": "1.55340438",
+            "funding": "credit bought by the agent from customer revenue (native NEAR)"
+          }
+        }
+      ],
+      "txHash": "HHMxuLZ1FxTYZAXnopHN9LtAKN788BRdqpYKa1NCQRqJ"
+    }
+  ],
+  "labels": [
+    "customer is a separate wallet supplied by the maintainer (real on-chain payment)",
+    "NanoGPT is not TEE-attested",
+    "cost is measured as the NanoGPT USD balance delta around the call"
+  ]
+}
