@@ -1,5 +1,5 @@
 use near_sdk::{env, near, AccountId, PanicOnDefault};
-use near_sdk::store::Vector;
+use near_sdk::store::{Vector, LookupMap};
 
 macro_rules! check_eq { ($a:expr, $b:expr, $msg:expr) => { near_sdk::require!($a == $b, $msg) }; }
 
@@ -35,6 +35,7 @@ pub struct CompanyLedger {
     writer_id: Option<AccountId>,
     company_hash: String,
     records: Vector<Record>,
+    agent_writers: LookupMap<AccountId, String>,
 }
 
 fn is_hash(value: &str) -> bool {
@@ -52,7 +53,7 @@ impl CompanyLedger {
     pub fn new(company_hash: String, writer_id: Option<AccountId>) -> Self {
         check_eq!(env::predecessor_account_id(), env::current_account_id(), "SELF_INIT_REQUIRED");
         near_sdk::require!(is_hash(&company_hash), "INVALID_COMPANY_HASH");
-        Self { owner_id: env::current_account_id(), writer_id, company_hash, records: Vector::new(b"r") }
+        Self { owner_id: env::current_account_id(), writer_id, company_hash, records: Vector::new(b"r"), agent_writers: LookupMap::new(b"a") }
     }
 
     /// Only the deployment owner may explicitly bind/rotate the operational writer.
@@ -60,6 +61,23 @@ impl CompanyLedger {
     pub fn set_writer(&mut self, writer_id: Option<AccountId>) {
         check_eq!(env::predecessor_account_id(), self.owner_id, "OWNER_REQUIRED");
         self.writer_id = writer_id;
+    }
+
+    /// Each agent signs with its own account and can commit only its bound actor.
+    /// This state layout is deployed to a fresh testnet account, not migrated over
+    /// the historical single-writer mainnet deployment.
+    pub fn set_agent_writer(&mut self, account_id: AccountId, actor_hash: Option<String>) {
+        check_eq!(env::predecessor_account_id(), self.owner_id, "OWNER_REQUIRED");
+        if let Some(actor) = actor_hash {
+            near_sdk::require!(is_hash(&actor), "INVALID_ACTOR_HASH");
+            self.agent_writers.insert(account_id, actor);
+        } else {
+            self.agent_writers.remove(&account_id);
+        }
+    }
+
+    pub fn get_agent_writer(&self, account_id: AccountId) -> Option<String> {
+        self.agent_writers.get(&account_id).cloned()
     }
 
     pub fn get_head(&self) -> Head {
@@ -76,7 +94,9 @@ impl CompanyLedger {
     }
 
     pub fn append(&mut self, company_hash: String, expected_sequence: u64, expected_hash: String, records: Vec<Record>) -> Head {
-        near_sdk::require!(self.writer_id.as_ref() == Some(&env::predecessor_account_id()), "WRITER_REQUIRED");
+        let caller = env::predecessor_account_id();
+        let actor = self.agent_writers.get(&caller);
+        near_sdk::require!(actor.is_some() || self.writer_id.as_ref() == Some(&caller), "WRITER_REQUIRED");
         check_eq!(company_hash, self.company_hash, "COMPANY_MISMATCH");
         near_sdk::require!(!records.is_empty() && records.len() <= 50, "INVALID_BATCH_SIZE");
         near_sdk::require!(is_hash(&expected_hash), "INVALID_HASH");
@@ -88,6 +108,7 @@ impl CompanyLedger {
         let mut previous = expected_hash;
         // Validate the whole batch before changing any storage.
         for (index, record) in records.iter().enumerate() {
+            if let Some(bound_actor) = actor { check_eq!(&record.actor_hash, bound_actor, "ACTOR_SIGNER_MISMATCH"); }
             check_eq!(record.sequence, expected_sequence + index as u64 + 1, "SEQUENCE_GAP");
             near_sdk::require!(record.sequence <= 9_007_199_254_740_991, "INVALID_SEQUENCE");
             check_eq!(record.previous_hash, previous, "HASH_CHAIN_MISMATCH");

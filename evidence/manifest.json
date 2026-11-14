@@ -1,9 +1,75 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-17T09:32:40.737Z",
+  "generatedAt": "2026-11-17T09:32:40.832Z",
   "grantsSpendingAuthority": false,
   "scope": "Evidence index; checksums and labels are not cryptographic proof of every claim.",
   "artifacts": [
+    {
+      "id": "swarm-accounts",
+      "path": "docs/evidence/swarm-accounts.json",
+      "kind": "public_capture",
+      "command": "node scripts/setup-swarm-testnet.mjs",
+      "doesNotProve": "Public account creation and actor-binding transactions; key-file names contain no private values. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PUBLIC",
+      "bytes": 3920,
+      "sha256": "176d4e04a21e365673bef0ec1ec3cdadd2ce7764e049e96851d6f8c12d647068",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "swarm-live-run",
+      "path": "docs/evidence/swarm-live-run.json",
+      "kind": "paid_provider",
+      "command": "node scripts/recovery-demo.mjs --scenario missing-address --agent-ledger docs/evidence/swarm-accounts.json --start",
+      "doesNotProve": "Retained real Cloud acceptance, bills, agent-signed append arguments and actual MCP exchanges; original errors retained. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PAID",
+      "bytes": 84228,
+      "sha256": "7f39099c333ecc5fcca5063a26d047a713b52b4d7a4e33f68b757edd5dae6a5b",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "swarm-execution",
+      "path": "docs/evidence/swarm-execution.txt",
+      "kind": "paid_provider",
+      "command": "node scripts/readable-swarm-evidence.mjs",
+      "doesNotProve": "Readable rendering of the retained successful testnet swarm; not new provider execution. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PAID",
+      "bytes": 9301,
+      "sha256": "0093a500aad08da80a0a2057472d8b419f654a9f5a507ad0150747f611ef61e7",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "swarm-verification",
+      "path": "docs/evidence/swarm-verification.txt",
+      "kind": "public_capture",
+      "command": "node scripts/verify-swarm-evidence.mjs",
+      "doesNotProve": "FINAL exact transaction signers, record/output hashes and real MCP chain readback; not historical Cloud plaintext revalidation. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
+      "trustScope": "LIVE_PUBLIC",
+      "bytes": 1516,
+      "sha256": "f5a7428b89e8c5331e0d1f06f162f132094fb28b20cacff391f19aaab8cc51a8",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "swarm-contract-tests",
+      "path": "docs/evidence/swarm-contract-tests.txt",
+      "kind": "local_execution",
+      "command": "node --test test/onchain-ledger-rules/swarm-contract.test.mjs",
+      "doesNotProve": "Actual compiled WASM in local nearcore Sandbox, including impersonation and revocation rejection; not public-chain execution.",
+      "trustScope": "LIVE_LOCAL",
+      "bytes": 1120,
+      "sha256": "baba4d911f34d42ea63aae40d4cf1229df9f32cee707f6b8d9457983e535dbaf",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "swarm-recovery-tests",
+      "path": "docs/evidence/swarm-recovery-tests.txt",
+      "kind": "controlled_test",
+      "command": "node --test test/integrations/recovery.test.mjs",
+      "doesNotProve": "Controlled Cloud inputs test native storage/recovery and no replacement inference on chain reconciliation.",
+      "trustScope": "CONTROLLED",
+      "bytes": 2283,
+      "sha256": "4972e042f23557c0800d41a76db676ea020befb540e81baf87e27a1f2b341231",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
     {
       "id": "baseline-512",
       "path": "docs/evidence/tests-baseline-512.txt",
@@ -594,6 +660,21 @@
     }
   ],
   "claims": [
+    {
+      "id": "agent-swarm-testnet",
+      "claim": "Redacted historical records describe: Five recovery agents signed six hash-linked work commitments through distinct NEAR testnet subaccounts during six real Cloud calls; ledger reads use the official NEAR MCP server with a CompanyOS tool.",
+      "status": "RECORDED_HASHES_WITHHELD",
+      "evidence": [
+        "swarm-accounts",
+        "swarm-live-run",
+        "swarm-execution",
+        "swarm-verification",
+        "swarm-contract-tests",
+        "swarm-recovery-tests"
+      ],
+      "verify": null,
+      "doesNotProve": "Configured recovery roles only; not automatic provisioning of every future profile. Cloud uses owner-prepaid credit. Historical SDK plaintext acceptance is not independently replayed by the public-chain verifier. Original rejected publication/read failures remain in the retained history. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files."
+    },
     {
       "id": "readable-regression",
       "claim": "The original 512-test baseline and the 606-test committed regression run retain every test name and passing summary.",

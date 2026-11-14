@@ -1,0 +1,108 @@
+{
+  "network": "testnet",
+  "rpc": "https://rpc.testnet.near.org",
+  "companyId": "near-ai-recovery",
+  "parentId": "companyos-mwkf17op.testnet",
+  "contractId": "swarm.companyos-mwkf17op.testnet",
+  "creation": {
+    "txHash": null,
+    "signerId": "companyos-mwkf17op.testnet",
+    "receiverId": "swarm.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "deployment": {
+    "txHash": null,
+    "signerId": "swarm.companyos-mwkf17op.testnet",
+    "receiverId": "swarm.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "agents": {
+    "manager": {
+      "accountId": "manager.companyos-mwkf17op.testnet",
+      "keyFile": ".runtime/hackathon-testnet/manager.json",
+      "actorHash": "16f47343cbcf006055d57eb53bf39546fd26235626ebd31f73bdfe532094a366",
+      "creation": {
+        "txHash": null,
+        "signerId": "companyos-mwkf17op.testnet",
+        "receiverId": "manager.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      },
+      "registration": {
+        "txHash": null,
+        "signerId": "swarm.companyos-mwkf17op.testnet",
+        "receiverId": "swarm.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      }
+    },
+    "support": {
+      "accountId": "support.companyos-mwkf17op.testnet",
+      "keyFile": ".runtime/hackathon-testnet/support.json",
+      "actorHash": "520931425858bce3ac5b87c88f374d6043e8140f376243c219a27a73e9a3a996",
+      "creation": {
+        "txHash": null,
+        "signerId": "companyos-mwkf17op.testnet",
+        "receiverId": "support.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      },
+      "registration": {
+        "txHash": null,
+        "signerId": "swarm.companyos-mwkf17op.testnet",
+        "receiverId": "swarm.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      }
+    },
+    "backlog": {
+      "accountId": "backlog.companyos-mwkf17op.testnet",
+      "keyFile": ".runtime/hackathon-testnet/backlog.json",
+      "actorHash": "664d55a2278c49905abe46c34a1d4af636941e2ddd5a15f9d162d3213ec1c831",
+      "creation": {
+        "txHash": null,
+        "signerId": "companyos-mwkf17op.testnet",
+        "receiverId": "backlog.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      },
+      "registration": {
+        "txHash": null,
+        "signerId": "swarm.companyos-mwkf17op.testnet",
+        "receiverId": "swarm.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      }
+    },
+    "knowledge_curator": {
+      "accountId": "knowledge_curator.companyos-mwkf17op.testnet",
+      "keyFile": ".runtime/hackathon-testnet/knowledge_curator.json",
+      "actorHash": "6d042d41ac8a17a651ec73011ff8963a821233360e6946ad29634c907287cde2",
+      "creation": {
+        "txHash": null,
+        "signerId": "companyos-mwkf17op.testnet",
+        "receiverId": "knowledge_curator.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      },
+      "registration": {
+        "txHash": null,
+        "signerId": "swarm.companyos-mwkf17op.testnet",
+        "receiverId": "swarm.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      }
+    },
+    "template_developer": {
+      "accountId": "template_developer.companyos-mwkf17op.testnet",
+      "keyFile": ".runtime/hackathon-testnet/template_developer.json",
+      "actorHash": "7fb4823625b1b3323b53d3249c6b24bb26487137c8576fa939cfa35b373c23d9",
+      "creation": {
+        "txHash": null,
+        "signerId": "companyos-mwkf17op.testnet",
+        "receiverId": "template_developer.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      },
+      "registration": {
+        "txHash": null,
+        "signerId": "swarm.companyos-mwkf17op.testnet",
+        "receiverId": "swarm.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      }
+    }
+  },
+  "transactionHashesWithheld": true,
+  "redactionScope": "Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt."
+}

@@ -17,7 +17,7 @@ import {startNativeJBrain} from '../helpers/native-jbrain.mjs';
 
 // Only these tests replace the model transport and SDK findings. Production
 // composition imports no test helper, synthetic signature or reasoner.
-async function fixture(t,{invalidPatch=false,invalidCitation=false,proofFailure=false,preflightFailure=false,pendingBill=false,scenarioId=DEFAULT_RECOVERY_SCENARIO,delegates=['knowledge_curator','template_developer']}={}){
+async function fixture(t,{invalidPatch=false,invalidCitation=false,proofFailure=false,preflightFailure=false,pendingBill=false,scenarioId=DEFAULT_RECOVERY_SCENARIO,delegates=['knowledge_curator','template_developer'],onAgentAction}={}){
  const scenario=recoveryScenario(scenarioId);
  const directory=await mkdtemp(path.join(os.tmpdir(),'near-recovery-')),brain=await startNativeJBrain(path.join(directory,'brain'));let app,calls=0;
  const authorization={id:'test-only-owner-grant',enabled:true,companyId:RECOVERY_COMPANY,model:RECOVERY_LIMITS.model,maxTotalNanoUsd:RECOVERY_LIMITS.maxTotalNanoUsd,responseAcceptance:'live-verified-hold-on-loss',credentialHash:'TEST',expiresAt:new Date(Date.now()+3600000).toISOString()};
@@ -37,7 +37,7 @@ async function fixture(t,{invalidPatch=false,invalidCitation=false,proofFailure=
    return {status:'confirmed',provider:'near-ai-cloud',mode:'live',inferenceId:'TEST-'+role,providerRequestId:'TEST-'+role,proof,generation:{output}};
   };
  }});
- const recovery=createRecovery({app,authorization,scenarioId,credential:'TEST-ONLY',verificationFactory,cloudClient:{async costs(id){return {requests:[{requestId:id,costNanoUsd:pendingBill?'0':'1000'}]};}},readModels:async()=>({data:{data:[{id:RECOVERY_LIMITS.model,context_length:262144,max_output_length:65536,pricing:{input:0.04,output:1.35,request:'0'}}]}})});
+ const recovery=createRecovery({app,authorization,scenarioId,onAgentAction,credential:'TEST-ONLY',verificationFactory,cloudClient:{async costs(id){return {requests:[{requestId:id,costNanoUsd:pendingBill?'0':'1000'}]};}},readModels:async()=>({data:{data:[{id:RECOVERY_LIMITS.model,context_length:262144,max_output_length:65536,pricing:{input:0.04,output:1.35,request:'0'}}]}})});
  await recovery.seed();
  return {app,rules,recovery,authorization,facts,get calls(){return calls;},async run(){await recovery.start();const end=Date.now()+15000;while(recovery.busy&&Date.now()<end)await new Promise(r=>setTimeout(r,10));assert.equal(recovery.busy,false);return recovery.view();}};
 }
@@ -107,3 +107,17 @@ test('scenario selection is bounded and an existing journal cannot be silently r
 
 
 test('recovery records local fixed evaluation for baseline and candidate',async t=>{const f=await fixture(t),r=await f.run();assert.equal(r.scenario.state,'completed');assert.equal(r.evaluations.length,2);for(const e of r.evaluations)assert.equal(e.source,'local-fixed-evaluator');});
+
+
+test('a proven pre-inclusion chain rejection resumes the original verified model result without another inference',async t=>{
+ let managerCommits=0;
+ const f=await fixture(t,{onAgentAction:async run=>{if(run.role==='manager'&&managerCommits++===0)throw Object.assign(Error('test-only RPC rejection'),{code:'AGENT_CHAIN_NOT_SUBMITTED'});return {txHash:'TEST-ONLY-CHAIN-RECEIPT',signerId:run.actorId};}});
+ const held=await f.run();assert.equal(held.scenario.state,'held');assert.equal(f.calls,1);
+ const complete=await f.run();assert.equal(complete.scenario.state,'completed');assert.equal(f.calls,6);assert.equal(managerCommits,2);assert.equal(complete.scenario.attempt,1);assert.equal(complete.scenario.reasonCode,null);
+});
+
+test('an unknown agent-chain outcome cannot restart the model or the transaction',async t=>{
+ const f=await fixture(t,{onAgentAction:async()=>{throw Error('TEST-ONLY unknown chain outcome');}});
+ const held=await f.run();assert.equal(held.scenario.state,'held');assert.equal(f.calls,1);
+ await assert.rejects(f.recovery.start(),{code:'RECOVERY_ALREADY_ATTEMPTED'});assert.equal(f.calls,1);
+});

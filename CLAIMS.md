@@ -6,6 +6,20 @@ Run `node scripts/evidence/verify.mjs` for offline integrity, scope consistency,
 
 Trust scopes: **LIVE_PUBLIC** = original public provider capture; **LIVE_PAID** = sanitized records of the approved actual owner-funded calls; **LIVE_LOCAL** = actual local execution; **CONTROLLED** = injected external facts. Each claim retains the provenance and verification scope of its supporting records.
 
+<!-- claim:agent-swarm-testnet:RECORDED_HASHES_WITHHELD -->
+## agent-swarm-testnet — RECORDED_HASHES_WITHHELD
+
+Redacted historical records describe: Five recovery agents signed six hash-linked work commitments through distinct NEAR testnet subaccounts during six real Cloud calls; ledger reads use the official NEAR MCP server with a CompanyOS tool.
+
+- **LIVE_PUBLIC**: [swarm-accounts](docs/evidence/swarm-accounts.json)
+- **LIVE_PAID**: [swarm-live-run](docs/evidence/swarm-live-run.json)
+- **LIVE_PAID**: [swarm-execution](docs/evidence/swarm-execution.txt)
+- **LIVE_PUBLIC**: [swarm-verification](docs/evidence/swarm-verification.txt)
+- **LIVE_LOCAL**: [swarm-contract-tests](docs/evidence/swarm-contract-tests.txt)
+- **CONTROLLED**: [swarm-recovery-tests](docs/evidence/swarm-recovery-tests.txt)
+
+Evidence scope: Configured recovery roles only; not automatic provisioning of every future profile. Cloud uses owner-prepaid credit. Historical SDK plaintext acceptance is not independently replayed by the public-chain verifier. Original rejected publication/read failures remain in the retained history. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.
+
 <!-- claim:readable-regression:OBSERVED -->
 ## readable-regression — OBSERVED
 
