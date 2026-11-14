@@ -2,7 +2,7 @@
 """Render a CompanyOs title card and prepend it to the existing narrated video."""
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
-import argparse, hashlib, json, subprocess
+import argparse, hashlib, json, subprocess, shutil
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'artifacts/companyos-walkthrough'
@@ -12,7 +12,12 @@ args = parser.parse_args()
 if not 2 <= args.duration <= 10:
     parser.error('Opening duration must be between 2 and 10 seconds.')
 OUT.mkdir(parents=True, exist_ok=True)
-source = OUT / 'companyos-walkthrough.mp4'
+canonical = OUT / 'companyos-walkthrough.mp4'
+source = OUT / 'companyos-walkthrough-body.mp4'
+if not source.exists():
+    previous = json.loads((OUT / 'opening-manifest.json').read_text())
+    assert hashlib.sha256(canonical.read_bytes()).hexdigest() == previous['sourceSha256'], 'Preserve the original walkthrough body before rebuilding the title screen.'
+    shutil.copy2(canonical, source)
 target = OUT / 'companyos-walkthrough-with-opening.mp4'
 
 def font_path(bold=False):
@@ -58,7 +63,7 @@ def probe(file):
 
 duration = float(probe(source)['format']['duration'])
 filters = (
-    f'[0:v]setpts=PTS-STARTPTS,fade=t=in:st=0:d=0.25:color=0xfafafa,'
+    '[0:v]setpts=PTS-STARTPTS,'
     f'fade=t=out:st={args.duration - 0.2}:d=0.2:color=0xfafafa[intro];'
     '[2:a]asetpts=PTS-STARTPTS[introaudio];'
     '[1:v]setpts=PTS-STARTPTS[body];[1:a]asetpts=PTS-STARTPTS[voice];'
@@ -75,8 +80,13 @@ subprocess.run([
 observed = probe(target)
 assert abs(float(observed['format']['duration']) - duration - args.duration) < 0.15
 assert any(s.get('codec_name') == 'aac' for s in observed['streams'])
+# Promote the title-screen version to the main video without changing its body source.
+shutil.copy2(target, canonical)
+shutil.copy2(OUT / 'opening-slide.png', OUT / 'companyos-title-screen.png')
 manifest = {
-    'product': 'CompanyOs', 'source': source.name, 'output': target.name,
+    'product': 'CompanyOs', 'source': source.name, 'output': canonical.name,
+    'alternateOutput': target.name, 'poster': 'companyos-title-screen.png',
+    'firstFrameIsTitleScreen': True,
     'openingSeconds': args.duration, 'narrationStartsAtSeconds': args.duration,
     'durationSeconds': float(observed['format']['duration']),
     'sourceSha256': hashlib.sha256(source.read_bytes()).hexdigest(),

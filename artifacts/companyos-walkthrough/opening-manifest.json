@@ -1,11 +1,15 @@
 {
   "product": "CompanyOs",
-  "source": "companyos-walkthrough.mp4",
-  "output": "companyos-walkthrough-with-opening.mp4",
+  "source": "companyos-walkthrough-body.mp4",
+  "output": "companyos-walkthrough.mp4",
+  "alternateOutput": "companyos-walkthrough-with-opening.mp4",
+  "poster": "companyos-title-screen.png",
+  "firstFrameIsTitleScreen": true,
   "openingSeconds": 4,
   "narrationStartsAtSeconds": 4,
   "durationSeconds": 192.569002,
   "sourceSha256": "3aab324127e564bc8ee53ea4352c5897cae07e291b4ea989c7b00a4e64a3b4b5",
-  "outputSha256": "7de9adf3779e4ed44f8d9492883dedd8a8db3937bead175b51318fab3a447e84",
-  "newSpeechRequests": 0
+  "outputSha256": "6853a631fb17db5b8e39624f0984ba9501afcbccd9925e10c1c5ab39d557e6ff",
+  "newSpeechRequests": 0,
+  "firstFrameMeanPixelError": 0.1249
 }
