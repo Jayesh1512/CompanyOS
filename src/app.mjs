@@ -142,7 +142,7 @@ export async function createApp(options={}) {
     };
     const committer={async append(events){const {api,grantToken}=await resolve();return createLedgerCommitter({api,agentId:providers.agentId,grantToken,contractId:ledgerBinding.contractId,companyId}).append(events);},async head(){const {api,grantToken}=await resolve();return createLedgerCommitter({api,agentId:providers.agentId,grantToken,contractId:ledgerBinding.contractId,companyId}).head();}};
     fundedLoopCommitter=committer;
-    spendExecutor=createSpendExecutor({journal,agentSpend,companyId,ledger:committer});
+    spendExecutor=createSpendExecutor({journal,agentSpend,companyId,ledger:committer,getCeiling:()=>rules.snapshot().safety.totalCeilingNanoUsd,getFinancial:()=>treasury.snapshot()});
     ledgerAutoCommit=createLedgerAutoCommit({journal,committer,companyId});
   }
   const fundedLoopFile=options.fundedLoopFile??process.env.SHOP_FUNDED_LOOP_FILE,fundedLoop=fundedLoopFile?createFundedLoop({file:fundedLoopFile,committer:fundedLoopCommitter,companyId,clock}):null;

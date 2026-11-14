@@ -137,6 +137,8 @@ node scripts/verify-loop-receipt.mjs   # read-only; 18/18 at last run (14 LIVE_P
 
 The verifier recomputes each committed event's payload hash with the product's own function and finds it in the contract's hash-chained records, then checks the ledger transaction is FINAL, successful and an `append()` signed by the agent. Reproduce the run itself with `node scripts/loop-spend-e2e.mjs` (needs owner credentials and spends real funds; `--controlled` supplies the decision instead of a model, `--reason-only` spends nothing).
 
+**Lifetime ceiling on agent spend.** The loop's spend executor (`src/workflow/spend.mjs`) checks the $5 lifetime ceiling before every provider call, counting M03 reservations plus every earlier agent spend that may have moved money. USDC is priced exactly (6 decimals to nanoUSD); any other asset, unreadable financial facts or an unpriced earlier spend fail closed. A denied spend is recorded as `denied` and nothing is sent. The executor cannot be constructed without the ceiling wiring, and tests (`test/autonomy/spend-executor.test.mjs`) cover the boundary, shared accounting with reservations and the call-site wiring. Not covered: operator scripts that call the spend port directly (`scripts/agent-spend-proof.mjs`, `scripts/demo-funded-loop.mjs`) are outside this ceiling, and the recorded 0.025 USDC spend predates the check.
+
 ## 9. Customer-funded service loop
 
 One real customer sale, one paid answer, the cost attributed to it, and the surplus. Labels are exact.

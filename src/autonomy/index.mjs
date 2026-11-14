@@ -49,7 +49,7 @@ export function createAutonomy({journal, rules, internalWork, companyId, clock =
         if(spendId){
           // Commit spend.requested (and anything before it) first, so the chain reads requested -> completed.
           if(ledgerAutoCommit){try{await ledgerAutoCommit.tick();}catch{/* retried next tick */}}
-          try{await spendExecutor.execute(spendId);}
+          try{const spent=await spendExecutor.execute(spendId);if(spent?.status==='denied')blocked=blocked??{decision:{status:'hold',reasonCode:spent.reasonCode}};}
           catch(error){blocked=blocked??{decision:{status:'hold',reasonCode:error.code??'SPEND_EXECUTION_FAILED'}};}
         }
       }

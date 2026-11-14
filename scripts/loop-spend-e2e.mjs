@@ -145,7 +145,12 @@ const internalWork = {
   async reconcile() { throw new Error('controlled test port'); },
 };
 
-const spendExecutor = createSpendExecutor({journal, agentSpend: port, ledger: committer, companyId, clock});
+const spendExecutor = createSpendExecutor({
+  journal, agentSpend: port, ledger: committer, companyId, clock,
+  // Controlled script, outside product treasury reservations (see header): still capped at the $5 lifetime ceiling.
+  getCeiling: () => rules.snapshot().safety.totalCeilingNanoUsd ?? '5000000000',
+  getFinancial: () => ({reservations: []}),
+});
 const ledgerAutoCommit = createLedgerAutoCommit({journal, committer, companyId});
 const autonomy = createAutonomy({journal, rules, internalWork, companyId, clock, spendExecutor, ledgerAutoCommit});
 

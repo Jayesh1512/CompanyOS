@@ -9,11 +9,24 @@
 // Standalone by design: it can be driven by a loop event, but it does not enter
 // the frozen inference decision engine.
 import {fingerprint} from '../contracts.mjs';
+import {lifetimeExposure} from '../rules/ceiling.mjs';
 
 const CLOSED = new Set(['completed', 'cancelled', 'superseded', 'failed']);
 const TERMINAL = new Set(['SUCCESS', 'FAILED', 'REFUNDED', 'NEEDS_REVIEW']);
 
 const fail = code => { throw Object.assign(new Error(code), {code}); };
+
+const USDC = 'nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1';
+// A provider-confirmed failure or refund moved no money; every other non-pending state may have.
+const NO_OUTFLOW = new Set(['proposed', 'admitted', 'blocked', 'denied']);
+const REFUNDED = new Set(['FAILED', 'REFUNDED']);
+
+/** USDC has 6 decimals, the ceiling counts nanoUSD (1e-9): exact. Any other asset has no
+ * price source here, so it has no bound and the caller must fail closed. */
+export function spendNanoUsd(asset, amount) {
+  if (asset !== USDC || typeof amount !== 'string' || !/^[0-9]{1,30}$/.test(amount)) return null;
+  return BigInt(amount) * 1000n;
+}
 
 /**
  * @param {object} deps
@@ -21,8 +34,15 @@ const fail = code => { throw Object.assign(new Error(code), {code}); };
  * @param {object} deps.agentSpend port from createAgentSpendPort
  * @param {object} [deps.ledger]  optional { append(records) } ledger committer
  * @param {string} deps.companyId
+ * @param {() => (string|null)} deps.getCeiling    REQUIRED lifetime ceiling in nanoUSD (null = none configured)
+ * @param {() => object}        deps.getFinancial  REQUIRED M03 financial facts (reservations) for lifetime exposure
  */
-export function createSpendExecutor({journal, agentSpend, ledger = null, companyId, clock = () => new Date()}) {
+export function createSpendExecutor({journal, agentSpend, ledger = null, companyId, getCeiling, getFinancial, clock = () => new Date()}) {
+  // The cap must be a deliberate wiring decision, never a forgotten default: without both
+  // functions the executor cannot be constructed, so this path cannot silently bypass it.
+  if (typeof getCeiling !== 'function' || typeof getFinancial !== 'function') {
+    throw new TypeError('createSpendExecutor requires getCeiling and getFinancial so spend counts against the lifetime ceiling');
+  }
   const now = () => new Date(clock()).toISOString();
   const scoped = xs => (xs ?? []).filter(x => x.companyId === companyId);
 
@@ -47,8 +67,35 @@ export function createSpendExecutor({journal, agentSpend, ledger = null, company
     return {kind: 'swap', asset: req.asset, amount: req.amount, destination};
   }
 
+  /** null when within the lifetime ceiling, else a reason code. Counts M03 reservations
+   * (inference, funding, ...) plus every earlier agent spend that may have moved money. */
+  function ceilingReason(req) {
+    const ceilingText = getCeiling();
+    if (ceilingText === null || ceilingText === undefined) return null; // no ceiling configured, same as every other action
+    let ceiling; try { ceiling = BigInt(ceilingText); } catch { return 'TOTAL_CEILING_INVALID'; }
+    const proposed = spendNanoUsd(req.asset, req.amount);
+    if (proposed === null) return 'SPEND_USD_BOUND_REQUIRED';
+    let used;
+    try { used = lifetimeExposure(getFinancial(), null); } catch { return 'TOTAL_CEILING_FACTS_REQUIRED'; }
+    for (const prior of scoped(journal.list('spendRequests'))) {
+      if (prior.id === req.id || NO_OUTFLOW.has(prior.state)) continue;
+      if (prior.state === 'failed' && REFUNDED.has(prior.providerStatus)) continue;
+      const bound = spendNanoUsd(prior.asset, prior.amount);
+      if (bound === null) return 'SPEND_EXPOSURE_UNPRICED';
+      used += bound;
+    }
+    return used + proposed > ceiling ? 'TOTAL_CEILING_EXCEEDED' : null;
+  }
+
   async function execute(spendId) {
     const req = admittedRequest(spendId);
+    const reason = ceilingReason(req);
+    if (reason) {
+      // Decided before any provider call, so a denied spend never moves money.
+      const denied = {...req, state: 'denied', reasonCode: reason, updatedAt: now()};
+      await journal.transaction({actionId: `spend:${req.id}:denied`, fingerprint: fingerprint(denied)}, tx => {tx.put('spendRequests', req.id, denied); return null;});
+      return {status: 'denied', reasonCode: reason};
+    }
     const capability = agentSpend.capability?.() ?? {};
     if (!capability.configured) {
       const blocked = {...req, state: 'blocked', reasonCode: 'SPEND_PORT_NOT_CONFIGURED', updatedAt: now()};

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-14T16:44:37.490Z",
+  "generatedAt": "2026-11-14T21:53:27.071Z",
   "grantsSpendingAuthority": false,
   "scope": "Evidence index; checksums and labels are not cryptographic proof of every claim.",
   "artifacts": [
@@ -336,6 +336,30 @@
       "timestampBasis": "recorded-source-observation"
     },
     {
+      "id": "funded-loop",
+      "path": "artifacts/mainnet-proof/funded-loop.json",
+      "kind": "local_execution",
+      "command": "node scripts/demo-funded-loop.mjs register|answer|report; verify with node scripts/verify-funded-loop.mjs",
+      "observedAt": "2026-11-14T17:56:17.885Z",
+      "doesNotProve": "Owner-wallet customer; inference paid by an owner-prepaid key and attributed to the sale in accounting only. Settlement assurance is provider status plus final deposit transactions.",
+      "trustScope": "LIVE_LOCAL",
+      "bytes": 2740,
+      "sha256": "520021290b5bd14f9431b417a42c39b136222235d083aeecdad8f38d4c82cc6b",
+      "timestampBasis": "recorded-source-observation"
+    },
+    {
+      "id": "live-checkout-settlement",
+      "path": "artifacts/mainnet-proof/live-checkout-settlement.json",
+      "kind": "local_execution",
+      "command": "node scripts/live-checkout.mjs",
+      "observedAt": "2026-11-14T17:33:21.253Z",
+      "doesNotProve": "Owner-wallet payer; provider SUCCESS plus final NEAR transactions, not independent monetary finality.",
+      "trustScope": "LIVE_LOCAL",
+      "bytes": 1488,
+      "sha256": "38db7060f72f1b2f5834dd5f270e8bf90b90da747bab0455d573fc0a5b17d498",
+      "timestampBasis": "recorded-source-observation"
+    },
+    {
       "id": "capture-cloud-models",
       "path": "artifacts/live-evidence/2026-11-14-readonly-r1/cloud-models.response.json",
       "kind": "public_capture",
@@ -653,12 +677,23 @@
       "doesNotProve": "The swap is confidential (USDC to wNEAR) and has no public transaction: the public proof is the ledger commitment, not fund movement. Not a customer sale, revenue, supplier payment or Cloud credit purchase, despite the model-written purpose text. Reasoning was paid from the owner key outside treasury reservations; the spend amount is a few cents."
     },
     {
+      "id": "owner-funded-checkout",
+      "claim": "A 0.10 USDC checkout settled on NEAR mainnet through 1Click (three final deposit transactions); the sale and a signature-verified Cloud inference answer, with its bill attributed to that sale, are both committed to the mainnet ledger.",
+      "status": "OBSERVED",
+      "evidence": [
+        "funded-loop",
+        "live-checkout-settlement"
+      ],
+      "verify": "node scripts/verify-funded-loop.mjs",
+      "doesNotProve": "The paying customer is the deployment-owner wallet, not an independent third party. Settlement assurance is provider status SUCCESS plus final deposit transactions; no independent money-movement port is wired. The inference was paid from an owner-prepaid Cloud key and attributed to the sale in accounting only: no agent-initiated Cloud credit purchase happened. No NanoGPT purchase has run on mainnet."
+    },
+    {
       "id": "funded-commerce",
-      "claim": "Customer settlement, delivery, refund/payout and supplier acquisition completed with independently verified evidence.",
+      "claim": "An independent third-party customer paid, delivery, refund/payout and supplier acquisition completed with independently verified evidence.",
       "status": "BLOCKED",
       "evidence": [],
       "verify": null,
-      "doesNotProve": "Not established. No customer paid us, nothing was delivered for payment, no refund/payout ran and no supplier was acquired by the loop. The loop-spend, marketplace and swap records show outbound spending only; provider SUCCESS, signed quotes and task artifacts cannot stand in for monetary finality or reusable licences."
+      "doesNotProve": "Not established. The only recorded checkout is owner-funded (see owner-funded-checkout). No independent customer paid us, no refund/payout ran and no supplier was acquired by the loop. The loop-spend, marketplace and swap records show outbound spending only; provider SUCCESS, signed quotes and task artifacts cannot stand in for monetary finality or reusable licences."
     },
     {
       "id": "outlayer-production-proof",

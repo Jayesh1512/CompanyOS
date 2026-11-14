@@ -167,14 +167,26 @@ Verify/reproduce: `node scripts/verify-loop-receipt.mjs`
 
 Limit: The swap is confidential (USDC to wNEAR) and has no public transaction: the public proof is the ledger commitment, not fund movement. Not a customer sale, revenue, supplier payment or Cloud credit purchase, despite the model-written purpose text. Reasoning was paid from the owner key outside treasury reservations; the spend amount is a few cents.
 
+<!-- claim:owner-funded-checkout:OBSERVED -->
+## owner-funded-checkout — OBSERVED
+
+A 0.10 USDC checkout settled on NEAR mainnet through 1Click (three final deposit transactions); the sale and a signature-verified Cloud inference answer, with its bill attributed to that sale, are both committed to the mainnet ledger.
+
+- **LIVE_LOCAL**: [funded-loop](artifacts/mainnet-proof/funded-loop.json)
+- **LIVE_LOCAL**: [live-checkout-settlement](artifacts/mainnet-proof/live-checkout-settlement.json)
+
+Verify/reproduce: `node scripts/verify-funded-loop.mjs`
+
+Limit: The paying customer is the deployment-owner wallet, not an independent third party. Settlement assurance is provider status SUCCESS plus final deposit transactions; no independent money-movement port is wired. The inference was paid from an owner-prepaid Cloud key and attributed to the sale in accounting only: no agent-initiated Cloud credit purchase happened. No NanoGPT purchase has run on mainnet.
+
 <!-- claim:funded-commerce:BLOCKED -->
 ## funded-commerce — BLOCKED
 
-Customer settlement, delivery, refund/payout and supplier acquisition completed with independently verified evidence.
+An independent third-party customer paid, delivery, refund/payout and supplier acquisition completed with independently verified evidence.
 
 - No established evidence for this outcome.
 
-Limit: Not established. No customer paid us, nothing was delivered for payment, no refund/payout ran and no supplier was acquired by the loop. The loop-spend, marketplace and swap records show outbound spending only; provider SUCCESS, signed quotes and task artifacts cannot stand in for monetary finality or reusable licences.
+Limit: Not established. The only recorded checkout is owner-funded (see owner-funded-checkout). No independent customer paid us, no refund/payout ran and no supplier was acquired by the loop. The loop-spend, marketplace and swap records show outbound spending only; provider SUCCESS, signed quotes and task artifacts cannot stand in for monetary finality or reusable licences.
 
 <!-- claim:outlayer-production-proof:NOT_IMPLEMENTED -->
 ## outlayer-production-proof — NOT_IMPLEMENTED
