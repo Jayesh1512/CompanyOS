@@ -1,4 +1,6 @@
 // NanoGPT: an inference provider whose API sells credit to an agent for crypto, no human top-up.
+// TEST STATUS: 5 unit tests (test/integrations-adapters/nanogpt.test.mjs) with a mocked transport and mocked payment.
+// NOT verified live: NanoGPT's real settlement, deposit-address format (memo/tag), or a real NEAR payment. See docs/MAINNET_EVIDENCE.md section 10.
 //   POST /api/transaction/create/near {amount} -> deposit address + expiry
 //   (agent pays native NEAR to that address)    GET /api/transaction/status/near/{txId} -> Completed
 //   POST /api/check-balance (x-api-key)         -> usd_balance      POST /api/v1/chat/completions (OpenAI-compatible)

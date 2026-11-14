@@ -179,6 +179,21 @@ NEAR AI Cloud has no API to buy credit (section 9 limits), so the agent's credit
 node scripts/demo-nanogpt-loop.mjs preflight   # read-only; shows what is missing
 ```
 
+**Test coverage for the agent-funded credit flow (unit level; no live run)**
+
+| Module | Tests | What they establish | What they cannot establish |
+| --- | --- | --- | --- |
+| `src/cloud-funding/nanogpt.mjs` | 5 | Exact NEAR/yocto conversion; the invoice is paid once, in the exact amount, only after safety checks (address shape, no memo/tag, not near expiry, amount within budget and above the minimum); the credit is recorded on the ledger only when the invoice reaches `Completed` and the balance rose; a paid-but-unconfirmed purchase is reported, not hidden; requests match NanoGPT's documented endpoints and headers | Behaviour of the live NanoGPT service, real settlement time, whether a real NEAR deposit address needs a memo |
+| `src/cloud-funding/purchase.mjs` (NEAR AI credit transfer design) | 5 | A payment must be a terminal success before credit is requested; delivery is idempotent on the payment; cap and amount validation precede any payment | Any real NEAR AI organization transfer (not run) |
+| `src/payments/funded-loop.mjs` | 6 | One sale pays for one answer; cost, surplus and ledger event arithmetic; a run that sent no completion releases the sale; purchases never exceed the sale and are reserved before money moves | Concurrent writers (single-file state) |
+| `src/payments/incoming.mjs` | 1 | A payment counts only with provider `SUCCESS` and a balance increase | A real Agent API deposit |
+| `src/integrations/chain-signatures.mjs` | 5 | Request construction, chain routing, response validation | A real signature (policy does not enable it) |
+| Marketplace listings | 5 | Inference listings show "Setup required" and grant no spending authority | The purchase running through the marketplace (it does not) |
+
+Whole suite on 14 November in the maintainer's checkout: 635 pass, 10 fail. The 10 are pre-existing and unrelated (pinned NEAR AI SDK attestation helper tests). A clean checkout without local runtime files fails 60, the same 60 without these commits.
+
+**What is deliberately not claimed:** these are mocked-transport unit tests. They check our logic, ordering and refusals, not that NanoGPT, NEAR or the Agent API behave as we assume. The agent cannot fund the purchase under its current policy (`destinations: only []`), so the flow is not run end to end.
+
 **What this does and does not claim**
 - The purchase is triggered by the script under owner authorization. It is **not** an LLM decision, and the autonomy loop's `spend` command is not wired to it.
 - The marketplace listing "NanoGPT (agent-bought credit)" is a display listing ("Setup required"). The purchase does not run through the marketplace and the listing grants no spending authority.

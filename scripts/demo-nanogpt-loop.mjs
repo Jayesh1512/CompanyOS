@@ -1,4 +1,6 @@
 // Closed loop, all real: customer pays NEAR -> company wallet -> agent buys inference credit from NanoGPT
+// TEST STATUS: the logic it calls is unit-tested (nanogpt.test.mjs); this script itself has never run live and has no automated test.
+// Under the agent's current owner-signed policy (destinations: only []) the Agent API wallet cannot fund the invoice; the company wallet pays.
 // (programmatic invoice, paid in native NEAR) -> agent runs LLM inference on that credit -> every step on the ledger.
 //   node scripts/demo-nanogpt-loop.mjs preflight                 # read-only: keys, balances, NanoGPT minimum, planned spend
 //   node scripts/demo-nanogpt-loop.mjs customer-pay [near=0.40]  # customer (owner wallet) pays the company wallet; commits sale.confirmed
