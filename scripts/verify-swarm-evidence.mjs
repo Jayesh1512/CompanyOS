@@ -12,6 +12,9 @@ const rpc=new JsonRpcProvider({url:'https://rpc.testnet.fastnear.com'}),lines=[]
 const pass=s=>{lines.push('PASS '+s);console.log('PASS '+s);};
 const reader=await createNearMcpReader({keyDirectory:'.runtime/mcp-empty'});
 try{
+ const build=JSON.parse(await readFile('artifacts/swarm-ledger/contract-manifest.json','utf8'));
+ const state=await rpc.query({request_type:'view_account',finality:'final',account_id:manifest.contractId});
+ assert.equal(state.code_hash,build.codeHash);pass('deployed swarm ledger matches the committed compiled WASM');
  assert.equal(proof.run.scenario.state,'completed');assert.equal(proof.run.runs.length,6);
  assert.equal(proof.commits.length,6);pass('six original live recovery calls completed and each has an agent-signed commitment');
  const signers=new Set();

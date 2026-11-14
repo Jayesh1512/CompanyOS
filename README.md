@@ -1,17 +1,19 @@
 # CompanyOs
 
-CompanyOs brings company setup, agent profiles, native JBrain knowledge, customer care and versioned improvements into one local workspace. Owners define the company, approve knowledge and set operating boundaries. Agents and their work have persistent records, revision history and a private company ledger.
+CompanyOs records agent commitments in a **hash-chained on-chain ledger with a tamper-rejecting evidence index**. Each record binds the actor, payload and preceding commitment. The evidence index checks retained bytes and claim scopes against the committed catalog; immutable proof digests are pinned so rebuilding cannot silently accept changed evidence. [Ledger construction](src/rules/onchain-ledger.mjs#L27), [contract validation](contracts/company-ledger/src/lib.rs#L96), [index validation](scripts/evidence/model.mjs#L61) and [redacted signer records](docs/evidence/swarm-execution.txt). Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
+
+The local workspace combines company setup, agent profiles, native JBrain knowledge, customer care and versioned improvements. Owners approve context and operating boundaries. [Operating model](docs/COMPANYOS_GUIDE.md) and [local execution evidence](artifacts/local-real-demo/validation.json).
 
 Start with [How CompanyOs works](docs/COMPANYOS_GUIDE.md) for the operating model and [the local demo](docs/LOCAL_REAL_DEMO.md) for a guided customer-care walkthrough.
 
 ## What you can use
 
-- **Company setup and agent management.** Define the company, review manager and backlog profiles, edit instructions and assign written skills.
-- **Company knowledge.** Store versioned documents in native JBrain, import PDFs/text/public pages and select each agent’s permitted context.
-- **Customer care.** The fictional Northstar Care agency serves Harbor Mutual policy questions with exact source quotations and creates persistent owner-review tickets.
-- **Versioned improvements.** Registered structured templates use fixed baseline/candidate evaluation, revision promotion and rollback. Instruction changes use paused owner review. Controlled full-loop tests exercise delegation, gap detection, repair and future context.
-- **Marketplace guidance.** Browse local templates, written skills, independently authored SOUL.md guidance and customer-care services.
-- **Private and mainnet records.** Inspect private company events and the deployed NEAR ledger’s ordered hash commitments.
+- **Company setup and agent management.** Define the company, review manager and backlog profiles, edit instructions and assign written skills. [Implementation](src/workspace/index.mjs#L8).
+- **Company knowledge.** Store versioned documents in native JBrain, import PDFs/text/public pages and select each agent’s permitted context. [Knowledge](src/knowledge/index.mjs#L6), [imports](src/knowledge/import.mjs#L1).
+- **Customer care.** The fictional Northstar Care agency serves Harbor Mutual policy questions with exact source quotations and creates persistent owner-review tickets. [Executed scenario](evidence/runs/2026-11-14T12-49-11-380Z/care-scenario.json).
+- **Versioned improvements.** Registered structured templates use fixed baseline/candidate evaluation, revision promotion and rollback. Instruction changes use paused owner review. Controlled full-loop tests exercise delegation, gap detection, repair and future context. [Fixed evaluator](src/autonomy/evaluation.mjs#L1), [live recovery](docs/evidence/swarm-live-run.json).
+- **Marketplace guidance.** Browse local templates, written skills, independently authored SOUL.md guidance and customer-care services. [Catalog](src/workspace/resources.mjs#L1).
+- **Private and mainnet records.** Inspect private company events and the deployed NEAR ledger’s ordered hash commitments. [Private ledger](src/ledger/index.mjs#L1), [historical verification log, redacted](docs/evidence/swarm-verification.txt).
 
 ## Demonstrated integrations
 
@@ -75,6 +77,8 @@ node scripts/evidence/verify.mjs
 node scripts/verify-mainnet-evidence.mjs
 ```
 
+The final [clean committed-source run](docs/evidence/tests-final-committed.txt) passed **618 tests**, with every name retained. All **15 evidence-index tests** and syntax checks for **218 committed JavaScript files** also passed; [validation output](docs/evidence/final-validation.txt). The working tree, including pre-existing uncommitted tests, separately passed 625 tests.
+
 The original **512-test baseline** is readable in [the unabridged historical output](docs/evidence/tests-baseline-512.txt), including every test name and its pass count. After item 1, the [committed regression suite](docs/evidence/tests-item2.txt) passed **606 tests**. The [second recovery timeline](docs/evidence/recovery-missing-address.txt) lists all six original Cloud calls, revisions, evaluation results and bills, plus redacted metadata for the later testnet evidence anchor. The anchor commits the retained historical bytes; the original recovery ran off-chain. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
 Controlled-loop tests combine real application modules, Rules, Treasury, native JBrain and the fixed evaluator with injected SDK reasoning, proof, credit and billing inputs. Mainnet verification labels public RPC checks and retained artifact checks separately.
@@ -92,3 +96,7 @@ Saved documents, grants, conversations, tickets, reports and history persist loc
 ## Integration scope
 
 Chain Signatures/MPC signing, PingPay/x402 revenue and OutLayer remote evaluation have been removed from the product. Recovery runs the [local fixed evaluator](src/autonomy/evaluation.mjs) through [the recovery executor](src/demo/recovery.mjs). The recorded x402 marketplace purchases above are buyer-side purchases, not business revenue. Unit tests use controlled inputs to test rejection and recovery; they do not establish a live integration.
+
+Reproduce the funded testnet paths after provisioning private testnet credentials with `node scripts/setup-swarm-testnet.mjs` and `node scripts/setup-business-testnet.mjs`. The recovery launcher takes `--agent-ledger docs/evidence/swarm-accounts.json`; the business runner is `node scripts/run-business-cycle.mjs`. Both retain original operation state and hold unknown outcomes. See [swarm execution](docs/evidence/swarm-execution.txt) and [business execution](docs/evidence/business-execution.txt) for the exact demonstrated scope. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
+
+[Critical rejection evidence](docs/evidence/critical-negative-tests.txt) covers unauthorized spends, foreign actors, tampered commitments, expired/exhausted grants, forged callbacks, repeated paid orders and reindexed proof tampering. Tests: [compiled business](test/business/cycle-contract.test.mjs#L28), [compiled swarm](test/onchain-ledger-rules/swarm-contract.test.mjs#L10), [ledger tampering](test/business/ledger-tamper.test.mjs#L7) and [evidence pins](scripts/evidence/checks.test.mjs#L52).

@@ -29,6 +29,8 @@ test('compiled swarm ledger binds each writer to its actor and rejects impersona
   await assert.rejects(stranger.call(contract,'append',own),/WRITER_REQUIRED/);
   const forged=ledgerBatch(companyId,head,[{type:'work.completed',data:{actorId:agents[1].accountId}}]);
   await assert.rejects(manager.call(contract,'append',forged),/ACTOR_SIGNER_MISMATCH/);
+  const tampered=structuredClone(own);tampered.records[0].payloadHash='f'.repeat(64);
+  await assert.rejects(manager.call(contract,'append',tampered),/RECORD_HASH_MISMATCH/);
   await assert.rejects(stranger.call(contract,'set_agent_writer',{account_id:stranger.accountId,actor_hash:own.records[0].actorHash}),/OWNER_REQUIRED/);
   await contract.call(contract,'set_agent_writer',{account_id:manager.accountId,actor_hash:null});
   await assert.rejects(manager.call(contract,'append',own),/WRITER_REQUIRED/);

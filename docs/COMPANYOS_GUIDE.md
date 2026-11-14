@@ -76,7 +76,7 @@ The table records implemented behavior and the evidence supporting each scope.
 | Rust NEAR ledger | Local Sandbox and recorded mainnet verification | Deployed contract, hash-chained records and Agent API native-call writes through evidence scripts. |
 | NanoGPT purchase | Redacted historical mainnet run; transaction references withheld | [Run and verification](MAINNET_EVIDENCE.md#10-nanogpt-paid-credit-purchase); company-wallet signing, not grant-bound. |
 
-[Mainnet evidence](MAINNET_EVIDENCE.md), [public-provider evidence](LIVE_EVIDENCE.md) and the [claim index](../CLAIMS.md) retain the references and verification scope. The 15 November documentation audit recorded 650 passing regression tests and syntax checks for 207 JavaScript files.
+[Mainnet evidence](MAINNET_EVIDENCE.md), [public-provider evidence](LIVE_EVIDENCE.md) and the [claim index](../CLAIMS.md) retain the references and verification scope. The [final committed-source regression run](evidence/tests-final-committed.txt) passed 618 tests. [Final validation](evidence/final-validation.txt) records the 15 evidence-index checks and 218 committed JavaScript syntax checks.
 
 ## Owner setup and practical next actions
 

@@ -1,6 +1,7 @@
 Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt.
 Historical output below retains the original observation scope; removed references cannot be independently rechecked here.
 
+PASS deployed swarm ledger matches the committed compiled WASM
 PASS six original live recovery calls completed and each has an agent-signed commitment
 PASS manager: FINAL exact append by manager.companyos-mwkf17op.testnet; [transaction hash removed]
   [transaction link removed]

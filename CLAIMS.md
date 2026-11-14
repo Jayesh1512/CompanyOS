@@ -6,6 +6,29 @@ Run `node scripts/evidence/verify.mjs` for offline integrity, scope consistency,
 
 Trust scopes: **LIVE_PUBLIC** = original public provider capture; **LIVE_PAID** = sanitized records of the approved actual owner-funded calls; **LIVE_LOCAL** = actual local execution; **CONTROLLED** = injected external facts. Each claim retains the provenance and verification scope of its supporting records.
 
+<!-- claim:final-regression:OBSERVED -->
+## final-regression — OBSERVED
+
+The isolated committed-source suite passed 618 named tests, all 15 evidence-index checks and syntax checks for 218 committed JavaScript files.
+
+- **CONTROLLED**: [final-regression](docs/evidence/tests-final-committed.txt)
+- **CONTROLLED**: [final-validation](docs/evidence/final-validation.txt)
+
+Verify/reproduce: `npm test; npm run check; node --test scripts/evidence/checks.test.mjs; node scripts/evidence/verify.mjs`
+
+Evidence scope: Local regression and offline evidence verification; not another live provider run. Pre-existing uncommitted tests are excluded from the 618 count, and the working tree separately passed 625 tests.
+
+<!-- claim:critical-rejection-coverage:OBSERVED -->
+## critical-rejection-coverage — OBSERVED
+
+Compiled contracts reject unauthorized/foreign actors, tampered commitments, expired/exhausted grants and repeated paid orders; rebuilding the evidence index cannot replace pinned live proof bytes.
+
+- **CONTROLLED**: [critical-negative-tests](docs/evidence/critical-negative-tests.txt)
+
+Verify/reproduce: `node --test test/business/*.test.mjs test/onchain-ledger-rules/swarm-contract.test.mjs scripts/evidence/checks.test.mjs`
+
+Evidence scope: Local nearcore Sandbox and deliberate local evidence tampering. These are negative regression tests, not additional public-chain business executions.
+
 <!-- claim:testnet-business-cycle:RECORDED_HASHES_WITHHELD -->
 ## testnet-business-cycle — RECORDED_HASHES_WITHHELD
 

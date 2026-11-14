@@ -1,9 +1,42 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-17T09:32:40.931Z",
+  "generatedAt": "2026-11-17T09:32:41.033Z",
   "grantsSpendingAuthority": false,
   "scope": "Evidence index; checksums and labels are not cryptographic proof of every claim.",
   "artifacts": [
+    {
+      "id": "final-regression",
+      "path": "docs/evidence/tests-final-committed.txt",
+      "kind": "controlled_test",
+      "command": "npm test in isolated committed-source snapshot",
+      "doesNotProve": "Full 618-test local run; controlled inputs and real local processes retain their original test scopes.",
+      "trustScope": "CONTROLLED",
+      "bytes": 71268,
+      "sha256": "55963bef996ad36ad9082d70980ba6f363ac433521d943e91727f8eecf3191fe",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "final-validation",
+      "path": "docs/evidence/final-validation.txt",
+      "kind": "controlled_test",
+      "command": "npm run check; node --test scripts/evidence/checks.test.mjs; node scripts/evidence/verify.mjs",
+      "doesNotProve": "218 syntax checks, 15 evidence-index tests and offline verification. The index count predates inclusion of these final log files.",
+      "trustScope": "CONTROLLED",
+      "bytes": 2572,
+      "sha256": "254db3f25dc764505c2a6d72762b69759bf839bee89552f0de0dc0797199fd6a",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
+    {
+      "id": "critical-negative-tests",
+      "path": "docs/evidence/critical-negative-tests.txt",
+      "kind": "controlled_test",
+      "command": "node --test test/business/*.test.mjs; node --test test/onchain-ledger-rules/swarm-contract.test.mjs; node --test scripts/evidence/checks.test.mjs",
+      "doesNotProve": "Compiled business/swarm rejection cases ran in local nearcore Sandbox; index rejection tests deliberately alter local data. No public-chain negative spend is claimed.",
+      "trustScope": "CONTROLLED",
+      "bytes": 7118,
+      "sha256": "0ca35278bda368faed8a57f94339ff181c7b8e58c075292fd3de7c70e0052e5d",
+      "timestampBasis": "historical-artifact-no-observation-time-asserted"
+    },
     {
       "id": "business-setup",
       "path": "docs/evidence/business-setup.json",
@@ -121,8 +154,8 @@
       "command": "node scripts/verify-swarm-evidence.mjs",
       "doesNotProve": "FINAL exact transaction signers, record/output hashes and real MCP chain readback; not historical Cloud plaintext revalidation. Transaction hashes and explorer links are withheld at the owner’s request. These redacted historical records do not permit transaction-by-transaction verification from the committed files.",
       "trustScope": "LIVE_PUBLIC",
-      "bytes": 1516,
-      "sha256": "f5a7428b89e8c5331e0d1f06f162f132094fb28b20cacff391f19aaab8cc51a8",
+      "bytes": 1579,
+      "sha256": "3c2c2c2134ce28fc8f77942ce5cce83c9fb3c8ff8da196e2e7f790b12825ccea",
       "timestampBasis": "historical-artifact-no-observation-time-asserted"
     },
     {
@@ -737,6 +770,27 @@
     }
   ],
   "claims": [
+    {
+      "id": "final-regression",
+      "claim": "The isolated committed-source suite passed 618 named tests, all 15 evidence-index checks and syntax checks for 218 committed JavaScript files.",
+      "status": "OBSERVED",
+      "evidence": [
+        "final-regression",
+        "final-validation"
+      ],
+      "verify": "npm test; npm run check; node --test scripts/evidence/checks.test.mjs; node scripts/evidence/verify.mjs",
+      "doesNotProve": "Local regression and offline evidence verification; not another live provider run. Pre-existing uncommitted tests are excluded from the 618 count, and the working tree separately passed 625 tests."
+    },
+    {
+      "id": "critical-rejection-coverage",
+      "claim": "Compiled contracts reject unauthorized/foreign actors, tampered commitments, expired/exhausted grants and repeated paid orders; rebuilding the evidence index cannot replace pinned live proof bytes.",
+      "status": "OBSERVED",
+      "evidence": [
+        "critical-negative-tests"
+      ],
+      "verify": "node --test test/business/*.test.mjs test/onchain-ledger-rules/swarm-contract.test.mjs scripts/evidence/checks.test.mjs",
+      "doesNotProve": "Local nearcore Sandbox and deliberate local evidence tampering. These are negative regression tests, not additional public-chain business executions."
+    },
     {
       "id": "testnet-business-cycle",
       "claim": "Redacted historical records describe: A real testnet audit-service cycle received 2 test NEAR, admitted a verified Cloud decision, spent 1 test NEAR through an expiring recipient-bound agent grant, delivered a stored digest and committed the business hash chain.",
