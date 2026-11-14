@@ -1,3 +1,4 @@
+import {customerPaymentView} from '../payments/receipts.mjs';
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 
 export const hashAccessToken = token => createHash('sha256').update(token).digest('hex');
@@ -65,6 +66,12 @@ export function createWeb({ aiDemo,fundedLoop,workflow, ledger, rules, readiness
         if (request.method === 'POST') {
           const origin = request.headers.get('origin');
           if (origin && origin !== url.origin) throw error('ORIGIN_MISMATCH', 'Use this application origin for requests.', 403);
+        }
+        if(path==='/api/workspace/customer-payments'){
+          const access=workspaceIdentity(request,transport);await decideAccess('workspace',access);
+          if(url.search)throw error('INVALID_INPUT','Payment receipts do not accept query parameters.');
+          if(request.method!=='GET')throw error('METHOD_NOT_ALLOWED','Payment receipts are read-only.',405);
+          return json(await customerPaymentView({fundedLoop,companyId,localDemo:!!localDemoContext}));
         }
         if(path==='/api/workspace/ai-demo'||path==='/api/workspace/ai-demo/run'||path==='/api/workspace/ai-demo/control'){
           const access=workspaceIdentity(request,transport);await decideAccess('workspace',access);

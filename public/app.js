@@ -9,7 +9,7 @@ import {signWithEvmWallet} from './owner-wallet.js';
 export function parseRoute(hash='') {
  const [path,query='']=hash.replace(/^#/,'').split('?');let [page,sub,id]=path.split('/').map(x=>decodeURIComponent(x||''));const params=new URLSearchParams(query);
  if(page==='autonomy'&&sub==='setup'){page='setup';sub=['org','brain','boundaries','review'][Number(params.get('step')??0)]??'org';params.delete('step');}
- return {page:['demo','autonomy','agents','overview','tasks','marketplace','ledger','settings','owner','activity','order','knowledge','setup','service','care','support'].includes(page)?page:'setup',sub:sub||null,id:page==='agents'&&sub==='new'?id:null,action:page==='agents'&&sub!=='new'?id:null,params};
+ return {page:['payments','demo','autonomy','agents','overview','tasks','marketplace','ledger','settings','owner','activity','order','knowledge','setup','service','care','support'].includes(page)?page:'setup',sub:sub||null,id:page==='agents'&&sub==='new'?id:null,action:page==='agents'&&sub!=='new'?id:null,params};
 }
 if(typeof document!=='undefined') {
   const root=document.querySelector('#app');
@@ -45,6 +45,10 @@ if(typeof document!=='undefined') {
     if(['order','service'].includes(state.route.page)){state.status=await api('/api/status');state.data={agents:[],tasks:[],catalog:[],activity:[],workspace:{name:'Research service'}};if(state.route.page==='service'){state.services=(await api('/api/services')).services;return;}}
     else {try{const [data,status]=await Promise.all([api('/api/workspace'),api('/api/status')]);state.data=data;state.status=status;state.workspaceAccessDenied=false;}catch(error){if(error.status!==403)throw error;state.workspaceAccessDenied=true;state.data={agents:[],tasks:[],catalog:[],activity:[]};state.status=await api('/api/status');state.operation=null;return;}}
     try{state.localDemo=await api('/api/workspace/local-demo');}catch(error){if(error.status!==404)throw error;state.localDemo={active:false};}
+    if(['payments','marketplace','demo'].includes(state.route.page)){
+      state.customerPayments=null;state.customerPaymentsError=null;
+      try{state.customerPayments=await api('/api/workspace/customer-payments');}catch(error){state.customerPaymentsError=error.message;}
+    }
     if(state.localDemo?.active)state.supportCatalog=await api('/api/support/services');
     if(state.route.page==='demo'&&!state.localDemo?.active)state.aiDemo=await api('/api/workspace/ai-demo');
     if(['setup','autonomy'].includes(state.route.page)){state.autonomy=await api('/api/workspace/autonomy');if(state.route.page==='setup'||state.route.sub==='knowledge')state.autonomyKnowledge=await api('/api/knowledge');if(state.route.page==='autonomy'&&state.route.sub==='improvements')state.autonomyTrace=await api('/api/workspace/autonomy/trace');if(state.route.page==='autonomy'&&state.route.sub==='ledger'){state.ledgerChain=await api('/api/workspace/ledger-chain');state.loopReceipt=await fetch('/loop-receipt.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);}}
@@ -161,6 +165,7 @@ if(typeof document!=='undefined') {
     }
     if(['toggle-menu','close-menu'].includes(action)){state.menuOpen=action==='toggle-menu'?!state.menuOpen:false;render();return;}
     if(['help','close-help'].includes(action)){state.helpOpen=action==='help';render();if(state.helpOpen)root.querySelector('.help-dialog button')?.focus();return;}
+    if(action==='payments-refresh'){task(async()=>{});return;}
     if(action==='company-finish-setup'){const key=state.companyFinishKey??=crypto.randomUUID();task(async()=>{await api('/api/workspace/autonomy/setup-review',{method:'POST',key,body:{version:state.autonomy.company.version}});state.companyFinishKey=null;location.hash=state.localDemo?.active?'marketplace':'autonomy';},{toast:'Setup reviewed. Open the company when you are ready to start work.'});return;}
     if(action==='autonomy-bootstrap'){if(state.autonomy?.company?.managerId){location.hash='autonomy';return;}const key=state.autonomyBootstrapKey??=crypto.randomUUID();task(async()=>{await api('/api/workspace/autonomy/bootstrap',{method:'POST',key,body:{version:state.autonomy.company.version}});state.autonomyBootstrapKey=null;location.hash='autonomy';},{toast:'Core agents and company objective created'});return;}
     if(['autonomy-start','autonomy-pause','autonomy-resume'].includes(action)){const operation=action.slice(9),key=state.autonomyControlKey??=crypto.randomUUID();task(async()=>{await api('/api/workspace/autonomy/control',{method:'POST',key,body:{version:state.autonomy.company.version,operation}});state.autonomyControlKey=null;},{toast:operation==='pause'?'New company work paused':'Company operating intent saved'});return;}

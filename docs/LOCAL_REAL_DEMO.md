@@ -6,6 +6,8 @@ Start the main workspace with `npm run dev`, then click **Start demo** in the to
 
 ## What to try
 
+The **Customer payments** page is linked from the sidebar, marketplace and guide. It shows this agency’s own receipts separately from the recorded prior mainnet sale. Fresh agencies have no received payments; customer-care chat remains free. [Receipt UI and evidence](CUSTOMER_PAYMENTS_UI.md).
+
 1. **Marketplace:** open the published policy or claims agent to start a customer conversation.
 2. **Review agents:** open the manager’s Settings, edit its working instructions and save. Refresh to check the real revision is preserved. The manager/backlog are saved profiles; this demo does not claim they are running a model.
 3. **Open knowledge:** read the fictional Harbor Mutual auto, home, travel and claims documents stored in actual native JBrain.
