@@ -73,7 +73,7 @@
   "reusedNarrationSections": 6,
   "outputs": [
     {
-      "file": "companyos-walkthrough.mp4",
+      "file": "companyos-walkthrough-body.mp4",
       "bytes": 7889903,
       "sha256": "3aab324127e564bc8ee53ea4352c5897cae07e291b4ea989c7b00a4e64a3b4b5"
     },
@@ -82,5 +82,12 @@
       "bytes": 4527169,
       "sha256": "ccf5a0464b89e254e11d9e3c2e95e67a99c9c982cd37a7f3182d56ab1e6b15e1"
     }
-  ]
+  ],
+  "presentation": {
+    "file": "companyos-walkthrough.mp4",
+    "durationSeconds": 192.569002,
+    "openingSeconds": 4,
+    "narrationStartsAtSeconds": 4,
+    "poster": "companyos-title-screen.png"
+  }
 }
