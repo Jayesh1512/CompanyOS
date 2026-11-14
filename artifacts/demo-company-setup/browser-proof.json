@@ -1,0 +1,24 @@
+{
+  "mode": "actual local app and native JBrain through T3 collaborative browser",
+  "companyId": "real-local-demo-fd9c45ac-fda8-47a1-b72c-06d9446e5240",
+  "landing": "#setup/org",
+  "prefilledCompany": "Northstar Care \u00b7 Demo",
+  "checks": [
+    "Company setup sidebar links to #setup/org",
+    "Save company opens agent review with all four care agents visible",
+    "Company brain and boundaries steps work",
+    "Save boundaries opens final review",
+    "Open agency marketplace shows two published services"
+  ],
+  "viewportWidths": [
+    390,
+    1440
+  ],
+  "horizontalOverflow": false,
+  "consoleErrors": [],
+  "agentCount": 4,
+  "documentCount": 4,
+  "serviceCount": 2,
+  "providerOperations": 0,
+  "financialVersion": 0
+}

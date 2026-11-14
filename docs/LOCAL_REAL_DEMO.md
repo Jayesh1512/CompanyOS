@@ -2,7 +2,7 @@
 
 **Start demo** creates a fresh Northstar Care customer-care agency on every launch. Each agency has a new organization ID, a care manager and backlog agent, two policy/claims guides, its own native JBrain knowledge store, and two published local marketplace services.
 
-Start the main workspace with `npm run dev`, then click **Start demo** in the top bar. You can also run `npm run demo:local` against the running loopback workspace. The button opens a dedicated local server and native JBrain store. **Exit local demo** returns to the main company.
+Start the main workspace with `npm run dev`, then click **Start demo** in the top bar. You can also run `npm run demo:local` against the running loopback workspace. The button opens a dedicated local server and native JBrain store. The demo opens **Company setup** with the customer-care brief prefilled. Review the company, its four agents, knowledge and boundaries, then open the agency marketplace from the final review. **Company setup** stays available in the sidebar. **Exit local demo** returns to the main company.
 
 ## What to try
 
@@ -53,6 +53,6 @@ npm run test:native
 npm run check
 ```
 
-Current evidence: [artifacts/fresh-customer-care-demo](../artifacts/fresh-customer-care-demo/). The full suite passes **639/639** with no failures or skips; focused demo/setup/UI checks pass **12/12**, and syntax checks cover **205 JavaScript files**. The T3 collaborative browser verified the one-click launch, fresh organization and agent IDs, two marketplace listings, a cited customer reply, an owner-review ticket, and a second launch with no earlier conversations. Desktop 1440/mobile 390 checks reported no horizontal overflow or browser errors. These checks used real local journals and native JBrain, with zero paid provider operations and no financial state changes.
+Current evidence: [fresh agency checks](../artifacts/fresh-customer-care-demo/) and [company setup browser checks](../artifacts/demo-company-setup/). The full suite passes **640/640** with no failures or skips; focused demo/setup/UI checks pass **14/14**, and syntax checks cover **205 JavaScript files**. The T3 collaborative browser verified the one-click launch, fresh organization and agent IDs, two marketplace listings, a cited customer reply, an owner-review ticket, and a second launch with no earlier conversations. Desktop 1440/mobile 390 checks reported no horizontal overflow or browser errors. These checks used real local journals and native JBrain, with zero paid provider operations and no financial state changes.
 
 These results establish the selected real **local** flow. They do not close live inference, economic, supplier, native signing/fee or public-deployment requirements.
