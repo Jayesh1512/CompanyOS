@@ -1,0 +1,28 @@
+✔ live recovery mechanics: native knowledge revisions, actual fixed failure/repair, model-selected roles and causal ledger persist (1109.847584ms)
+✔ unverified model response holds before delegation; repeated start does not pay or repair (316.4755ms)
+✔ model cannot replace the mandatory template field or activate an untested repair (970.152709ms)
+✔ invented retry citation holds instead of reporting recovery success (1111.968417ms)
+✔ scope fails closed for missing grant and forged owner access (220.781208ms)
+✔ a preflight rejection can be retried explicitly without erasing the failed original or sending a completion (256.011167ms)
+✔ pending zero bills retain every conservative reservation and prevent repeating the scenario (1050.900958ms)
+✔ private recovery HTTP routes reject unauthenticated and cross-origin requests and expose no credentials (168.337666ms)
+✔ revoked live context prevents reuse, excessive bills are held, and a changed template head cannot be promoted (1070.109833ms)
+✔ missing address uses the same repair loop with the model choosing developer before curator (1089.230875ms)
+✔ a valid partial backlog plan runs only selected roles and holds the incomplete recovery knowledge_curator (810.168834ms)
+✔ a valid partial backlog plan runs only selected roles and holds the incomplete recovery template_developer (780.988542ms)
+✔ invalid model delegations are rejected before any repair ["manager"] (595.673ms)
+✔ invalid model delegations are rejected before any repair ["knowledge_curator","knowledge_curator"] (591.247ms)
+✔ invalid model delegations are rejected before any repair "knowledge_curator" (594.645959ms)
+✔ invalid model delegations are rejected before any repair [] (567.683792ms)
+✔ scenario selection is bounded and an existing journal cannot be silently repurposed (154.124042ms)
+✔ recovery records local fixed evaluation for baseline and candidate (1113.136708ms)
+✔ a proven pre-inclusion chain rejection resumes the original verified model result without another inference (1307.058083ms)
+✔ an unknown agent-chain outcome cannot restart the model or the transaction (265.764625ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14372.358083

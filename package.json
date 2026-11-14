@@ -14,7 +14,7 @@
     "check:autonomy:browser": "node scripts/check-autonomy-browser.mjs",
     "probe": "node scripts/probe-vendors.mjs",
     "video:studio": "remotion studio walkthrough/src/index.tsx --public-dir walkthrough/public --port 3001",
-    "video:render": "remotion render walkthrough/src/index.tsx CompanyOsWalkthrough artifacts/companyos-legacy-walkthrough.mp4 --public-dir walkthrough/public --codec h264 --crf 18",
+    "video:render": "remotion render walkthrough/src/index.tsx NearWalkthrough artifacts/near-product-walkthrough.mp4 --public-dir walkthrough/public --codec h264 --crf 18",
     "video:problem:studio": "remotion studio problem-video/src/index.tsx --public-dir problem-video/public --port 3002",
     "video:problem:prepare": "node scripts/prepare-problem-video.mjs",
     "video:problem:render": "remotion render problem-video/src/index.tsx TheAgentProblem artifacts/agent-problem-statement.mp4 --public-dir problem-video/public --codec h264 --crf 18 --audio-codec aac --audio-bitrate 192k",
@@ -47,7 +47,9 @@
     "@nearai/inference-sdk": "0.3.0",
     "near-api-js": "7.5.3",
     "pdfjs-dist": "6.5.438",
-    "yaml": "^2.9.1"
+    "yaml": "^2.9.1",
+    "@nearai/near-mcp": "0.0.35",
+    "@modelcontextprotocol/sdk": "1.28.0"
   },
   "devDependencies": {
     "@remotion/cli": "4.0.542",

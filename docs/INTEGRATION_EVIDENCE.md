@@ -1,4 +1,8 @@
-# Current SDK verification integration — 13 November 2026
+> Current scope: OutLayer remote evaluation, PingPay revenue and Chain Signatures/MPC signing have been removed. References below are dated historical test notes, not active product features. See [CLAIMS.md](../CLAIMS.md).
+
+# SDK verification integration snapshot — 13 November 2026
+
+> **Dated implementation snapshot.** The [current product guide](COMPANYOS_GUIDE.md) describes the active workspace; [mainnet evidence](MAINNET_EVIDENCE.md) records subsequent executions. This page retains the original increment’s implementation and test history.
 
 This section supersedes the earlier R1/historical implementation inventories below. The user approved reversible SDK integration, not execution. No provider preflight, paid generation, quote/deposit request, transfer, account/grant provisioning, supplier purchase, secrets request or funded proof was run in this work. Coordinator installed/pinned dependencies and owns app/config/package/runner/UI changes; this worker did not edit those files. Local tests use real SDK cryptographic helpers with explicitly synthetic keys/documents and local HTTP stand-ins. They do not establish deployed-provider, TDX, balance, credit, movement or economic proof.
 
@@ -39,7 +43,7 @@ Therefore a current E2EE response always keeps strict overall `status:'unavailab
 
 The documented non-E2EE route was examined only for feasibility: the same Node SDK can use a supported NEAR model with `e2ee:false`, verified model routing, `x-no-aliasing:true`, pinned TLS and provider-TEE signatures over exact plaintext request/response bytes. That removes this particular ephemeral decryption-key replay problem, but still needs actual retained attestation/collateral verification, accepted provenance/pins and separately approved security/route scope. **It was not selected as a fallback.**
 
-Business M07 `generate()` remains the old HTTP path with explicit proof-unavailable metadata. No `prepareVerified` alias or silent business migration was added. The coordinator's standalone bounded component entry uses the new SDK factory; strict M01 prevents the legacy path from supplying a complete business proof.
+At this snapshot, the worker supplied the SDK factory for coordinator integration. The subsequent [business SDK integration](NEAR_VERIFICATION.md) prepares the encrypted request before application reservation and final dispatch.
 
 Primary SDK/source references: [official JavaScript guide](https://docs.near.ai/cloud/inference-sdk/javascript), [verification policy](https://docs.near.ai/cloud/verification/reference/verification-policy), [exact response-signature scope](https://docs.near.ai/cloud/verification/cloud-api/response-signatures), [published 0.3.0 npm package](https://www.npmjs.com/package/@nearai/inference-sdk/v/0.3.0), [official source repository](https://github.com/nearai/inference-sdk).
 

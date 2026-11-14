@@ -1,142 +1,57 @@
 # CompanyOs
 
-**Create an organization, not just an agent.** CompanyOs is a platform for autonomous organizations designed to earn from useful work, maintain a treasury, and pay for the infrastructure and services that keep them running.
+CompanyOs records agent commitments in a **hash-chained on-chain ledger with a tamper-rejecting evidence index**. Each record binds the actor, payload and preceding commitment. The evidence index checks retained bytes and claim scopes against the committed catalog; immutable proof digests are pinned so rebuilding cannot silently accept changed evidence. [Ledger construction](src/rules/onchain-ledger.mjs#L27), [contract validation](contracts/company-ledger/src/lib.rs#L96), [index validation](scripts/evidence/model.mjs#L61) and [redacted signer records](docs/evidence/swarm-execution.txt). Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
-An owner defines the purpose, approved knowledge, operating policy and initial budget. A master agent coordinates the team around that purpose. Customers pay for services; the treasury tracks revenue and expenses; the organization acquires the resources it needs and maintains its ability to serve the next customer.
+The local workspace combines company setup, agent profiles, native JBrain knowledge, customer care and versioned improvements. Owners approve context and operating boundaries. [Operating model](docs/COMPANYOS_GUIDE.md) and [local execution evidence](artifacts/local-real-demo/validation.json).
 
-**Earn → Spend → Improve → Sustain.** Self-repair is one part of that operating cycle—not the product's entire purpose.
+Start with [How CompanyOs works](docs/COMPANYOS_GUIDE.md) for the operating model and [the local demo](docs/LOCAL_REAL_DEMO.md) for a guided customer-care walkthrough.
 
-Northstar Care, our fictional insurance customer-service organization, is the hackathon example. **CompanyOs is the platform; insurance is one instance.** Research services, document services and other customer-facing agent businesses are intended applications of the same operating model, not separate products already demonstrated.
+## What you can use
 
-[Judge's guide](docs/JUDGE_GUIDE.md) · [Payment evidence](docs/MAINNET_EVIDENCE.md) · [Organization guide](docs/COMPANYOS_GUIDE.md) · [Recovery evidence](docs/RECOVERY_EXECUTION.md)
+- **Company setup and agent management.** Define the company, review manager and backlog profiles, edit instructions and assign written skills. [Implementation](src/workspace/index.mjs#L8).
+- **Company knowledge.** Store versioned documents in native JBrain, import PDFs/text/public pages and select each agent’s permitted context. [Knowledge](src/knowledge/index.mjs#L6), [imports](src/knowledge/import.mjs#L1).
+- **Customer care.** The fictional Northstar Care agency serves Harbor Mutual policy questions with exact source quotations and creates persistent owner-review tickets. [Executed scenario](evidence/runs/2026-11-14T12-49-11-380Z/care-scenario.json).
+- **Versioned improvements.** Registered structured templates use fixed baseline/candidate evaluation, revision promotion and rollback. Instruction changes use paused owner review. Controlled full-loop tests exercise delegation, gap detection, repair and future context. [Fixed evaluator](src/autonomy/evaluation.mjs#L1), [live recovery](docs/evidence/swarm-live-run.json).
+- **Marketplace guidance.** Browse local templates, written skills, independently authored SOUL.md guidance and customer-care services. [Catalog](src/workspace/resources.mjs#L1).
+- **Private and mainnet records.** Inspect private company events and the deployed NEAR ledger’s ordered hash commitments. [Private ledger](src/ledger/index.mjs#L1), [historical verification log, redacted](docs/evidence/swarm-verification.txt).
 
-## How a living organization works
+## Demonstrated integrations
 
-A conventional agent completes a task. An organization also has to pay its bills, coordinate work, maintain knowledge and keep serving customers. CompanyOs brings those responsibilities into one operating model.
+**Owner-funded NEAR AI Cloud.** Two recorded encrypted calls through the official SDK produced a cited answer and an owner-review ticket, with original-process gateway/model and response verification. Provider bills total **$0.00322116**. Saved accepted results replay from the local journal. [AI demo and verification scope](docs/REAL_AI_DEMO.md).
 
-```text
-             Owner defines purpose, knowledge, policy and budget
-                                      |
-                                      v
-                      Master agent + specialist agents
-                                      |
-              Customers request useful work and pay for services
-                                      |
-                                      v
-                         Treasury receives revenue
-                                      |
-                         Pays for permitted resources
-                         |- Inference and compute
-                         |- External services and task providers
-                         `- Maintenance and improvements
-                                      |
-                                      v
-                      Agents deliver the customer's work
-                                      |
-                                      v
-                     Record revenue, costs and obligations
-                                      |
-                                      v
-                   Retain working funds for the next request
-                                      |
-                              Keep serving customers
+**NEAR mainnet ledger.** The Rust contract is deployed and has recorded Agent API native-call writes under an owner-signed policy and grant. The 14 November verification snapshot passed **20 checks**: 14 public-chain checks and 6 retained-provider-artifact checks, including a 22-record hash chain. [Transactions and read-only verification](docs/MAINNET_EVIDENCE.md).
 
-       When a gap is observed: backlog -> specialist work -> evaluated update
-       The updated knowledge or template supports subsequent permitted work.
-```
+**Recovery swarm on NEAR testnet.** Retained records describe five agents with distinct NEAR subaccounts that signed six commitments during a real six-call Cloud recovery. The contract binds each signer to its actor hash. Agent head, authorization and readback tools run through the official NEAR MCP server with a CompanyOS public-read extension. [Redacted execution record](docs/evidence/swarm-execution.txt), [full run with MCP exchanges](docs/evidence/swarm-live-run.json), [historical verification log, redacted](docs/evidence/swarm-verification.txt), [contract](contracts/company-ledger/src/lib.rs), [signer](src/onchain/agent-ledger.mjs) and [MCP tool](src/onchain/near-mcp.mjs). This is the configured recovery swarm; arbitrary new profiles are not automatically funded. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
-This is the **business design**, not a claim that every step is already autonomous in production. The demonstrated sale used 1Click; x402 is the intended programmatic charging path. The current Cloud call used owner-prepaid credits, so automatic treasury-to-Cloud funding remains open.
+**Marketplace task purchases.** Two separately invoked x402 purchases obtained completed task outputs from `market.near.ai`, at **0.5 USDC each**. The company acted as the buyer. [Recorded task purchases](docs/MAINNET_EVIDENCE.md#4-real-paid-marketplace-call-x402--nep-366).
 
-### Earn: provide something worth paying for
+**Public quote and attestation reads.** A real 1Click `dry:true` quote passed production-root SDK signature verification and offline replay. Cloud preflight verified fresh gateway/model nonces, UpToDate TCB and gateway TLS binding. [Public evidence and reproduction](docs/LIVE_EVIDENCE.md).
 
-An organization offers a useful service: answer a support question, produce a document, or complete a research task. Customers pay for that output. The platform's revenue model includes x402 payments; the recorded service-payment demonstration currently uses NEAR Intents / 1Click.
+**Testnet paid audit cycle.** Retained records describe a maintainer-controlled customer paying **2 test NEAR**; a real, SDK-verified Cloud decision led the manager agent to spend **1 test NEAR** under an on-chain recipient-bound, expiring grant. The paid notary stored the requested digest, and the business committed `sale.confirmed`, `spend.requested` and `spend.completed` in its on-chain hash chain. [Redacted step-by-step execution](docs/evidence/business-execution.txt), [redacted run record](docs/evidence/business-cycle.json), [historical verification log, redacted](docs/evidence/business-verification.txt), [contract](contracts/audit-business/src/lib.rs) and [runner](scripts/run-business-cycle.mjs). These are test tokens and maintainer-controlled accounts; independent customer revenue, USD profit and a self-funded mainnet business are not established. Cloud remains owner-prepaid. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
-### Spend: buy what the organization needs
+**Owner-funded checkout test.** The deployment-owner wallet supplied a **0.10 USDC** checkout payment. A separately owner-prepaid, signature-verified Cloud answer cost **$0.00020271**. The recorded accounting attributes that cost to the checkout; `sale.confirmed` and `inference.consumed` have mainnet ledger references. [Checkout evidence and attribution](docs/MAINNET_EVIDENCE.md#9-owner-funded-checkout-and-answer).
 
-A treasury is more than a wallet balance. The organization needs to account for incoming payments, committed costs, pending work and available operating funds. Inference, compute and external task services are operating expenses—not features the owner should have to purchase manually for every request in the intended autonomous model.
+**Loop-driven spend.** A real Cloud decision led to a **0.025 USDC** confidential swap through the Agent API. Provider records describe the swap; the public ledger commits its recorded events. [Spend evidence](docs/MAINNET_EVIDENCE.md#8-loop-driven-spend-through-the-agent-api).
 
-Rules control permitted actions and limits; Treasury records reservations and costs. Actual resource acquisition still depends on supported provider routes, credentials and verifiable receipts. A model cannot grant itself spending permission.
+**NanoGPT credit purchase.** A retained mainnet run received **0.35 NEAR** from a separate maintainer-supplied wallet and paid **0.340779 NEAR** to NanoGPT invoice `498165652`. NanoGPT reports `COMPLETED`; purchase and inference records have ledger commitments. This standalone path uses a company-wallet key; it is not grant-bound or proof of an independent customer. [Redacted run record](artifacts/mainnet-proof/nanogpt-loop-2.json), [read-only verification](docs/evidence/nanogpt-live-verification.txt), [purchase code](src/cloud-funding/nanogpt.mjs) and [runner](scripts/demo-nanogpt-loop.mjs). Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
 
-### Improve: maintain the business, not just the current answer
+## Open the workspace
 
-Missing knowledge or a workflow defect becomes backlog work. The master agent can coordinate specialist roles, including a knowledge curator and developer, within the allowed scope. Approved updates become new revisions for subsequent work. The demonstrated automatic changes are source-backed knowledge and additive templates; arbitrary host-code changes and paid external hiring are not established by those demonstrations.
+The main workspace uses **port 4173**:
 
-### Sustain: keep the organization able to operate
+- [Organization setup](http://127.0.0.1:4173/#setup): Define company → Review agents → optional Company brain → Boundaries & infra → Review & finish.
+- [Company operations](http://127.0.0.1:4173/#autonomy): objectives, responsible agents, work, improvements and requests.
+- [Company knowledge](http://127.0.0.1:4173/#knowledge): documents, grants and revisions.
+- [Customer chat](http://127.0.0.1:4173/#care) and [owner inbox](http://127.0.0.1:4173/#support): cited policy lookup and local review tickets.
+- [Company ledger](http://127.0.0.1:4173/#autonomy/ledger): private history and NEAR audit tools.
+- [Marketplace](http://127.0.0.1:4173/#marketplace): guidance, resource descriptions and local services.
+- [Real AI demo](http://127.0.0.1:4173/#demo): owner-funded inference using the configured private execution scope.
 
-The goal is to use service revenue to cover operating costs and fund continued delivery and maintenance. That means tracking both sides of the business—not merely showing an agent with a wallet. Recording a sale and its associated cost is demonstrated; continuously replenishing provider credits from treasury revenue, paying contributors and running a fully self-funded business are not yet demonstrated.
+The top-right **Start demo** button opens a fresh local agency with its own native JBrain store, four agents, four fictional policy documents and two published local services. **Exit local demo** returns to the main company. **Fill example fields** prefills editable setup drafts. [Local demo walkthrough](docs/LOCAL_REAL_DEMO.md).
 
-## The hackathon instance: Northstar Care
+## Run
 
-Northstar Care serves fictional Harbor Mutual insurance documents. The domain makes the platform tangible; it does not define the platform or represent a real insurer.
-
-### A service payment linked to a delivered answer
-
-The recorded demonstration links a **0.10 USDC sale via 1Click** to one encrypted, signature-verified NEAR AI answer. `sale.confirmed` and `inference.consumed` commitments are on the NEAR mainnet ledger.
-
-| Business item | Recorded value |
-|---|---:|
-| Service payment | 0.10 USDC |
-| Matched inference bill | $0.00020271 |
-| Payment less that one bill | $0.09979729 |
-
-The payment and answer are real recorded execution, not a forecast. This is an operator-run demonstration, not evidence of independent customer demand. The remainder is **accounting only, not profit**: gas, other calls and operating costs are excluded. The inference was billed to the owner-prepaid Cloud key; the sale did not purchase those credits. The verifier checks a FINAL settlement leg and ledger records, not the customer's original deposit transfer or full independent monetary settlement. [Receipts, transactions and exact limits](docs/MAINNET_EVIDENCE.md#9-customer-funded-service-loop).
-
-Separately, retained evidence includes marketplace x402 task purchases and a **0.025 USDC confidential swap** initiated by a model-produced command through the Agent API. These demonstrate outbound expense/spend paths, not x402 customer revenue or a purchase of Cloud credits. [Payment inventory](docs/MAINNET_EVIDENCE.md#payment-inventory-what-moved-and-how-to-check-it).
-
-### Maintaining the organization between requests
-
-In the recorded contact-preference scenario, support cannot answer a question from its incomplete runbook. The backlog delegates a knowledge curator and template developer. The curator selects an exact approved-source passage for a new native JBrain revision. The developer proposes the missing template field; a fixed evaluator checks it before promotion. Support then retries the same request using the new revisions and completes the intake.
-
-A second scenario repairs a missing mailing-address requirement using the shared scenario engine. Each recorded run has six accepted NEAR AI Cloud responses; matched bills are **$0.005128148** and **$0.00776905**, respectively. These are bounded recovery scenarios with retained original-process verification, not unrestricted autonomous development. Their cited evaluations used local fallback, not verified remote OutLayer execution. [Contact-preference run](docs/LIVE_RECOVERY_DEMO.md) · [Address run and execution modes](docs/RECOVERY_EXECUTION.md).
-
-This is what maintenance contributes to the larger vision: the organization improves what it uses to deliver future work, rather than treating each request as an isolated conversation.
-
-## Evidence a judge can inspect
-
-Public verification was rerun on **14 November 2026 around 18:03 UTC**. Counts are recorded snapshots, not guaranteed output from future code or chain state.
-
-| Evidence path | Recorded result | What it establishes |
-|---|---|---|
-| Mainnet checklist | 20/20 | 14 public-chain checks and 6 retained-artifact checks |
-| Loop receipt | 17/17; 24 ledger records at that check | 14 public-chain checks and 3 artifact checks; authenticated provider check skipped |
-| Sale-to-answer receipt | 10/10 | 7 public-chain checks and 3 artifact checks; payment/funding limits stated above |
-| Two recovery scenarios | Linked run records and revision history | Retained model verification, billing and reuse of revised knowledge/templates |
-
-The Rust mainnet ledger contains safe event/hash commitments, not raw customer documents. A public commitment proves the record was committed; it does not independently prove every business assertion inside it. Recovery's private company journal and public mainnet evidence remain separate histories.
-
-## Why NEAR fits this organization model
-
-| Component | Responsibility | Evidence boundary |
-|---|---|---|
-| Agent API | Owner-signed policy/grant, native ledger calls, bounded spend routes | Mainnet transactions and separate provider receipts |
-| NEAR AI Cloud | Encrypted inference with original-process attestation/signature checks | Recorded live responses; offline plaintext recovery unavailable |
-| NEAR Intents / 1Click | Cross-asset quotes and service checkout | Signed quote and recorded sale settlement-leg evidence |
-| Rust ledger / NEAR RPC | Ordered event commitments and FINAL transaction reads | Public mainnet verification |
-| Native JBrain | Approved organizational knowledge and revisions | Actual local storage and demonstrated revision reuse |
-| OutLayer evaluator integration | Remote evaluation path | See current execution documentation; the cited recovery runs used local fallback |
-| Read-only MCP server over the Agent API | `scripts/mcp-server.mjs`, `src/integrations/mcp-server.mjs` | 4 tests plus one recorded live session (balances, policy, a refused `transfer`). Our own minimal stdio server, not the hosted OAuth MCP endpoint; scripted client only. [Section 13](docs/MAINNET_EVIDENCE.md#13-read-only-mcp-server-over-the-agent-api) |
-| Agent API native sign-intent adapter | EVM signing route backed by NEAR MPC keys | Mocked tests plus one live signature: the agent signed a transfer intent whose signature recovers to its EVM address `0x7b6313d0…`. Signed, never published; no funds moved. `node scripts/chain-signatures-proof.mjs verify` |
-| Agent-purchased NEAR AI credit | `src/cloud-funding/purchase.mjs`: pay USDC via Intents, seller org transfers credit to the agent's org | **Unit-tested only; not run live.** NEAR AI Cloud has no purchase API, so this uses its org-to-org credit transfer with an owner-operated seller. Needs one-time console setup: `node scripts/demo-funded-loop.mjs preflight` |
-| Agent repurchases inference credit from a marketplace provider (NanoGPT) | `scripts/demo-nanogpt-loop.mjs`, checked by `scripts/verify-nanogpt-loop.mjs` | **Run twice on mainnet** (17/17 and 15/15). Run 2: a 0.35 NEAR sale from a separate maintainer-held wallet covered a 0.340779 NEAR credit purchase first pass, then an answer, all on the ledger. Not an independent customer; NanoGPT's conversion cost 24.6%; a script, not an LLM, triggered it. [Section 10](docs/MAINNET_EVIDENCE.md#10-agent-bought-inference-credit-nanogpt-run-twice-on-mainnet) |
-| Marketplace listings for inference providers | NEAR AI Cloud and "NanoGPT (agent-bought credit)" in `src/workspace/resources.mjs` | Display listings with honest limits ("Setup required"); they grant no spending authority and the purchase does not run through them |
-| Customer payment into the agent's own wallet | `src/payments/incoming.mjs`: Agent API deposit address, verified by provider status + balance rise | **Unit-tested only; not run live** |
-
-Exact versions and call sites are in [package.json](package.json) and the linked execution documents. SDK presence alone is not execution evidence.
-
-## Verify without spending
-
-```sh
-git clone https://github.com/Jayesh1512/company-for-none.git CompanyOs
-cd CompanyOs
-node scripts/verify-mainnet-evidence.mjs
-node scripts/verify-loop-receipt.mjs
-```
-
-For the sale-to-answer verifier, use the public account identifiers in the [judge's guide](docs/JUDGE_GUIDE.md). Use a clean checkout without `.env` for public-only checks. These verifiers sign nothing and submit no paid work; the optional authenticated provider read is skipped without credentials.
-
-## Run an organization locally
-
-Requires Node **24.22.1+**, npm, Git and Rust/Cargo:
+Requires Node **24.22.1+**, npm, Git and Rust/Cargo.
 
 ```sh
 npm ci
@@ -144,12 +59,44 @@ npm run setup:jbrain
 npm run dev
 ```
 
-Open the application in your browser and use the company setup wizard to define the company and review its agents, knowledge and boundaries. Ordinary startup seeds no sample organization or spending authority. A new domain needs its own approved documents, service configuration and permitted resource connections; the platform does not supply those automatically.
+JBrain setup builds pinned commit `35836b0972a6471b22db3155f78b26749c78b6ac` with locked Cargo dependencies. Configure an existing installation through `SHOP_JBRAIN_BINARY`, or `SHOP_JBRAIN_URL` and `SHOP_JBRAIN_TOKEN_FILE`.
 
-The latest **Open demo** flow opens a fresh, prefilled company setup wizard for review, then the agency marketplace; it is a model-free local demonstration, not a paid autonomous run. The separate actual-AI and recovery paths require explicit credentials and budget authorization. Follow the [organization guide](docs/COMPANYOS_GUIDE.md), [local-access documentation](docs/LOCAL_WORKSPACE_ACCESS.md) and [recovery setup](docs/RECOVERY_EXECUTION.md).
+Development startup loads local environment configuration and starts the app and native JBrain on loopback. Direct local-browser access uses the actual socket, exact Host/port and same-origin metadata. Shared or remote deployments use configured authentication. [Access setup](docs/LOCAL_WORKSPACE_ACCESS.md).
 
-## Engineering checks and current limits
+Configuration names are in [.env.example](.env.example). `SHOP_CONFIG_PATH` explicitly selects a commercial policy. Setup saves company and agent configuration; execution uses separately configured authority and readiness.
 
-Run `npm test`, `npm run check` and `npm run test:native` after installing dependencies and building native JBrain. **563 passing tests is a historical baseline**, not current CI status after recent execution changes. This documentation update did not rerun the full application suite.
+## Checks
 
-The platform's direction is autonomous operation, not unlimited authority. Owners still define policies, authorize budgets and resolve exceptions. Unknown effects reconcile their original operation rather than being blindly retried. Template evaluation is scoped and is not general semantic validation. End-to-end automatic treasury funding of providers, contributor payouts and refunds remain open. See [mainnet evidence](docs/MAINNET_EVIDENCE.md) and [verification contracts](docs/NEAR_VERIFICATION.md) for the full boundaries.
+```sh
+npm test
+npm run test:native
+npm run check
+npm run test:autonomy
+npm run demo:e2e:controlled
+node scripts/evidence/verify.mjs
+node scripts/verify-mainnet-evidence.mjs
+```
+
+The final [clean committed-source run](docs/evidence/tests-final-committed.txt) passed **618 tests**, with every name retained. All **15 evidence-index tests** and syntax checks for **218 committed JavaScript files** also passed; [validation output](docs/evidence/final-validation.txt). The working tree, including pre-existing uncommitted tests, separately passed 625 tests.
+
+The original **512-test baseline** is readable in [the unabridged historical output](docs/evidence/tests-baseline-512.txt), including every test name and its pass count. After item 1, the [committed regression suite](docs/evidence/tests-item2.txt) passed **606 tests**. The [second recovery timeline](docs/evidence/recovery-missing-address.txt) lists all six original Cloud calls, revisions, evaluation results and bills, plus redacted metadata for the later testnet evidence anchor. The anchor commits the retained historical bytes; the original recovery ran off-chain. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
+
+Controlled-loop tests combine real application modules, Rules, Treasury, native JBrain and the fixed evaluator with injected SDK reasoning, proof, credit and billing inputs. Mainnet verification labels public RPC checks and retained artifact checks separately.
+
+## Accounting, verification and storage
+
+Within the journal-backed application, M01 decides policy and exact plans; M03 records reservations and receipts. Its configured **USD5 lifetime actual-plus-pending ceiling** applies to the application’s shared financial store. Separately invoked evidence scripts use their own recorded run state and operator-selected amounts.
+
+Official Cloud **0.3.0**, 1Click **0.1.26** and Agent API **0.9.0** SDKs are pinned. The AI demo accepts output verified during the original encrypted call and reuses committed results from the journal. Offline verification covers retained byte integrity and supported wire-signature checks. [Verification details](docs/NEAR_VERIFICATION.md).
+
+Saved documents, grants, conversations, tickets, reports and history persist locally. Back up the application journal and company-brain directory together while stopped. Imports produce editable previews; explicit Save persists reviewed text and provenance. Customer-care publication binds exact fictional document revisions. The public ledger stores event types, times and linked hashes; original business data stays private. [Knowledge storage](docs/JBRAIN_INTEGRATION.md) and [customer-care behavior](docs/CUSTOMER_CARE.md).
+
+[Product overview](PRODUCT.md), [design system](DESIGN.md) and [claim-to-evidence index](CLAIMS.md) provide additional detail.
+
+## Integration scope
+
+Chain Signatures/MPC signing, PingPay/x402 revenue and OutLayer remote evaluation have been removed from the product. Recovery runs the [local fixed evaluator](src/autonomy/evaluation.mjs) through [the recovery executor](src/demo/recovery.mjs). The recorded x402 marketplace purchases above are buyer-side purchases, not business revenue. Unit tests use controlled inputs to test rejection and recovery; they do not establish a live integration.
+
+Reproduce the funded testnet paths after provisioning private testnet credentials with `node scripts/setup-swarm-testnet.mjs` and `node scripts/setup-business-testnet.mjs`. The recovery launcher takes `--agent-ledger docs/evidence/swarm-accounts.json`; the business runner is `node scripts/run-business-cycle.mjs`. Both retain original operation state and hold unknown outcomes. See [swarm execution](docs/evidence/swarm-execution.txt) and [business execution](docs/evidence/business-execution.txt) for the exact demonstrated scope. Transaction hashes and explorer links are withheld from these records; transaction-by-transaction verification cannot be reproduced from the committed files.
+
+[Critical rejection evidence](docs/evidence/critical-negative-tests.txt) covers unauthorized spends, foreign actors, tampered commitments, expired/exhausted grants, forged callbacks, repeated paid orders and reindexed proof tampering. Tests: [compiled business](test/business/cycle-contract.test.mjs#L28), [compiled swarm](test/onchain-ledger-rules/swarm-contract.test.mjs#L10), [ledger tampering](test/business/ledger-tamper.test.mjs#L7) and [evidence pins](scripts/evidence/checks.test.mjs#L52).

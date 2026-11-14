@@ -1,0 +1,9 @@
+{
+  "wasmBytes": 136078,
+  "wasmHash": "ad86660c89cc510006e7e5e88eca4fa41fde67dfaf3fe0175ca150ed2262a4dc",
+  "codeHash": "CgNPtEkWTpRD1EhtLFht84jJEGuidzAPXTd3Vjmsxez7",
+  "nearSdk": "5.30.2",
+  "deployed": false,
+  "sourceSha256": "ef41d238809e9a1f35b746ddc280402668d36b5f7381b695d53dffa26b454fc8",
+  "lockSha256": "5f838fba7fc2500baf5a2d5816cb39310f39273da35e5433807cb2ca89f3db93"
+}

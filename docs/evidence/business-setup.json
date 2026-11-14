@@ -1,0 +1,70 @@
+{
+  "network": "testnet",
+  "rpc": "https://rpc.testnet.fastnear.com",
+  "companyId": "business.companyos-mwkf17op.testnet",
+  "vendorId": "notary.companyos-mwkf17op.testnet",
+  "customerId": "companyos-customer-mwkg7tzd.testnet",
+  "agentId": "manager.companyos-mwkf17op.testnet",
+  "companyCreation": {
+    "txHash": null,
+    "signerId": "companyos-mwkf17op.testnet",
+    "receiverId": "business.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "vendorCreation": {
+    "txHash": null,
+    "signerId": "companyos-mwkf17op.testnet",
+    "receiverId": "notary.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "deployments": {
+    "company": {
+      "txHash": null,
+      "signerId": "business.companyos-mwkf17op.testnet",
+      "receiverId": "business.companyos-mwkf17op.testnet",
+      "nearblocks": null
+    },
+    "vendor": {
+      "txHash": null,
+      "signerId": "notary.companyos-mwkf17op.testnet",
+      "receiverId": "notary.companyos-mwkf17op.testnet",
+      "nearblocks": null
+    }
+  },
+  "upgrades": {
+    "company": {
+      "txHash": null,
+      "signerId": "business.companyos-mwkf17op.testnet",
+      "receiverId": "business.companyos-mwkf17op.testnet",
+      "nearblocks": null
+    },
+    "vendor": {
+      "txHash": null,
+      "signerId": "notary.companyos-mwkf17op.testnet",
+      "receiverId": "notary.companyos-mwkf17op.testnet",
+      "nearblocks": null
+    }
+  },
+  "customerFaucet": {
+    "txHash": null,
+    "signerId": "testnet",
+    "receiverId": "companyos-customer-mwkg7tzd.testnet",
+    "nearblocks": null
+  },
+  "grantReceipt": {
+    "txHash": null,
+    "signerId": "business.companyos-mwkf17op.testnet",
+    "receiverId": "business.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "grant": {
+    "id": "c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab",
+    "agentId": "manager.companyos-mwkf17op.testnet",
+    "vendorId": "notary.companyos-mwkf17op.testnet",
+    "remainingYocto": "1000000000000000000000000",
+    "expiresAtNs": "1794991613175000000"
+  },
+  "scope": "All accounts are maintainer-controlled. Customer test tokens came from the real testnet faucet. No mainnet funds or independent customer revenue.",
+  "transactionHashesWithheld": true,
+  "redactionScope": "Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt."
+}

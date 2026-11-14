@@ -1,0 +1,188 @@
+{
+  "network": "testnet",
+  "rpc": "https://rpc.testnet.fastnear.com",
+  "recordedAt": "2026-11-17T08:55:02.211Z",
+  "setup": {
+    "network": "testnet",
+    "rpc": "https://rpc.testnet.fastnear.com",
+    "companyId": "business.companyos-mwkf17op.testnet",
+    "vendorId": "notary.companyos-mwkf17op.testnet",
+    "customerId": "companyos-customer-mwkg7tzd.testnet",
+    "agentId": "manager.companyos-mwkf17op.testnet",
+    "companyCreation": {
+      "txHash": null,
+      "signerId": "companyos-mwkf17op.testnet",
+      "receiverId": "business.companyos-mwkf17op.testnet",
+      "nearblocks": null
+    },
+    "vendorCreation": {
+      "txHash": null,
+      "signerId": "companyos-mwkf17op.testnet",
+      "receiverId": "notary.companyos-mwkf17op.testnet",
+      "nearblocks": null
+    },
+    "deployments": {
+      "company": {
+        "txHash": null,
+        "signerId": "business.companyos-mwkf17op.testnet",
+        "receiverId": "business.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      },
+      "vendor": {
+        "txHash": null,
+        "signerId": "notary.companyos-mwkf17op.testnet",
+        "receiverId": "notary.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      }
+    },
+    "upgrades": {
+      "company": {
+        "txHash": null,
+        "signerId": "business.companyos-mwkf17op.testnet",
+        "receiverId": "business.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      },
+      "vendor": {
+        "txHash": null,
+        "signerId": "notary.companyos-mwkf17op.testnet",
+        "receiverId": "notary.companyos-mwkf17op.testnet",
+        "nearblocks": null
+      }
+    },
+    "customerFaucet": {
+      "txHash": null,
+      "signerId": "testnet",
+      "receiverId": "companyos-customer-mwkg7tzd.testnet",
+      "nearblocks": null
+    },
+    "grantReceipt": {
+      "txHash": null,
+      "signerId": "business.companyos-mwkf17op.testnet",
+      "receiverId": "business.companyos-mwkf17op.testnet",
+      "nearblocks": null
+    },
+    "grant": {
+      "id": "c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab",
+      "agentId": "manager.companyos-mwkf17op.testnet",
+      "vendorId": "notary.companyos-mwkf17op.testnet",
+      "remainingYocto": "1000000000000000000000000",
+      "expiresAtNs": "1794991613175000000"
+    },
+    "scope": "All accounts are maintainer-controlled. Customer test tokens came from the real testnet faucet. No mainnet funds or independent customer revenue."
+  },
+  "source": "docs/evidence/swarm-execution.txt",
+  "taskHash": "5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9",
+  "orderId": "audit-cycle-1",
+  "sale": {
+    "txHash": null,
+    "signerId": "companyos-customer-mwkg7tzd.testnet",
+    "receiverId": "business.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "decision": {
+    "command": {
+      "action": "fulfill",
+      "orderId": "audit-cycle-1",
+      "vendorId": "notary.companyos-mwkf17op.testnet",
+      "amountYocto": "1000000000000000000000000",
+      "purpose": "Fulfill paid digest notarization for order audit-cycle-1; pay notary fee 1000000000000000000000000 yoctoNEAR under grant c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab"
+    },
+    "decisionHash": "1b4120162215568beb3051877131856dcbf10ca98ad18be53f758347261d53cd",
+    "rawOutput": "\n\n{\"action\":\"fulfill\",\"orderId\":\"audit-cycle-1\",\"vendorId\":\"notary.companyos-mwkf17op.testnet\",\"amountYocto\":\"1000000000000000000000000\",\"purpose\":\"Fulfill paid digest notarization for order audit-cycle-1; pay notary fee 1000000000000000000000000 yoctoNEAR under grant c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab\"}",
+    "model": "Qwen/Qwen3.8-27B",
+    "providerRequestId": "740d02d6416a4bc9aa68f45d927ef220",
+    "signatureKind": "provider_tee",
+    "responseSignatureVerified": true,
+    "promptSha256": "2875d72da0fccba14c727a6d1ff6d3e036faf74c981c9d047916fa0b110a902b",
+    "usage": {
+      "prompt_tokens": 513,
+      "total_tokens": 4158,
+      "completion_tokens": 3645,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "reasoning_tokens": 3481,
+      "completion_tokens_details": {
+        "reasoning_tokens": 3481
+      }
+    },
+    "funding": "existing owner-prepaid Cloud credit; outside native testnet sales",
+    "acceptanceScope": "original live SDK E2EE verification"
+  },
+  "spend": {
+    "txHash": null,
+    "signerId": "manager.companyos-mwkf17op.testnet",
+    "receiverId": "business.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "finalOrder": {
+    "id": "audit-cycle-1",
+    "customerId": "companyos-customer-mwkg7tzd.testnet",
+    "taskHash": "5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9",
+    "revenueYocto": "2000000000000000000000000",
+    "spendYocto": "1000000000000000000000000",
+    "state": "completed",
+    "decisionHash": "1b4120162215568beb3051877131856dcbf10ca98ad18be53f758347261d53cd"
+  },
+  "grantAfter": {
+    "id": "c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab",
+    "agentId": "manager.companyos-mwkf17op.testnet",
+    "vendorId": "notary.companyos-mwkf17op.testnet",
+    "remainingYocto": "0",
+    "expiresAtNs": "1794991613175000000"
+  },
+  "notarization": "5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9",
+  "businessRecords": [
+    {
+      "sequence": 1,
+      "kind": "sale.confirmed",
+      "actorId": "companyos-customer-mwkg7tzd.testnet",
+      "orderId": "audit-cycle-1",
+      "payload": "{\"id\":\"audit-cycle-1\",\"customerId\":\"companyos-customer-mwkg7tzd.testnet\",\"taskHash\":\"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9\",\"revenueYocto\":\"2000000000000000000000000\",\"spendYocto\":\"0\",\"state\":\"paid\",\"decisionHash\":null}",
+      "payloadHash": "89a2117aa6f3b08f2759efbae015fd6839949b35816ae3f5c280008daa7fc638",
+      "previousHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "4b3a636e19fe4aac6f9e0925f7155a3fe40bc6dc844ea2b7f4b13b713f323625"
+    },
+    {
+      "sequence": 2,
+      "kind": "spend.requested",
+      "actorId": "manager.companyos-mwkf17op.testnet",
+      "orderId": "audit-cycle-1",
+      "payload": "{\"vendorId\":\"notary.companyos-mwkf17op.testnet\",\"amountYocto\":\"1000000000000000000000000\",\"grantId\":\"c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab\",\"decisionHash\":\"1b4120162215568beb3051877131856dcbf10ca98ad18be53f758347261d53cd\",\"taskHash\":\"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9\"}",
+      "payloadHash": "d3faa0013c089475127e6817aeb21ea660a3b9bc3d0f4b0f51e54db9c197a649",
+      "previousHash": "4b3a636e19fe4aac6f9e0925f7155a3fe40bc6dc844ea2b7f4b13b713f323625",
+      "hash": "fb2ea806ecfc1fccbb693a3a5b119ad5f22c22dcccd41e9049043e1809935f28"
+    },
+    {
+      "sequence": 3,
+      "kind": "spend.completed",
+      "actorId": "business.companyos-mwkf17op.testnet",
+      "orderId": "audit-cycle-1",
+      "payload": "{\"id\":\"audit-cycle-1\",\"customerId\":\"companyos-customer-mwkg7tzd.testnet\",\"taskHash\":\"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9\",\"revenueYocto\":\"2000000000000000000000000\",\"spendYocto\":\"1000000000000000000000000\",\"state\":\"completed\",\"decisionHash\":\"1b4120162215568beb3051877131856dcbf10ca98ad18be53f758347261d53cd\"}",
+      "payloadHash": "ea23c1f082eb87005d1f1292ad476f0602f59977730e4edbf61dbb414975e929",
+      "previousHash": "fb2ea806ecfc1fccbb693a3a5b119ad5f22c22dcccd41e9049043e1809935f28",
+      "hash": "e0cb2ffa3f940a4e777d0fddaa92d35cf89bf4d4ccdf531fcf833a6caa18de79"
+    }
+  ],
+  "vendorRecords": [
+    {
+      "sequence": 1,
+      "kind": "evidence.notarized",
+      "actorId": "business.companyos-mwkf17op.testnet",
+      "orderId": "audit-cycle-1",
+      "payload": "{\"taskHash\":\"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9\",\"feeYocto\":\"1000000000000000000000000\"}",
+      "payloadHash": "cf3e2a8d63eb130fc4f8df8e4ce71af94a96e0bb96549b373d132aaa861c002b",
+      "previousHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "de9d7155a98b3382ca14a3df25b9f4ac27b4cf55618aa011f46fb61d363a658a"
+    }
+  ],
+  "accounting": {
+    "revenueYocto": "2000000000000000000000000",
+    "vendorSpendYocto": "1000000000000000000000000",
+    "grossRemainderBeforeGasYocto": "1000000000000000000000000"
+  },
+  "scope": "Maintainer-controlled testnet customer and vendor; real on-chain service and grant enforcement. Test NEAR has no claimed USD value. Cloud inference uses owner-prepaid credit. This does not establish independent customers or a self-funded mainnet business.",
+  "transactionHashesWithheld": true,
+  "redactionScope": "Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt.",
+  "sourceDigestScope": "taskHash binds the original unredacted source bytes. The committed source is redacted and its current file digest is different; no replacement hash is presented as the original commitment."
+}

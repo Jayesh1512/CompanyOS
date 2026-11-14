@@ -1,0 +1,26 @@
+Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt.
+Historical output below retains the original observation scope; removed references cannot be independently rechecked here.
+
+NanoGPT loop, company wallet e17d480f28ef...
+  note: customer is a separate wallet supplied by the maintainer (real on-chain payment)
+  note: NanoGPT is not TEE-attested
+  note: cost is measured as the NanoGPT USD balance delta around the call
+
+PASS  [LIVE_PUBLIC] customer payment: tx FINAL and succeeded - [transaction hash removed]
+PASS  [LIVE_PUBLIC] customer payment: native transfer of the exact amount, signer -> receiver as recorded - 350000000000000000000000 yocto
+PASS  [LIVE_PUBLIC] agent payment to NanoGPT invoice: tx FINAL and succeeded - [transaction hash removed]
+PASS  [LIVE_PUBLIC] agent payment to NanoGPT invoice: native transfer of the exact amount, signer -> receiver as recorded - 340779000000000000000000 yocto
+PASS  [LIVE_PUBLIC] sale.confirmed: ledger append() FINAL, signed by the agent, on the ledger contract - [transaction hash removed]
+PASS  [LIVE_PUBLIC] sale.confirmed: payload hash recomputes from the recorded event data
+PASS  [LIVE_PUBLIC] procurement.confirmed: ledger append() FINAL, signed by the agent, on the ledger contract - [transaction hash removed]
+PASS  [LIVE_PUBLIC] procurement.confirmed: payload hash recomputes from the recorded event data
+PASS  [LIVE_PUBLIC] inference.consumed: ledger append() FINAL, signed by the agent, on the ledger contract - [transaction hash removed]
+PASS  [LIVE_PUBLIC] inference.consumed: payload hash recomputes from the recorded event data
+PASS  [LOCAL_ARTIFACT] ledger has sale.confirmed, procurement.confirmed and inference.consumed - sale.confirmed, procurement.confirmed, inference.consumed
+PASS  [LOCAL_ARTIFACT] credit purchase (NEAR) does not exceed customer revenue (NEAR) - 340779000000000000000000 <= 350000000000000000000000 yocto
+PASS  [LOCAL_ARTIFACT] NanoGPT balance rose after the purchase and fell after inference - $0.77650229 -> $1.55376810; inference cost $0.00036372
+PASS  [LIVE_AUTHED] NanoGPT reports the invoice Completed - 498165652
+PASS  [LIVE_AUTHED] NanoGPT balance is consistent with the recorded post-inference balance
+
+15/15 passed
+Not proven here: whether the customer wallet belongs to an independent third party (see the note above); the inference cost is a balance delta measured by us; NanoGPT is not TEE-attested; a ledger commitment proves the record existed, not that the business event is true.

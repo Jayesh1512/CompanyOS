@@ -1,0 +1,43 @@
+Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt.
+Historical output below retains the original observation scope; removed references cannot be independently rechecked here.
+
+LIVE PAID AUDIT CYCLE — NEAR testnet
+Maintainer-controlled testnet customer and vendor; real on-chain service and grant enforcement. Test NEAR has no claimed USD value. Cloud inference uses owner-prepaid credit. This does not establish independent customers or a self-funded mainnet business.
+
+Company: business.companyos-mwkf17op.testnet
+Customer: companyos-customer-mwkg7tzd.testnet
+Agent: manager.companyos-mwkf17op.testnet
+Notary: notary.companyos-mwkf17op.testnet
+Task: SHA-256 of docs/evidence/swarm-execution.txt = 5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9
+
+1. Revenue received: exactly 2 test NEAR for audit-cycle-1.
+   [transaction hash removed]
+   [transaction link removed]
+2. The real NEAR AI Cloud agent chose the purchase. Original SDK E2EE response verification passed.
+   Provider request: 740d02d6416a4bc9aa68f45d927ef220
+   Model: Qwen/Qwen3.8-27B
+   Command: {"action":"fulfill","orderId":"audit-cycle-1","vendorId":"notary.companyos-mwkf17op.testnet","amountYocto":"1000000000000000000000000","purpose":"Fulfill paid digest notarization for order audit-cycle-1; pay notary fee 1000000000000000000000000 yoctoNEAR under grant c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab"}
+   Decision hash: 1b4120162215568beb3051877131856dcbf10ca98ad18be53f758347261d53cd
+   The first separate decision attempt returned empty content and sent no vendor spend; see business-decision-failure.txt.
+3. The manager signed fulfill under the on-chain grant: exact agent, exact vendor, 1 test NEAR cap, one-day expiry.
+   Grant: c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab
+   Expiry (Unix nanoseconds): 1794991613175000000
+   [transaction hash removed]
+   [transaction link removed]
+4. The business contract called the deployed notary with exactly 1 test NEAR. The notary stored and returned the exact digest.
+   Stored digest: 5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9
+   Order state: completed
+   Remaining grant allowance: 0 yoctoNEAR
+5. On-chain hash-chain records (recomputed and compared against public RPC by verify-business-cycle.mjs):
+   1. sale.confirmed: 4b3a636e19fe4aac6f9e0925f7155a3fe40bc6dc844ea2b7f4b13b713f323625
+      actor=companyos-customer-mwkg7tzd.testnet; payload={"id":"audit-cycle-1","customerId":"companyos-customer-mwkg7tzd.testnet","taskHash":"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9","revenueYocto":"2000000000000000000000000","spendYocto":"0","state":"paid","decisionHash":null}
+   2. spend.requested: fb2ea806ecfc1fccbb693a3a5b119ad5f22c22dcccd41e9049043e1809935f28
+      actor=manager.companyos-mwkf17op.testnet; payload={"vendorId":"notary.companyos-mwkf17op.testnet","amountYocto":"1000000000000000000000000","grantId":"c27a68f5b58ef253eeffe4ac88501807acc2fd3f33a56eda13e6f327faaf7bab","decisionHash":"1b4120162215568beb3051877131856dcbf10ca98ad18be53f758347261d53cd","taskHash":"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9"}
+   3. spend.completed: e0cb2ffa3f940a4e777d0fddaa92d35cf89bf4d4ccdf531fcf833a6caa18de79
+      actor=business.companyos-mwkf17op.testnet; payload={"id":"audit-cycle-1","customerId":"companyos-customer-mwkg7tzd.testnet","taskHash":"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9","revenueYocto":"2000000000000000000000000","spendYocto":"1000000000000000000000000","state":"completed","decisionHash":"1b4120162215568beb3051877131856dcbf10ca98ad18be53f758347261d53cd"}
+   Vendor 1. evidence.notarized: de9d7155a98b3382ca14a3df25b9f4ac27b4cf55618aa011f46fb61d363a658a
+      payload={"taskHash":"5a0f5259f1f43ea375c1095a088c834f509b418b5123b4eff7559a8165bdf5e9","feeYocto":"1000000000000000000000000"}
+
+Gross remainder before gas: 1 test NEAR. Contract deployment/storage and agent gas were separately owner-funded with test tokens.
+Cloud inference remains owner-prepaid; it is not paid by this native testnet sale. The first failed decision cost was not retained or reconciled.
+The customer and vendor are maintainer-controlled. This demonstrates a real testnet service cycle, not independent customer revenue, USD profit or a self-funded mainnet business.

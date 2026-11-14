@@ -4,7 +4,6 @@ import {readFile,access} from 'node:fs/promises';
 import {spawnSync} from 'node:child_process';
 import {fingerprint} from '../../src/contracts.mjs';
 import {readExchange} from '../../src/integrations/http.mjs';
-import {outlayerRequest,createOutlayerEvaluator} from '../../src/integrations/outlayer.mjs';
 import {ownerIntentRequest,validateOwnerIntent,signedOwnerRequest,createOwnerSigning} from '../../src/integrations/owner-signing.mjs';
 import {accountPlan,checkpointFeedPlan} from '../../src/integrations/accounts.mjs';
 import {nativeFeeReceipt} from '../../src/onchain/fees.mjs';
@@ -12,39 +11,11 @@ import {evaluateTemplateChange} from '../../src/autonomy/evaluation.mjs';
 import {ledgerBindingHash} from '../../src/rules/onchain-ledger.mjs';
 
 const spec={baseline:{fields:[{name:'answer',required:false}]},candidate:{fields:[{name:'answer',required:true},{name:'evidence',required:true}]},contract:{requiredFields:['answer','evidence']}};
-const outRequest=()=>outlayerRequest({projectOwner:'company.near',projectName:'evaluate',versionHash:'a'.repeat(64),paymentKeyOwner:'payer.near',paymentKeyNonce:1,evaluationSpec:spec,jobId:'exact-job-1'});
+const requirement={scheme:'exact',network:'eip155:1',asset:'asset-id',extra:{assetTransferMethod:'near-intents',paymentFlow:'upfront',destination:'merchant.near'}};
 const now=Date.parse('2026-11-14T16:00:00Z');
 const generated=request=>({type:request.body.type,status:'PENDING_SIGNATURE',correlation_id:'intent_'+'a'.repeat(43),agent_id:'a'.repeat(64),expires_at:new Date(now+60000).toISOString(),preview:{summary:'Exact provider operation'},signer:request.body.owner??{type:'near',account_id:'owner.near'},intent:{standard:'nep413',payload:{message:'EXACT provider message',recipient:'agentsonintents.com',nonce:Buffer.alloc(32,1).toString('base64')}}});
 const exchange=async(value,status=200)=>readExchange(new Response(JSON.stringify(value),{status}));
 
-test('OutLayer request pins payer, code, unique input, compute/deposit and resource limits',()=>{
- const p=outRequest();assert.equal(p.body.version_key,p.binding.versionHash);assert.equal(p.headers['X-Attached-Deposit'],'0');assert.equal(p.maxCostNanoUsd,'1000000');assert.equal(p.body.input.jobId,'exact-job-1');assert.equal(p.body.async,true);assert.equal(p.body.resource_limits.max_execution_seconds,60);
- for(const patch of [{versionHash:'latest'},{networkId:'other'},{paymentKeyNonce:-1},{paymentKeyOwner:undefined},{computeMicroUsd:'999'},{jobId:''}])assert.throws(()=>outlayerRequest({...p.binding,evaluationSpec:spec,computeMicroUsd:'1000',jobId:'job',...patch}));
-});
-test('OutLayer resolves credentials before final transport; original reads stay on the fixed origin',async()=>{
- const p=outRequest(),calls=[];const client=createOutlayerEvaluator({resolveSecret:async()=> 'payer.near:1:PRIVATE-NOT-LOGGED',transport:(url,options)=>{calls.push({url,options});return Promise.resolve(new Response('{}'));}});
- const handle=await client.prepare(p);assert.equal(calls.length,0);await handle.start();assert.equal(calls.length,1);assert.equal(calls[0].url,'https://api.outlayer.ai/call/company.near/evaluate');assert.equal(calls[0].options.redirect,'error');
- await assert.rejects(createOutlayerEvaluator({resolveSecret:async()=> 'other.near:1:secret'}).prepare(p),{code:'OUTLAYER_PAYER_BINDING_MISMATCH'});
- await assert.rejects(client.observe('https://evil.example',p),{code:'ORIGINAL_CALL_ID_REQUIRED'});
-});
-test('OutLayer success and attestation URL never replace execution proof or verified cost',async()=>{
- const client=createOutlayerEvaluator(),p=outRequest(),v={call_id:'550e8400-e29b-41d4-a716-446655440000',status:'completed',output:evaluateTemplateChange(spec),compute_cost:'12',attestation_url:'https://evil.example'};
- const r=await client.decode(await exchange(v),p);assert.equal(r.status,'unknown');assert.equal(r.reportedCostNanoUsd,'12000');assert.equal(r.cost.status,'pending');assert.equal(r.proof,null);
- assert.equal((await client.decode(await exchange({...v,compute_cost:'1001'}),p)).code,'PROVIDER_COST_EXCEEDED');
-});
-test('OutLayer byte hashes are separate from semantic fingerprints and bind this exact job',async()=>{
- const p=outRequest(),v={call_id:'550e8400-e29b-41d4-a716-446655440000',status:'completed',output:{x:1},compute_cost:'12'};
- // Explicit test-only verifier port. This is not vendor proof.
- const proof={source:'outlayer-execution-verifier',callId:v.call_id,wasmHash:p.binding.versionHash,inputHash:'b'.repeat(64),outputHash:'c'.repeat(64),inputFingerprint:fingerprint(p.body.input),outputFingerprint:fingerprint(v.output),evidenceRef:'private:test-only-proof'};
- const client=createOutlayerEvaluator({verifyExecution:async()=>proof});assert.equal((await client.decode(await exchange(v),p)).status,'confirmed');
- p.body.input.jobId='different-job';assert.equal((await client.decode(await exchange(v),p)).status,'unknown');
-});
-test('OutLayer real balance codec attributes the presented payer and excludes trial/call grants from money',async()=>{
- let body={owner:'payer.near',nonce:1,initial_balance:'100',spent:'20',reserved:'30',available:'50'};
- const client=createOutlayerEvaluator({resolveSecret:async()=> 'payer.near:1:secret',transport:async url=>{assert.equal(url,'https://api.outlayer.ai/payment-keys/balance');return new Response(JSON.stringify(body));}});
- const r=await client.balance(outRequest());assert.equal(r.availableNanoUsd,'50000');assert.ok(r.resourceId);
- for(const patch of [{owner:'other.near'},{nonce:2},{available:'51'},{trial:{calls_left:100}}]){const old=body;body={...body,...patch};await assert.rejects(client.balance(outRequest()),{code:'OUTLAYER_RESOURCE_UNVERIFIED'});body=old;}
-});
 test('Agent API owner signing keeps the exact provider payload and correlation through all standards',()=>{
  const req=ownerIntentRequest({type:'agent_create',owner:{type:'near',account_id:'owner.near'},name:'Company',policy:{}}),v=validateOwnerIntent(generated(req),req,now),signed={standard:'nep413',payload:v.intent.payload,public_key:'ed25519:'+'2'.repeat(44),signature:'a'.repeat(88)};
  const submitted=signedOwnerRequest(v,signed,now);assert.equal(submitted.body.correlation_id,v.correlation_id);assert.deepEqual(submitted.body.signed_data.payload,v.intent.payload);

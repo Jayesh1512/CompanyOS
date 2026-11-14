@@ -29,41 +29,40 @@ async function fixture(t,{transport,resolveSecret,beforeGate}={}){
   authorize(plan,maxCostNanoUsd='0'){authorization={id:'exact:'+plan.id,companyId,policyVersion:rules.snapshot().policyVersion,planId:plan.id,requestHash:plan.hash,kind:plan.kind,maxCalls:1,maxCostNanoUsd,maxTotalNanoUsd:'5000000000',expiresAt:new Date(clock+60000).toISOString()};bounds.push({source:'integration-cost-bound',requestHash:plan.hash,kind:plan.kind,bindingHash:fingerprint(plan.binding),expiresAt:new Date(clock+60000).toISOString(),maxCostNanoUsd});},
   async restart(){await journal.close();journal=await createJournal({directory,clock:()=>new Date(clock)});init();},setClock:t=>clock=t,authorization:()=>authorization};
 }
-const AGENT='a'.repeat(64),body=()=>({type:'agent_freeze',agent_id:AGENT});
-const intentResponse=()=>({type:'agent_freeze',status:'PENDING_SIGNATURE',correlation_id:'intent_'+'a'.repeat(43),agent_id:AGENT,expires_at:new Date(NOW+60000).toISOString(),preview:{summary:'Exact provider operation'},signer:{type:'near',account_id:'owner.near'},intent:{standard:'nep413',payload:{message:'EXACT provider message',recipient:'agentsonintents.com',nonce:Buffer.alloc(32,1).toString('base64')}}});
-const prep=(f,key,input=body())=>f.api.prepare('owner_generate',input,owner,key);
+const ownerResponse={type:'agent_freeze',status:'PENDING_SIGNATURE',correlation_id:'intent_'+'a'.repeat(43),agent_id:'a'.repeat(64),expires_at:new Date(NOW+60000).toISOString(),preview:{summary:'Exact operation'},signer:{type:'near',account_id:'owner.near'},intent:{standard:'nep413',payload:{message:'exact',recipient:'agentsonintents.com',nonce:Buffer.alloc(32,1).toString('base64')}}};
 test('actual M01/M03 integration gate denies anonymous, unapproved and caller-supplied authority before HTTP',async t=>{
  let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response('{}');}});
  assert.throws(()=>f.api.view({role:'public'}),{code:'ACCESS_DENIED'});
- const {plan}=await prep(f,'offer');assert.equal(sends,0);
+ const {plan}=await f.api.prepare('owner_generate',{type:'agent_freeze',agent_id:'a'.repeat(64)},owner,'offer');assert.equal(sends,0);
  await assert.rejects(f.api.execute({planId:plan.id},owner),{code:'INTEGRATION_AUTHORIZATION_REQUIRED'});assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations.length,0);
  f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'unknown');assert.equal(sends,1);assert.equal(f.treasury.snapshot().reservations.length,1);
 });
 test('real client composition persists exact exchange before decoding, restart never resubmits original effect',async t=>{
- let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response(JSON.stringify(intentResponse()));}});
- const {plan}=await prep(f,'offers');f.authorize(plan);
+ let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response(JSON.stringify(ownerResponse));}});
+ const {plan}=await f.api.prepare('owner_generate',{type:'agent_freeze',agent_id:'a'.repeat(64)},owner,'offers');f.authorize(plan);
  const first=await f.api.execute({planId:plan.id},owner);assert.equal(first.status,'confirmed');assert.equal(sends,1);assert.ok(f.journal.get('integrationExchanges',plan.id+':execute').raw.includes('PENDING_SIGNATURE'));
  await f.restart();const again=await f.api.execute({planId:plan.id},owner);assert.equal(again.reasonCode,'ORIGINAL_OPERATION_RECONCILIATION_REQUIRED');assert.equal(sends,1);
- assert.equal((await prep(f,'offers')).replayed,true);
- await assert.rejects(prep(f,'offers',{...body(),agent_id:'b'.repeat(64)}),{code:'CONFLICT'});
+ assert.equal((await f.api.prepare('owner_generate',{type:'agent_freeze',agent_id:'a'.repeat(64)},owner,'offers')).replayed,true);
+ await assert.rejects(f.api.prepare('owner_generate',{type:'agent_unfreeze',agent_id:'a'.repeat(64)},owner,'offers'),{code:'CONFLICT'});
 });
 test('invalid JSON after accepted effect remains durable unknown with its original raw bytes',async t=>{
  let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response('provider accepted but invalid JSON');}});
- const {plan}=await prep(f,'malformed');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'unknown');
+ const {plan}=await f.api.prepare('owner_generate',{type:'agent_freeze',agent_id:'a'.repeat(64)},owner,'malformed');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'unknown');
  assert.equal(f.journal.get('integrationExchanges',plan.id+':execute').raw,'provider accepted but invalid JSON');await f.restart();await f.api.execute({planId:plan.id},owner);assert.equal(sends,1);
 });
 test('missing credentials cause no provider operation or financial reservation',async t=>{
- let sends=0;const f=await fixture(t,{resolveSecret:async()=>null,transport:async()=>{sends++;return new Response('{}');}});const {plan}=await prep(f,'missing');f.authorize(plan);
+ let sends=0;const f=await fixture(t,{resolveSecret:async()=>null,transport:async()=>{sends++;return new Response('{}');}});const {plan}=await f.api.prepare('owner_generate',{type:'agent_freeze',agent_id:'a'.repeat(64)},owner,'missing');f.authorize(plan);
  await assert.rejects(f.api.execute({planId:plan.id},owner),{code:'CREDENTIAL_UNAVAILABLE'});assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations.length,0);assert.equal(f.journal.recoverableOperations().length,0);
 });
 test('current kill/policy and plan expiry rechecked after credential await prevent transport',async t=>{
- let sends=0,secretHook=()=>{};const f=await fixture(t,{resolveSecret:async()=>{secretHook();return 'secret';},transport:async()=>{sends++;return new Response('{}');}});const {plan}=await prep(f,'stop');f.authorize(plan);
+ let sends=0,secretHook=()=>{};const f=await fixture(t,{resolveSecret:async()=>{secretHook();return 'secret';},transport:async()=>{sends++;return new Response('{}');}});const {plan}=await f.api.prepare('owner_generate',{type:'agent_freeze',agent_id:'a'.repeat(64)},owner,'stop');f.authorize(plan);
  secretHook=()=>f.rules.updateConfig({...f.rules.snapshot().config,killSwitch:true});await assert.rejects(f.api.execute({planId:plan.id},owner),{code:'CONFLICT'});assert.equal(sends,0);
  assert.equal(f.treasury.snapshot().reservations.length,0);
 });
+
 test('a current final stop releases only a locally proven unsubmitted reservation, never an unknown effect',async t=>{
  let sends=0;const f=await fixture(t,{beforeGate:rules=>rules.updateConfig({...rules.snapshot().config,killSwitch:true}),transport:async()=>{sends++;return new Response('{}');}});
- const {plan}=await prep(f,'final-stop');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'not_submitted');assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations[0].status,'released');assert.equal(f.treasury.snapshot().reservations[0].actualCostNanoUsd,'0');
+ const {plan}=await f.api.prepare('owner_generate',{type:'agent_freeze',agent_id:'a'.repeat(64)},owner,'final-stop');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'not_submitted');assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations[0].status,'released');assert.equal(f.treasury.snapshot().reservations[0].actualCostNanoUsd,'0');
 });
 test('native snapshots are absolute, monotone and replayable; actual fees reconcile once without credit creation',async t=>{
  const f=await fixture(t),n={source:'near-json-rpc-final-account',networkId:'mainnet',accountId:'writer.near',balanceYocto:'1000',blockHeight:10,blockHash:'block',reference:'rpc',observedAt:new Date(NOW).toISOString()};
@@ -76,10 +75,10 @@ test('native snapshots are absolute, monotone and replayable; actual fees reconc
  await assert.rejects(apply(f.treasury,'stale-new-native',{kind:'reservation',reservation:{id:'stale-reserve',actionId:'stale-new-native',purpose:'native_ledger',accountingDay:'2026-11-14',upperBoundNanoUsd:'100',status:'reserved',nativeResource:{networkId:'mainnet',accountId:'writer.near',amountYocto:'997'}}}),{code:'CONFLICT'});
 });
 test('all provider purposes share the lifetime ceiling and the same prepaid key across project bindings',()=>{
- const p={id:'plan',companyId,kind:'outlayer_evaluate',request:{maxCostNanoUsd:'20'},binding:{provider:'outlayer',project:'one'},inputHash:'i',expiresAt:new Date(NOW+60000).toISOString()};p.hash=fingerprint({kind:p.kind,request:p.request,binding:p.binding,inputHash:p.inputHash});
+ const p={id:'plan',companyId,kind:'owner_generate',request:{maxCostNanoUsd:'20'},binding:{provider:'near-agent-api',project:'one'},inputHash:'i',expiresAt:new Date(NOW+60000).toISOString()};p.hash=fingerprint({kind:p.kind,request:p.request,binding:p.binding,inputHash:p.inputHash});
  const action={id:'operation',type:'integration_execute',planId:p.id,requestHash:p.hash,maxCostNanoUsd:'20'},ctx={companyId,policyVersion:'v',now:NOW,authorizations:[],config:{mode:'live',killSwitch:false,nearIntegrations:{operations:[p.kind],maxRequestNanoUsd:'100'},spending:{totalCeilingNanoUsd:'100'}},data:{plans:[p],authorization:{id:'a',companyId,policyVersion:'v',planId:p.id,requestHash:p.hash,kind:p.kind,maxCalls:1,maxCostNanoUsd:'20',expiresAt:p.expiresAt},bounds:[{source:'integration-cost-bound',requestHash:p.hash,kind:p.kind,bindingHash:fingerprint(p.binding),expiresAt:p.expiresAt,maxCostNanoUsd:'20'}],resources:[{source:'provider-resource-observation',bindingHash:fingerprint(p.binding),resourceId:'same-key',availableNanoUsd:'30',expiresAt:p.expiresAt}]}};
  const facts={access:owner,financial:{version:0,reservations:[]}};assert.equal(integrationDecision(action,facts,ctx).status,'allow');
- facts.financial.reservations=[{id:'other-project',actionId:'other',purpose:'outlayer_evaluate',providerBindingHash:'different-project',providerResourceId:'same-key',upperBoundNanoUsd:'20',status:'unknown'}];assert.equal(integrationDecision(action,facts,ctx).reasonCode,'INSUFFICIENT_PROVIDER_RESOURCE');
+ facts.financial.reservations=[{id:'other-project',actionId:'other',purpose:'owner_generate',providerBindingHash:'different-project',providerResourceId:'same-key',upperBoundNanoUsd:'20',status:'unknown'}];assert.equal(integrationDecision(action,facts,ctx).reasonCode,'INSUFFICIENT_PROVIDER_RESOURCE');
  facts.financial.reservations=[{actionId:'cloud',upperBoundNanoUsd:'90',status:'unknown'}];assert.equal(integrationDecision(action,facts,ctx).reasonCode,'TOTAL_CEILING_EXCEEDED');
 });
 test('a durable provider cost-bound incident blocks new spending while owner status remains readable',()=>{
@@ -87,3 +86,5 @@ test('a durable provider cost-bound incident blocks new spending while owner sta
  assert.equal(rules.evaluate({id:'new-model',type:'component_inference'},{access:owner}).reasonCode,'PROVIDER_COST_BOUND_BREACH');
  assert.equal(rules.evaluate({id:'view',type:'integration_view'},{access:owner}).status,'allow');
 });
+
+test('removed provider operations cannot prepare requests or call a transport',async t=>{let sends=0;const f=await fixture(t,{transport:async()=>{sends++;}});for(const kind of ['outlayer_evaluate','pingpay_offers','pingpay_quote','pingpay_settle'])await assert.rejects(f.api.prepare(kind,{},owner,kind),{code:'INTEGRATION_KIND_UNSUPPORTED'});assert.equal(sends,0);});

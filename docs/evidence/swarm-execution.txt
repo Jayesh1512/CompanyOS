@@ -1,0 +1,105 @@
+Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt.
+Historical output below retains the original observation scope; removed references cannot be independently rechecked here.
+
+LIVE RECOVERY SWARM — NEAR testnet
+Company ledger: swarm.companyos-mwkf17op.testnet
+Deployment: [transaction hash removed]
+[transaction link removed]
+Five independently keyed subaccounts; six real NEAR AI Cloud calls; six self-signed commitments.
+Cloud is funded from the existing owner-prepaid key. Blockchain writes and gas use testnet tokens.
+MCP: @nearai/near-mcp 0.0.35 plus @modelcontextprotocol/sdk 1.28.0. CompanyOS adds a public read tool using the current FastNEAR RPC.
+Original upstream read failures, the rejected gas prepayment, and resumes remain in the retained event history.
+Only chain publication/readback was resumed; no accepted model request was sent again.
+
+manager: manager.companyos-mwkf17op.testnet
+  create [transaction hash removed]
+  [transaction link removed]
+  bind actor 16f47343cbcf006055d57eb53bf39546fd26235626ebd31f73bdfe532094a366
+  [transaction link removed]
+support: support.companyos-mwkf17op.testnet
+  create [transaction hash removed]
+  [transaction link removed]
+  bind actor 520931425858bce3ac5b87c88f374d6043e8140f376243c219a27a73e9a3a996
+  [transaction link removed]
+backlog: backlog.companyos-mwkf17op.testnet
+  create [transaction hash removed]
+  [transaction link removed]
+  bind actor 664d55a2278c49905abe46c34a1d4af636941e2ddd5a15f9d162d3213ec1c831
+  [transaction link removed]
+knowledge_curator: knowledge_curator.companyos-mwkf17op.testnet
+  create [transaction hash removed]
+  [transaction link removed]
+  bind actor 6d042d41ac8a17a651ec73011ff8963a821233360e6946ad29634c907287cde2
+  [transaction link removed]
+template_developer: template_developer.companyos-mwkf17op.testnet
+  create [transaction hash removed]
+  [transaction link removed]
+  bind actor 7fb4823625b1b3323b53d3249c6b24bb26487137c8576fa939cfa35b373c23d9
+  [transaction link removed]
+
+WORK IN EXECUTION ORDER
+manager: completed
+  local profile near-ai-recovery:manager; on-chain signer manager.companyos-mwkf17op.testnet
+  Cloud request 81fb9d7f337c4fd389f2c0f1c5a2a4c8; inference ee8b82c0-afec-5939-bf60-ce0238445358
+  Original SDK acceptance verified, provider_tee, live-process-e2ee
+  Output {"summary":"The intake must record the provided mailing address, 42 Example Street, Demo City. The runbook documents only policyReference and incidentSummary and states the mailing address process is undocumented, so delegate to support.","delegate":["support"]}
+  Exact output commitment 5979af1281f59589a490d0a534c8cb8fe1d5728d3eff87caa92c909ef3d6d35c
+  Transaction [transaction hash removed]
+  [transaction link removed]
+  Record 1: 0ea181bb9f5cecb41f7299bc7c52793057eae84154daf4a631140718f31aa07c
+  Actual bill 537700 nanoUSD
+support_before: completed
+  local profile 2b61ba28-d600-4fa7-9d40-0e98d7c8d904; on-chain signer support.companyos-mwkf17op.testnet
+  Cloud request e0ec13bc2c0446f8a68fc99d156e28d5; inference d31a8f10-3e5a-5c4b-ae6d-437b044b8315
+  Original SDK acceptance verified, provider_tee, live-process-e2ee
+  Output {"summary":"A local review intake was requested, but the runbook does not document any address requirement.","answer":"No address is documented as required before this fictional intake is complete. The runbook only says to capture policyReference and incidentSummary and create a local review ticket, and it states that the process for mailing addresses has not been documented. Escalating because the required address cannot be determined from the runbook.","escalate":true,"citations":[{"documentId":"companies/near-ai-recovery/documents/96cdbcd5-b6bf-4f35-8222-d529e917d92a","quote":"Capture policyReference and incidentSummary."},{"documentId":"companies/near-ai-recovery/documents/96cdbcd5-b6bf-4f35-8222-d529e917d92a","quote":"The process for mailing addresses has not been documented."}]}
+  Exact output commitment 8a6a9961374f83b65cc8548b53a3d5729a748c96c20b079229dd1ddc2ecc9293
+  Transaction [transaction hash removed]
+  [transaction link removed]
+  Record 2: 6569a970d9714aab5fbd33947cbe949ed2fb35800b900d3eab5a6fc64726a315
+  Actual bill 1105820 nanoUSD
+backlog: completed
+  local profile near-ai-recovery:backlog; on-chain signer backlog.companyos-mwkf17op.testnet
+  Cloud request 94744f11a463469a95401f361bb598ac; inference 8089b952-7ff0-56ea-a844-5273bf85ca0d
+  Original SDK acceptance verified, provider_tee, live-process-e2ee
+  Output {"summary":"The required address is the customer-supplied mailing address; for this intake record 42 Example Street, Demo City. Root cause: the runbook and baseline template omit the approved address requirement, causing template validation and escalation. Plan: knowledge_curator updates the intake runbook to require a customer-supplied mailing address and local-review-only handling; template_developer then adds the required address field to the intake template/contract and revalidates so policyReference, incidentSummary, and address are required before completion.","delegate":["knowledge_curator","template_developer"]}
+  Exact output commitment a78aa8ca09df57657ab64c5baf23d0f2b5be3e8cc1ac089bca9674933b781bdc
+  Transaction [transaction hash removed]
+  [transaction link removed]
+  Record 3: e79f247c4a5a176dafff62417e8ad6a9ce3f2894038920160219a68215ef07fc
+  Actual bill 1477042 nanoUSD
+knowledge_curator: completed
+  local profile db2bf2ff-a133-4e68-af5c-5583f02f62df; on-chain signer knowledge_curator.companyos-mwkf17op.testnet
+  Cloud request 974d8f040d5b414ab113ea416e0cb677; inference e59afb18-1446-5039-a849-ea3e58a6ceca
+  Original SDK acceptance verified, provider_tee, live-process-e2ee
+  Output {"summary":"The excerpt supplies the missing runbook rule: a fictional claim intake requires policyReference, incidentSummary, and the customer-supplied mailing address; if the address is missing, the intake is incomplete, and completion only creates a local review ticket without approving a claim.","excerpt":"Every fictional claim intake must include policyReference, incidentSummary, and address. The address must be the customer-supplied mailing address. If address is missing, the intake is incomplete. A complete intake creates a local review ticket only; it never approves a claim."}
+  Exact output commitment 6811e0fe5213ba3dd5672ae880f57c779a961d22bfde84fb99cd2fd699a1a989
+  Transaction [transaction hash removed]
+  [transaction link removed]
+  Record 4: e94ca249a727518c3a8ee18663c77df446b06117c23eadd3dab62d298cec4fbe
+  Actual bill 1878710 nanoUSD
+template_developer: completed
+  local profile 4a51b27d-6648-4df9-9358-9184bd9bf201; on-chain signer template_developer.companyos-mwkf17op.testnet
+  Cloud request 73e13c98d85c41edb0038075f55746d3; inference a3a939b0-d76c-5705-97b1-cae953a42521
+  Original SDK acceptance verified, provider_tee, live-process-e2ee
+  Output {"summary":"The intake failed because the baseline omitted address, which the contract and approved source require as the customer-supplied mailing address. For this intake, the address to record is 42 Example Street, Demo City. Add the missing required address field to complete the local review intake; this does not approve a claim.","operations":[{"type":"add_field","name":"address","required":true}]}
+  Exact output commitment 475b78d6fe53fe1b0e71df5e367f73d4b30cb59e65c623b6680b8078e1c22d1c
+  Transaction [transaction hash removed]
+  [transaction link removed]
+  Record 5: 8ca44de478a68e57e4f902c13906c9ce11d303c57712d8359325ae4d6490f5f4
+  Actual bill 726622 nanoUSD
+support_after: completed
+  local profile 2b61ba28-d600-4fa7-9d40-0e98d7c8d904; on-chain signer support.companyos-mwkf17op.testnet
+  Cloud request 4c62b336976d4adeb7a70b3c4e7f7f0c; inference fa1f15d8-23bd-5115-bb48-8812a91278b3
+  Original SDK acceptance verified, provider_tee, live-process-e2ee
+  Output {"summary":"A fictional intake now succeeds when policyReference, incidentSummary, and the customer-supplied mailing address are recorded, allowing a local review ticket only.","answer":"The address that must be recorded before the fictional intake is complete is the customer-supplied mailing address: 42 Example Street, Demo City. The local review intake was prepared with policyReference HM-AUTO-DEMO, incidentSummary Parked vehicle damage, and address 42 Example Street, Demo City.","escalate":false,"citations":[{"documentId":"companies/near-ai-recovery/documents/96cdbcd5-b6bf-4f35-8222-d529e917d92a","quote":"The address must be the customer-supplied mailing address."}],"intake":{"policyReference":"HM-AUTO-DEMO","incidentSummary":"Parked vehicle damage","address":"42 Example Street, Demo City"}}
+  Exact output commitment 7848fa7001d8ed76d18c4884fa03a98438c2a421b2b47b22ed3a23db275e180f
+  Transaction [transaction hash removed]
+  [transaction link removed]
+  Record 6: ee676d11959648ae63dee84bfe1bde91659dcad2d224734df65c29277b35e1ae
+  Actual bill 1001962 nanoUSD
+
+Total actual Cloud cost: 6727856 nanoUSD ($0.006727856).
+Pending reservation: 0 nanoUSD.
+Retained MCP exchanges: 23.
+Historical Cloud plaintext is not reverified by the public-chain verifier. The verifier checks FINAL signers, exact append arguments and all retained output hashes.

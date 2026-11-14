@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {hash,checkBytes,scanText,safePath,validateManifest,renderClaims,validateClaimIndex} from './model.mjs';
+import {hash,checkBytes,scanText,safePath,validateManifest,renderClaims,validateClaimIndex,definitions} from './model.mjs';
 import {spawnSync} from 'node:child_process';
 import {readFile} from 'node:fs/promises';
 import {verifyAiRecords} from './ai-records.mjs';
@@ -48,6 +48,19 @@ test('claim prose cannot silently promote a held outcome or change generated lim
 test('reindexing an altered original public response cannot replace its collection digest',()=>{
  const m=sample(),e={artifacts:[{...spec,expectedHash:'f'.repeat(64),expectedBytes:m.artifacts[0].bytes}],claims:[claim]};
  assert.throws(()=>validateManifest(m,e),/ORIGINAL_CAPTURE_DIGEST_CHANGED/);
+});
+test('reindexing tampered live business evidence cannot replace the committed proof pin',async()=>{
+ const expected=await definitions();
+ const manifest=JSON.parse(await readFile(new URL('../../evidence/manifest.json',import.meta.url),'utf8'));
+ const spec=expected.artifacts.find(e=>e.id==='business-cycle');
+ assert.match(spec.expectedHash,/^[a-f0-9]{64}$/);
+ const bytes=await readFile(new URL('../../'+spec.path,import.meta.url));
+ const changed=JSON.parse(bytes);changed.businessRecords[1].payload='tampered ledger record';
+ const altered=Buffer.from(JSON.stringify(changed,null,2)+'\n');
+ const entry=manifest.artifacts.find(e=>e.id===spec.id);
+ assert.throws(()=>checkBytes(altered,entry),/EVIDENCE_BYTES_CHANGED/);
+ entry.bytes=altered.length;entry.sha256=hash(altered); // Attacker rebuilds the index too.
+ assert.throws(()=>validateManifest(manifest,expected),/ORIGINAL_CAPTURE_DIGEST_CHANGED/);
 });
 test('a paid_provider artifact carries LIVE_PAID scope and cannot masquerade as controlled',async()=>{
  const {SCOPE_BY_KIND}=await import('./catalog.mjs');

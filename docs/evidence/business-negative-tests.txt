@@ -1,0 +1,42 @@
+✔ compiled business executes revenue, grant-bound service purchase, delivery and hash-chain commits (17872.968291ms)
+Receipt: 3ECsZypguyyu6gnWghBWMRnP2HmnhZrhoukr7aULcLgR
+	Failure [dev-28984-17312.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: AGENT_REQUIRED"}}}}
+▶ compiled business rejects unauthorized and expired-grant spends before any external effect
+  ✔ unauthorized signer cannot spend (1567.912375ms)
+Receipt: 9su8Le7BEJmxUMRo7VfvqxM9iGJowyp1SYDUMfp6XetK
+	Failure [dev-28984-17312.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_MISMATCH"}}}}
+  ✔ foreign grant cannot spend (2059.798542ms)
+Receipt: CijbGSzgwtRUgXrFBoqrZLNrFgvaBLevx6TCfNJM5P9F
+	Failure [dev-28984-17312.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: DECISION_HASH_REQUIRED"}}}}
+  ✔ invalid decision commitment cannot spend (1535.123ms)
+Receipt: ABDpkgfowSvNamJ51AGB95GQc71UURq2WGrE1R3pYmkq
+	Failure [dev-28984-17312.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: OWNER_REQUIRED"}}}}
+  ✔ non-owner cannot widen the grant (2067.355625ms)
+Receipt: 75cqkpG96LNERbkqwPqTFPURDE17no2KT8bg4rtzdDQS
+	Failure [dev-28984-17312.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: Method on_notarized is private"}}}}
+  ✔ forged callback cannot manufacture completion (2058.849541ms)
+Receipt: GWd6jn96FoUPZAT92x3Na4Vnbqh9DQrmo6LVxoEaXd75
+	Failure [dev-28984-17312.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_EXPIRED"}}}}
+  ✔ expired grant cannot spend or consume the order (3585.016375ms)
+✔ compiled business rejects unauthorized and expired-grant spends before any external effect (27181.590125ms)
+Receipt: HnDgJm4qgUXmTnLoJB4A4pMm7eivBhLhW4nUj1qhRQ8V
+	Failure [dev-56173-74528.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: GRANT_EXHAUSTED"}}}}
+Receipt: 63gNfFE4s4TZy7YFnaMzJ9UEj67xiQpZnXiXPUdpr8F7
+	Failure [dev-56173-74528.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: ORDER_NOT_SPENDABLE"}}}}
+✔ compiled business cannot double-spend a delivered order or exceed a grant (24074.704583ms)
+✔ the real retained business ledger verifies and rejects payload, signer, order, sequence and predecessor tampering (2.666417ms)
+✔ activation publishes selected service, excludes company knowledge by default, freezes bindings and pauses sales (582.356708ms)
+✔ configured skill procurement pays once, records a licence and survives restart without another purchase (618.584709ms)
+✔ live permits recheck authorization expiry, renewal and policy caps immediately before dispatch (3.852166ms)
+✔ prepaid evidence expires and cannot be reused to replenish a consumed credit lot (52.743209ms)
+✔ activation and customer service views escape supplied text and separate demo authority (161.543958ms)
+✔ unselected wallet bucket cannot dispatch, and payment authentication schemes are explicit (94.587333ms)
+✔ real product never auto-imports owner balance assertions or enables a sale from credentials and mode (36.287916ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73454.389417

@@ -1,0 +1,20 @@
+Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt.
+Historical output below retains the original observation scope; removed references cannot be independently rechecked here.
+
+PASS deployed swarm ledger matches the committed compiled WASM
+PASS six original live recovery calls completed and each has an agent-signed commitment
+PASS manager: FINAL exact append by manager.companyos-mwkf17op.testnet; [transaction hash removed]
+  [transaction link removed]
+PASS support: FINAL exact append by support.companyos-mwkf17op.testnet; [transaction hash removed]
+  [transaction link removed]
+PASS backlog: FINAL exact append by backlog.companyos-mwkf17op.testnet; [transaction hash removed]
+  [transaction link removed]
+PASS knowledge_curator: FINAL exact append by knowledge_curator.companyos-mwkf17op.testnet; [transaction hash removed]
+  [transaction link removed]
+PASS template_developer: FINAL exact append by template_developer.companyos-mwkf17op.testnet; [transaction hash removed]
+  [transaction link removed]
+PASS support: FINAL exact append by support.companyos-mwkf17op.testnet; [transaction hash removed]
+  [transaction link removed]
+PASS all five recovery agents signed through distinct NEAR subaccounts
+PASS official NEAR MCP server readback matches all six stored records; original reads retained
+Scope: blockchain actions are testnet transactions. Original Cloud acceptance used the live SDK; this verifier rechecks retained model output hashes, not historical TEE plaintext.

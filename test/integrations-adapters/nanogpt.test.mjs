@@ -53,3 +53,8 @@ test('client sends the documented requests with the key', async () => {
   assert.equal(seen[1].url, 'https://nano-gpt.com/api/transaction/create/near'); assert.deepEqual(JSON.parse(seen[1].init.body), {amount: 0.4});
   assert.equal(seen[2].url, 'https://api.nano-gpt.com/api/v1/chat/completions'); assert.equal(seen[2].init.headers.authorization, 'Bearer k'); assert.throws(() => createNanoGpt({}), {code: 'NANOGPT_NOT_CONFIGURED'});
 });
+
+test('actual uppercase invoice completion is normalized for the purchase gate',async()=>{
+ const nano=createNanoGpt({apiKey:'TEST-ONLY',transport:async()=>new Response(JSON.stringify({status:'COMPLETED',payinHash:'recorded-payment'}))});
+ const status=await nano.status('498165652');assert.equal(status.status,'Completed');assert.equal(status.rawStatus,'COMPLETED');assert.equal(status.payinHash,'recorded-payment');
+});

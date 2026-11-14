@@ -1,0 +1,88 @@
+{
+  "network": "testnet",
+  "rpc": "https://rpc.testnet.near.org",
+  "source": "artifacts/recovery-missing-address/live-run.json",
+  "artifactSha256": "26d0cb4897d21a04d6c1d9cf1bb05a83dfb79435705468c9b58ffc54c7f42477",
+  "events": [
+    {
+      "type": "recovery.evidence_anchored",
+      "data": {
+        "actorId": "companyos-mwkf17op.testnet",
+        "source": "artifacts/recovery-missing-address/live-run.json",
+        "artifactSha256": "26d0cb4897d21a04d6c1d9cf1bb05a83dfb79435705468c9b58ffc54c7f42477",
+        "originalRecordedAt": "2026-11-14T17:46:42.123Z",
+        "scope": "Retrospective commitment to a historical off-chain run; not on-chain execution of the recovery."
+      }
+    }
+  ],
+  "creation": {
+    "txHash": null,
+    "signerId": "companyos-mwkf17op.testnet",
+    "receiverId": "recovery.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "storageTopup": {
+    "txHash": null,
+    "signerId": "companyos-mwkf17op.testnet",
+    "receiverId": "recovery.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "failedDeployment": {
+    "txHash": null,
+    "status": {
+      "Failure": {
+        "ActionError": {
+          "index": null,
+          "kind": {
+            "LackBalanceForState": {
+              "account_id": "recovery.companyos-mwkf17op.testnet",
+              "amount": "354091320108140500000000"
+            }
+          }
+        }
+      }
+    },
+    "finality": "FINAL"
+  },
+  "deployment": {
+    "txHash": null,
+    "signerId": "recovery.companyos-mwkf17op.testnet",
+    "receiverId": "recovery.companyos-mwkf17op.testnet",
+    "nearblocks": null
+  },
+  "append": {
+    "txHash": null,
+    "signerId": "companyos-mwkf17op.testnet",
+    "receiverId": "recovery.companyos-mwkf17op.testnet",
+    "nearblocks": null,
+    "args": {
+      "company_hash": "7a28903ca450489cf1d7ac7ce434fad0d1de219833b545e00032e52b5123cac7",
+      "expected_sequence": 0,
+      "expected_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "records": [
+        {
+          "sequence": 1,
+          "type": "recovery.evidence_anchored",
+          "at": "2026-11-17T08:18:11.716Z",
+          "actorHash": "eba32bbc9766af1050c904a70d0e54e51e00efbc5060b23e204d34130b635c2d",
+          "payloadHash": "7b854c3babc17d9d550e90ba2846aaf1faac9546f1410f6a806f11017ba36706",
+          "previousHash": "0000000000000000000000000000000000000000000000000000000000000000",
+          "hash": "f5cca4e0f7c6257fd75eb05048e46faa32e8bf5d6641e6daba608e64f2a9a004"
+        }
+      ]
+    }
+  },
+  "records": [
+    {
+      "sequence": 1,
+      "type": "recovery.evidence_anchored",
+      "at": "2026-11-17T08:18:11.716Z",
+      "actorHash": "eba32bbc9766af1050c904a70d0e54e51e00efbc5060b23e204d34130b635c2d",
+      "payloadHash": "7b854c3babc17d9d550e90ba2846aaf1faac9546f1410f6a806f11017ba36706",
+      "previousHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "f5cca4e0f7c6257fd75eb05048e46faa32e8bf5d6641e6daba608e64f2a9a004"
+    }
+  ],
+  "transactionHashesWithheld": true,
+  "redactionScope": "Transaction references removed at the owner’s request. This is a redacted historical record, not a reproducible transaction-verification receipt."
+}

@@ -1,0 +1,17 @@
+Receipt: 4ksQdCcFA5BLJoRfCLZdSAt3vJZh7ZEUMVDzi88dcdWT
+	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: WRITER_REQUIRED"}}}}
+Receipt: ByyugPYmMfD3QoxcULLMeSLR73UuuhcTAAgSoyAkLszW
+	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: ACTOR_SIGNER_MISMATCH"}}}}
+Receipt: 8Gx216B2HkGRPidMbzMD3pVnrc9uaSojiFedyxJLkW6x
+	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: OWNER_REQUIRED"}}}}
+Receipt: E7zXR6u2D3LTMh5xicFucZ3iY8MiMjG8LV1jCGFebXAv
+	Failure [dev-38128-52448.test.near]: Error: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Smart contract panicked: WRITER_REQUIRED"}}}}
+✔ compiled swarm ledger binds each writer to its actor and rejects impersonation and revocation (39817.007209ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44134.16225

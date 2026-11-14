@@ -3,7 +3,7 @@ import {allow,deny,hold} from './policies.mjs';
 import {ownerAccess} from './runtime.mjs';
 import {lifetimeExposure,totalCeiling} from './ceiling.mjs';
 
-export const INTEGRATION_KINDS=Object.freeze(['outlayer_evaluate','owner_generate','owner_submit','checkpoint_feed']);
+export const INTEGRATION_KINDS=Object.freeze(['owner_generate','owner_submit','checkpoint_feed']);
 export const INTEGRATION_LIFETIME_MAX_NANO_USD='5000000000';
 const exact=(v,keys)=>v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).every(k=>keys.includes(k));
 const fresh=(v,now)=>Number.isFinite(Date.parse(v))&&Date.parse(v)>now;

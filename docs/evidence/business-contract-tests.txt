@@ -1,0 +1,9 @@
+✔ compiled business executes revenue, grant-bound service purchase, delivery and hash-chain commits (17524.331417ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21759.686209

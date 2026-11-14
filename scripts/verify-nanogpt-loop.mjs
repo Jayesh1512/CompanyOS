@@ -8,11 +8,12 @@ import {hash} from '../src/rules/config.mjs';
 import {ledgerCompanyHash} from '../src/rules/onchain-ledger.mjs';
 
 try { loadEnvFile('.env'); } catch (e) { if (e.code !== 'ENOENT') throw e; }
-const file = process.argv[2] ?? 'artifacts/mainnet-proof/nanogpt-loop.json', RPC = process.env.NEAR_RPC_URL ?? 'https://free.rpc.fastnear.com';
+const file = process.argv[2] ?? 'artifacts/mainnet-proof/nanogpt-loop.json', RPC = process.env.NEAR_RPC_URL ?? 'https://archival-rpc.mainnet.fastnear.com';
 const rpc = async (method, params) => { const p = await (await fetch(RPC, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({jsonrpc: '2.0', id: 1, method, params}), signal: AbortSignal.timeout(20000)})).json(); if (p.error) throw new Error(p.error.data ?? p.error.message); return p.result; };
 const results = []; const check = (scope, name, ok, detail = '') => { results.push({scope, ok}); console.log(`${ok ? 'PASS' : 'FAIL'}  [${scope}] ${name}${detail ? ` - ${detail}` : ''}`); return ok; };
 const finalOk = tx => tx.final_execution_status === 'FINAL' && 'SuccessValue' in (tx.status ?? {}) && !(tx.receipts_outcome ?? []).some(r => 'Failure' in (r.outcome?.status ?? {}));
 const r = JSON.parse(await readFile(file, 'utf8')), {sale, purchase, answer} = r, companyHash = ledgerCompanyHash('local-workspace');
+if(r.transactionHashesWithheld)throw Error('TRANSACTION_HASHES_WITHHELD: original private receipt required for transaction verification');
 const contract = process.env.SHOP_LEDGER_CONTRACT_ID, signer = process.env.SHOP_LEDGER_SIGNER_ID ?? process.env.NEAR_AGENT_ACCOUNT_ID;
 console.log(`NanoGPT loop, company wallet ${r.companyWallet.slice(0, 12)}...\n${r.labels.map(l => `  note: ${l}`).join('\n')}\n`);
 
@@ -37,18 +38,13 @@ for (const c of r.ledgerCommits) {
 }
 const types = r.ledgerCommits.map(c => c.events[0].type);
 check('LOCAL_ARTIFACT', 'ledger has sale.confirmed, procurement.confirmed and inference.consumed', ['sale.confirmed', 'procurement.confirmed', 'inference.consumed'].every(t => types.includes(t)), types.join(', '));
-{
-  // Invariant: a purchase larger than the sale revenue is never silent. The shortfall must be disclosed with a ledger-recorded funding event.
-  const shortfall = BigInt(purchase.paidYocto) - BigInt(sale.amountYocto), funding = r.funding;
-  check('LOCAL_ARTIFACT', shortfall <= 0n ? 'credit purchase does not exceed customer revenue' : 'purchase exceeds sale revenue: the shortfall is disclosed and the agent funding is on the ledger',
-    shortfall <= 0n || Boolean(funding?.ledgerTx && funding.correlationId && (r.labels ?? []).some(l => /shortfall/.test(l))), shortfall <= 0n ? `${purchase.paidYocto} <= ${sale.amountYocto} yocto` : `purchase ${purchase.paidYocto} yocto vs sale ${sale.amountYocto}; shortfall ${shortfall} yocto; agent withdrawal ${funding?.fundedYocto ?? 'none'} yocto (${funding?.correlationId ?? 'unrecorded'}) plus the company wallet's own prior balance`);
-}
+check('LOCAL_ARTIFACT', 'credit purchase (NEAR) does not exceed customer revenue (NEAR)', BigInt(purchase.paidYocto) <= BigInt(sale.amountYocto), `${purchase.paidYocto} <= ${sale.amountYocto} yocto`);
 check('LOCAL_ARTIFACT', 'NanoGPT balance rose after the purchase and fell after inference', Number(purchase.balanceAfterUsd) > Number(purchase.balanceBeforeUsd) && Number(answer.balanceAfterUsd) < Number(answer.balanceBeforeUsd), `$${purchase.balanceBeforeUsd} -> $${purchase.balanceAfterUsd}; inference cost $${answer.costUsd}`);
 
 if (process.env.NANOGPT_API_KEY) {
   try {
     const {createNanoGpt} = await import('../src/cloud-funding/nanogpt.mjs'), n = createNanoGpt({apiKey: process.env.NANOGPT_API_KEY});
-    check('LIVE_AUTHED', 'NanoGPT reports the invoice Completed', String((await n.status(purchase.invoiceTxId)).status).toLowerCase() === 'completed', purchase.invoiceTxId);
+    check('LIVE_AUTHED', 'NanoGPT reports the invoice Completed', (await n.status(purchase.invoiceTxId)).status === 'Completed', purchase.invoiceTxId);
     check('LIVE_AUTHED', 'NanoGPT balance is consistent with the recorded post-inference balance', Math.abs(Number((await n.balance()).usd) - Number(answer.balanceAfterUsd)) < 0.01);
   } catch (e) { check('LIVE_AUTHED', 'NanoGPT re-read', false, String(e.message).slice(0, 80)); }
 } else console.log('SKIP  [LIVE_AUTHED] NanoGPT re-read (set NANOGPT_API_KEY to enable)');
