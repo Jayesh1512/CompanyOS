@@ -6,7 +6,7 @@ import {readExchange} from '../integrations/http.mjs';
 const fail=code=>{throw new ContractError(code,code);};
 
 /** One durable submission per job. Recovery observes the original call only. */
-export function createRecoveryEvaluator({journal,binding,resolveSecret,verifyExecution,transport,clock=()=>new Date(),maxPolls=30,pollIntervalMs=1000}={}){
+export function createRecoveryEvaluator({journal,binding,resolveSecret,verifyExecution,transport,clock=()=>new Date(),maxPolls=30,pollIntervalMs=1000,maxAttestationPolls=8}={}){
  return {async evaluate({baseline,candidate,contract,jobId}){
   if(!binding)fail('OUTLAYER_PROJECT_BINDING_REQUIRED');
   if(typeof verifyExecution!=='function')fail('OUTLAYER_EXECUTION_VERIFIER_REQUIRED');
@@ -23,10 +23,13 @@ export function createRecoveryEvaluator({journal,binding,resolveSecret,verifyExe
    await save({[kind+'EvidenceRef']:evidenceRef,[kind+'WireHash']:exchange.wireHash});return evidenceRef;
   };
   const client=createOutlayerEvaluator({resolveSecret,transport,verifyExecution:async input=>{
-   const attestation=await client.attestation(input.callId,request);
-   const attestationEvidenceRef=await capture('attestation',attestation);
-   if(!attestation.ok||attestation.parseError)fail('OUTLAYER_ATTESTATION_UNAVAILABLE');
-   return verifyExecution({...input,attestation:attestation.value,attestationEvidenceRef});
+   for(let poll=0;;poll++){
+    const attestation=await client.attestation(input.callId,request);
+    const attestationEvidenceRef=await capture('attestation',attestation);
+    if(attestation.httpStatus===404&&poll<maxAttestationPolls){await new Promise(resolve=>setTimeout(resolve,pollIntervalMs));continue;}
+    if(!attestation.ok||attestation.parseError)fail('OUTLAYER_ATTESTATION_UNAVAILABLE');
+    return verifyExecution({...input,attestation:attestation.value,attestationEvidenceRef});
+   }
   }});
   if(record?.status==='confirmed')return record.result;
   let exchange;

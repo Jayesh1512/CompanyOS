@@ -1,0 +1,144 @@
+{
+  "observedAt": "2026-11-14T18:06:52.770Z",
+  "mode": "read-only-public-reference",
+  "referenceTaskId": 221092,
+  "ourEvaluatorExecution": false,
+  "verifier": {
+    "source": "https://github.com/out-layer/outlayer-verify",
+    "revision": "90c27d9d4fc843194ddc6f8ebaafa4eb320c3bb6",
+    "intelRootSha256": "44a0196b2b99f889b8e149e95b807a350e7424964399e885a7cbb8ccfab674d3",
+    "binaryHash": "7151428cf780a4a6920f34231cfa0ec3f0f64f855784e6de06ab898970c32b0d",
+    "lockHash": "ac539fb96d69ffb7c95d46fa046d3c56b1811aed48a19ea55a0c98df0b6b9149",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)"
+  },
+  "online": {
+    "task_id": 221092,
+    "task_type": "execute",
+    "timestamp": 1785490592,
+    "format": "V1",
+    "authenticity": {
+      "verdict": "pass",
+      "detail": "Intel signature chain valid, TCB UpToDate"
+    },
+    "identity": {
+      "verdict": "pass",
+      "detail": "measurements approved on worker.outlayer.near"
+    },
+    "binding": {
+      "verdict": "pass",
+      "detail": "report_data commits to exactly these task fields"
+    },
+    "tcb_status": "UpToDate",
+    "measurements": {
+      "mrtd": "7fe60787222bd394cb516abca2435f22f035ab2cc9c0a4b4b3b148e46297f3d931a237b72f359052c6e657d8c1409173",
+      "rtmr0": "530526e456733dff151712d1db1728cfc3bc85ed0a6c13653add2e644c57068009595b935f6a50ce4a714bad2b33bc8e",
+      "rtmr1": "e8601b64942f9f7a66f4d8f5727c0a7d4a71953cfc3c7d13e043f8ddf4f94d2358afd17e01f567a5d8209f3cf7479489",
+      "rtmr2": "ad1ed113dbecf8516b1ae1ba33a5188d61dd4a4baf5c181c1dd3c61ed8b91a624b5ac2242328028e540d9a2fb4f2dbfe",
+      "rtmr3": "e1c2f169733c62b61dd28281ff8a45b8afb9f41f39ca57643b62f550382736e1e5c61f02ddc931928b0881d76b47ddc0"
+    },
+    "collateral": {
+      "fmspc": "b0c06f000000",
+      "valid_from": "2026-07-21T00:13:24Z",
+      "valid_until": "2026-08-19T23:51:19Z",
+      "covers_execution_time": true,
+      "contract_id": "worker.outlayer.near",
+      "collateral_sha256": "4ce45a28f0227cf7b517151c9174f5a8a23f68cba45ef1bd942e74fc97f86bb9",
+      "tx_hash": null,
+      "block_height": 209222035,
+      "source": "sync",
+      "read_from_chain_at_block": 209222035,
+      "api_copy_matches_chain": true
+    },
+    "quote_size": 5006,
+    "report_data_prefix": "fb894ba0011caafe2427f7d4ea88cd4e92ca6123e63beea9fbc2467ed8e1b232",
+    "report_data_suffix": "0000000000000000000000000000000000000000000000000000000000000000",
+    "expected_task_hash": "fb894ba0011caafe2427f7d4ea88cd4e92ca6123e63beea9fbc2467ed8e1b232"
+  },
+  "offline": {
+    "task_id": 221092,
+    "task_type": "execute",
+    "timestamp": 1785490592,
+    "format": "V1",
+    "authenticity": {
+      "verdict": "pass",
+      "detail": "Intel signature chain valid, TCB UpToDate"
+    },
+    "identity": {
+      "verdict": "pass",
+      "detail": "measurements approved on worker.outlayer.near"
+    },
+    "binding": {
+      "verdict": "pass",
+      "detail": "report_data commits to exactly these task fields"
+    },
+    "tcb_status": "UpToDate",
+    "measurements": {
+      "mrtd": "7fe60787222bd394cb516abca2435f22f035ab2cc9c0a4b4b3b148e46297f3d931a237b72f359052c6e657d8c1409173",
+      "rtmr0": "530526e456733dff151712d1db1728cfc3bc85ed0a6c13653add2e644c57068009595b935f6a50ce4a714bad2b33bc8e",
+      "rtmr1": "e8601b64942f9f7a66f4d8f5727c0a7d4a71953cfc3c7d13e043f8ddf4f94d2358afd17e01f567a5d8209f3cf7479489",
+      "rtmr2": "ad1ed113dbecf8516b1ae1ba33a5188d61dd4a4baf5c181c1dd3c61ed8b91a624b5ac2242328028e540d9a2fb4f2dbfe",
+      "rtmr3": "e1c2f169733c62b61dd28281ff8a45b8afb9f41f39ca57643b62f550382736e1e5c61f02ddc931928b0881d76b47ddc0"
+    },
+    "collateral": {
+      "fmspc": "b0c06f000000",
+      "valid_from": "2026-07-21T00:13:24Z",
+      "valid_until": "2026-08-19T23:51:19Z",
+      "covers_execution_time": true,
+      "contract_id": "worker.outlayer.near",
+      "collateral_sha256": "4ce45a28f0227cf7b517151c9174f5a8a23f68cba45ef1bd942e74fc97f86bb9",
+      "tx_hash": null,
+      "block_height": 209222035,
+      "source": "sync",
+      "read_from_chain_at_block": 209222035,
+      "api_copy_matches_chain": true
+    },
+    "quote_size": 5006,
+    "report_data_prefix": "fb894ba0011caafe2427f7d4ea88cd4e92ca6123e63beea9fbc2467ed8e1b232",
+    "report_data_suffix": "0000000000000000000000000000000000000000000000000000000000000000",
+    "expected_task_hash": "fb894ba0011caafe2427f7d4ea88cd4e92ca6123e63beea9fbc2467ed8e1b232"
+  },
+  "tamperedWasmHash": {
+    "task_id": 221092,
+    "task_type": "execute",
+    "timestamp": 1785490592,
+    "format": "V1",
+    "authenticity": {
+      "verdict": "pass",
+      "detail": "Intel signature chain valid, TCB UpToDate"
+    },
+    "identity": {
+      "verdict": "pass",
+      "detail": "measurements approved on worker.outlayer.near"
+    },
+    "binding": {
+      "verdict": "fail",
+      "reason": "report_data commits to fb894ba0011caafe2427f7d4ea88cd4e92ca6123e63beea9fbc2467ed8e1b232 but the published fields hash to 892cd06a2e38dc1a09274474dcf01ec41a090f55733e2009dbbef5049368abc9 — the record does not describe the execution that was signed"
+    },
+    "tcb_status": "UpToDate",
+    "measurements": {
+      "mrtd": "7fe60787222bd394cb516abca2435f22f035ab2cc9c0a4b4b3b148e46297f3d931a237b72f359052c6e657d8c1409173",
+      "rtmr0": "530526e456733dff151712d1db1728cfc3bc85ed0a6c13653add2e644c57068009595b935f6a50ce4a714bad2b33bc8e",
+      "rtmr1": "e8601b64942f9f7a66f4d8f5727c0a7d4a71953cfc3c7d13e043f8ddf4f94d2358afd17e01f567a5d8209f3cf7479489",
+      "rtmr2": "ad1ed113dbecf8516b1ae1ba33a5188d61dd4a4baf5c181c1dd3c61ed8b91a624b5ac2242328028e540d9a2fb4f2dbfe",
+      "rtmr3": "e1c2f169733c62b61dd28281ff8a45b8afb9f41f39ca57643b62f550382736e1e5c61f02ddc931928b0881d76b47ddc0"
+    },
+    "collateral": {
+      "fmspc": "b0c06f000000",
+      "valid_from": "2026-07-21T00:13:24Z",
+      "valid_until": "2026-08-19T23:51:19Z",
+      "covers_execution_time": true,
+      "contract_id": "worker.outlayer.near",
+      "collateral_sha256": "4ce45a28f0227cf7b517151c9174f5a8a23f68cba45ef1bd942e74fc97f86bb9",
+      "tx_hash": null,
+      "block_height": 209222035,
+      "source": "sync",
+      "read_from_chain_at_block": 209222035,
+      "api_copy_matches_chain": true
+    },
+    "quote_size": 5006,
+    "report_data_prefix": "fb894ba0011caafe2427f7d4ea88cd4e92ca6123e63beea9fbc2467ed8e1b232",
+    "report_data_suffix": "0000000000000000000000000000000000000000000000000000000000000000",
+    "expected_task_hash": "892cd06a2e38dc1a09274474dcf01ec41a090f55733e2009dbbef5049368abc9"
+  },
+  "scope": "The verifier successfully checked an existing public production proof and rejected a changed WASM hash. This is not an execution of our template evaluator; a funded payment key is still required."
+}

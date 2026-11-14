@@ -16,7 +16,7 @@ const json=(v,status=200)=>new Response(JSON.stringify(v),{status,headers:{'cont
 
 /** Real NEAR model work. No recorded responses, fake SDK evidence, fake credit,
  * fake bills or timers that manufacture a successful lifecycle. */
-export function createRecovery({app,authorization,credential,clock=()=>new Date(),verificationFactory,cloudClient,readModels,outlayerEvaluator,outlayerBinding,resolveSecret,verifyOutlayerExecution,outlayerTransport,scenarioId=DEFAULT_RECOVERY_SCENARIO}={}){
+export function createRecovery({app,authorization,credential,clock=()=>new Date(),verificationFactory,cloudClient,readModels,outlayerEvaluator,outlayerBinding,resolveSecret,verifyOutlayerExecution,outlayerTransport,scenarioId=DEFAULT_RECOVERY_SCENARIO,requireOutlayer=false}={}){
  const {journal,rules,workspace,knowledge,treasury,autonomy}=app,companyId=RECOVERY_COMPANY,access={role:'owner',verified:true,companyId};
  const scenario=recoveryScenario(scenarioId),{profiles,instructions}=scenario;
  const now=()=>new Date(clock()).toISOString();
@@ -34,6 +34,7 @@ export function createRecovery({app,authorization,credential,clock=()=>new Date(
   }
   const value={id:jobId,stage,observation,...evidence};
   await journal.transaction({actionId:jobId+':observation',fingerprint:fingerprint(value)},tx=>{tx.put('recoveryEvaluations',jobId,value);tx.append('recovery.evaluation_observed',{companyId,stage,...evidence});});
+  if(requireOutlayer&&evidence.source!=='outlayer')fail(evidence.reasonCode);
   return {observation,evidence};
  }
  let busy=false;
