@@ -2,6 +2,10 @@
 //   node scripts/demo-funded-loop.mjs register            # import the settled live-checkout sale
 //   node scripts/demo-funded-loop.mjs run "<question>"    # POST the paid answer to a server started with SHOP_FUNDED_LOOP_FILE
 //   node scripts/demo-funded-loop.mjs answer "<question>"  # no server: claim sale, real E2EE Cloud call over the Harbor Mutual docs, read billed cost, commit to ledger
+//   node scripts/demo-funded-loop.mjs preflight           # which owner inputs for the credit purchase are still missing (spends nothing)
+//   node scripts/demo-funded-loop.mjs receive-open [amountAtomic=100000]   # step 2: deposit address into the agent wallet (customer pays it)
+//   node scripts/demo-funded-loop.mjs receive-settle      # verify receipt, register it as a sale, commit sale.confirmed
+//   node scripts/demo-funded-loop.mjs buy-credits [usdcAtomic]            # step 3: agent pays USDC via Intents, seller delivers NEAR AI credit
 //   node scripts/demo-funded-loop.mjs report              # write artifacts/mainnet-proof/funded-loop.json
 // Server base URL: FUNDED_LOOP_URL (default http://127.0.0.1:4173). The AI call is billed to the
 // owner-prepaid Cloud key; the sale is attributed to its cost (see src/payments/funded-loop.mjs).
@@ -65,6 +69,32 @@ if (step === 'register') {
   const st = await fl.view(); st.sales[sale.id].settled = entry.settled; await writeFile(file, JSON.stringify(st, null, 2) + '\n');
   console.log(JSON.stringify(entry.settled, null, 1));
   process.exitCode = entry.settled.status === 'settled' ? 0 : 2;
+} else if (step === 'preflight' || step === 'buy-credits') {
+  const need = {NEAR_CREDIT_SELLER_ORG_ID: 'org that HOLDS the credit to sell (console)', NEAR_CREDIT_SELLER_CREDENTIAL: 'organization_credential with credits:transfer for that org (console)',
+    NEAR_CREDIT_RECIPIENT_ORG_ID: "the AGENT's own org; its API key must be the one used for inference", NEAR_CREDIT_SELLER_DESTINATION: 'seller Intents account that receives the USDC; must be in the agent policy destinations'};
+  const missing = Object.keys(need).filter(k => !process.env[k]);
+  if (step === 'preflight' || missing.length) { for (const k of Object.keys(need)) console.log(`${process.env[k] ? 'OK     ' : 'MISSING'} ${k} - ${need[k]}`); process.exit(missing.length ? 2 : 0); }
+  const {createCreditPurchase, createCreditSeller} = await import('../src/cloud-funding/purchase.mjs'), {createAgentSpendPort, SPEND_ASSETS} = await import('../src/custody/agent-spend.mjs');
+  const entry = await onlySale(), purchaseCommitter = await committer(), amount = rest[0] ?? entry.sale.priceAtomic, fl2 = createFundedLoop({file});
+  const buyer = createCreditPurchase({spend: createAgentSpendPort({apiKey: process.env.NEAR_INTENTS_AGENT_API_KEY, baseUrl: process.env.NEAR_INTENTS_AGENT_API_URL, agentId: process.env.NEAR_AGENT_ID, grantToken: process.env.NEAR_AGENT_GRANT_TOKEN}),
+    seller: createCreditSeller({orgId: process.env.NEAR_CREDIT_SELLER_ORG_ID, credential: process.env.NEAR_CREDIT_SELLER_CREDENTIAL, recipientOrgId: process.env.NEAR_CREDIT_RECIPIENT_ORG_ID}),
+    committer: purchaseCommitter, asset: SPEND_ASSETS.USDC_NEAR, sellerDestination: process.env.NEAR_CREDIT_SELLER_DESTINATION});
+  const index = await fl2.reserve(entry.sale.id, amount);          // durable cap BEFORE any money moves
+  try { const receipt = await buyer.purchase({usdcAtomic: amount, saleId: entry.sale.id}); await fl2.completePurchase(entry.sale.id, index, receipt); console.log(JSON.stringify(receipt, null, 1)); }
+  catch (e) { await fl2.completePurchase(entry.sale.id, index, null); console.error('purchase failed:', e.code, JSON.stringify(e.payment ?? e.transferId ?? '')); process.exitCode = 2; }
+} else if (step === 'receive-open' || step === 'receive-settle') {
+  const {createIncomingPayments} = await import('../src/payments/incoming.mjs'), {SPEND_ASSETS} = await import('../src/custody/agent-spend.mjs'), {saleFromReceipt} = await import('../src/payments/funded-loop.mjs');
+  const inc = createIncomingPayments({apiKey: process.env.NEAR_INTENTS_AGENT_API_KEY, baseUrl: process.env.NEAR_INTENTS_AGENT_API_URL, agentId: process.env.NEAR_AGENT_ID, grantToken: process.env.NEAR_AGENT_GRANT_TOKEN, asset: SPEND_ASSETS.USDC_NEAR});
+  const invoiceFile = '.runtime/funded-loop/invoice.json';
+  if (step === 'receive-open') {
+    const invoice = await inc.openInvoice({amount: rest[0] ?? '100000'}); await mkdir('.runtime/funded-loop', {recursive: true}); await writeFile(invoiceFile, JSON.stringify(invoice, null, 2) + '\n');
+    console.log(`Customer pays exactly ${invoice.amount} atomic USDC (NEAR) to:\n  ${invoice.depositAddress}\nThen: node scripts/demo-funded-loop.mjs receive-settle`);
+  } else {
+    const invoice = JSON.parse(await readFile(invoiceFile, 'utf8')), receipt = await inc.settle(invoice); console.log('receipt:', receipt);
+    if (!receipt.received) { console.error('Not received yet (needs provider SUCCESS and a wallet balance increase). Nothing recorded.'); process.exit(2); }
+    const sale = saleFromReceipt({invoice, receipt}), ledger = await (await committer()).append([{type: 'sale.confirmed', data: {companyId: 'local-workspace', actorId: 'customer', saleId: sale.id, amount: sale.priceAtomic, asset: sale.asset, receivedInto: sale.receivedInto, depositCorrelationId: sale.depositCorrelationId}}]);
+    sale.saleLedgerTx = ledger.txHash; await createFundedLoop({file}).registerSale(sale); console.log('sale', sale.id, 'ledger tx', ledger.txHash);
+  }
 } else if (step === 'report') {
   const {sale, claim, settled} = await onlySale();
   if (settled?.status !== 'settled') throw new Error('sale not settled yet');

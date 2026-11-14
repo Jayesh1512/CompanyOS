@@ -92,6 +92,8 @@ Customer payments funding autonomous service delivery and maintenance are the ta
 | OutLayer adapter + WASM evaluator | Optional remote evaluation path | Adapter/tests implemented; recorded address run used local fallback |
 | PingPay x402 adapter | Offers, quote and settlement integration | Adapter exists; marketplace purchases do **not** establish live PingPay merchant settlement |
 | Agent API native sign-intent adapter | EVM/Solana signing-route integration | Mocked SDK tests only; no live Chain Signatures/MPC execution evidence claimed |
+| Agent-purchased NEAR AI credit | `src/cloud-funding/purchase.mjs`: pay USDC via Intents, seller org transfers credit to the agent's org | **Unit-tested only; not run live.** NEAR AI Cloud has no purchase API, so this uses its org-to-org credit transfer with an owner-operated seller. Needs one-time console setup: `node scripts/demo-funded-loop.mjs preflight` |
+| Customer payment into the agent's own wallet | `src/payments/incoming.mjs`: Agent API deposit address, verified by provider status + balance rise | **Unit-tested only; not run live** |
 
 ## Verify without spending
 

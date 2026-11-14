@@ -47,3 +47,10 @@ test('a run that sent no completion releases the sale for another attempt', asyn
   await fl.settle({saleId: sale.id, runKey: 'k1', run: {id: 'r', status: 'not_submitted', cost: {status: 'not_incurred'}}});
   await fl.claim(sale.id, 'k2'); // would throw SALE_ALREADY_USED if still claimed
 });
+test('credit purchases can never exceed the sale; reservations are durable before payment', async t => {
+  const {fl} = await make(t), {sale} = await fl.register(settlement);
+  const i = await fl.reserve(sale.id, '60000'); await fl.completePurchase(sale.id, i, {status: 'purchased'});
+  await assert.rejects(fl.reserve(sale.id, '60000'), {code: 'SALE_FUNDS_EXHAUSTED'});
+  await fl.reserve(sale.id, '40000');
+  await assert.rejects(fl.reserve(sale.id, '1'), {code: 'SALE_FUNDS_EXHAUSTED'});
+});

@@ -25,6 +25,15 @@ export function saleFromSettlement(s) {
     customer: s.customer, depositAddress: s.depositAddress, depositedAmount: s.depositedAmount ?? null, depositTxs: (s.nearTxs ?? []).map(t => t.hash), saleLedgerTx: s.ledger.txHash, assurance: s.assurance ?? null, settledAt: s.at};
 }
 
+/** A customer payment received into the agent wallet (src/payments/incoming.mjs) becomes a sale. Fails closed unless received. */
+export function saleFromReceipt({invoice, receipt}) {
+  if (!receipt?.received) fail('SALE_NOT_CONFIRMED', 400);
+  return {id: 'sale:' + createHash('sha256').update(`${invoice.depositAddress}:${invoice.correlationId}`).digest('hex').slice(0, 24), priceAtomic: invoice.amount, asset: invoice.asset,
+    revenueNanoUsd: (big(invoice.amount) * USDC_ATOMIC_TO_NANO_USD).toString(), customer: null, depositAddress: invoice.depositAddress, depositedAmount: receipt.delta, depositTxs: [],
+    saleLedgerTx: null, receivedInto: 'agent-wallet (confidential Intents balance)', depositCorrelationId: invoice.correlationId, assurance: 'provider SUCCESS + agent wallet balance increase', settledAt: clock0().toISOString()};
+}
+const clock0 = () => new Date();
+
 export function createFundedLoop({file, committer = null, companyId = 'local-workspace', clock = () => new Date()} = {}) {
   if (!file) fail('FUNDED_LOOP_FILE_REQUIRED', 500);
   let queue = Promise.resolve();
@@ -37,6 +46,7 @@ export function createFundedLoop({file, committer = null, companyId = 'local-wor
     const sale = saleFromSettlement(settlement), state = await load();
     state.sales[sale.id] ??= {sale, claim: null, settled: null}; await save(state); return state.sales[sale.id];
   });
+  const registerSale = sale => serial(async () => { const state = await load(); state.sales[sale.id] ??= {sale, claim: null, settled: null}; await save(state); return state.sales[sale.id]; });
   /** Reserve the sale for one run. Same run key replays; a different run is refused. */
   const claim = (saleId, runKey) => serial(async () => {
     const state = await load(), entry = state.sales[saleId];
@@ -64,6 +74,17 @@ export function createFundedLoop({file, committer = null, companyId = 'local-wor
     }
     entry.settled = settled; await save(state); return entry;
   });
+  /** Reserve part of a sale's USDC for a credit purchase. Spend never exceeds the sale; each reservation is durable before any money moves. */
+  const reserve = (saleId, usdcAtomic) => serial(async () => {
+    const state = await load(), e = state.sales[saleId]; if (!e) fail('SALE_UNKNOWN', 402);
+    const reserved = (e.purchases ?? []).reduce((a, p) => a + BigInt(p.usdcAtomic), 0n), want = big(usdcAtomic);
+    if (reserved + want > BigInt(e.sale.priceAtomic)) fail('SALE_FUNDS_EXHAUSTED', 402);
+    (e.purchases ??= []).push({usdcAtomic, status: 'reserved', at: clock().toISOString()}); await save(state); return e.purchases.length - 1;
+  });
+  const completePurchase = (saleId, index, receipt) => serial(async () => {
+    const state = await load(), p = state.sales[saleId]?.purchases?.[index]; if (!p) fail('SALE_UNKNOWN', 402);
+    Object.assign(p, {status: receipt ? 'purchased' : 'failed', receipt: receipt ?? null}); await save(state);
+  });
   const view = async () => (await load());
-  return Object.freeze({register, claim, settle, view});
+  return Object.freeze({register, registerSale, claim, settle, reserve, completePurchase, view});
 }
