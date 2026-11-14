@@ -1,0 +1,86 @@
+{
+  "at": "2026-11-14T21:01:24.894Z",
+  "kind": "actual product walkthrough screen capture",
+  "product": "CompanyOs",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "audio": "ElevenLabs narration aligned to actual scene timings",
+  "demoCompanyId": "real-local-demo-3b5e6412-efa6-40c7-b37d-ee8ac0692728",
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Create a customer-care agency",
+      "atSeconds": 1.27,
+      "url": "http://127.0.0.1:4173/#setup/org"
+    },
+    {
+      "id": "02",
+      "title": "Review the team and company knowledge",
+      "atSeconds": 24.79,
+      "url": "http://127.0.0.1:55106/#setup/agents"
+    },
+    {
+      "id": "03",
+      "title": "Explore the agency marketplace",
+      "atSeconds": 56.72,
+      "url": "http://127.0.0.1:55106/#marketplace"
+    },
+    {
+      "id": "04",
+      "title": "Answer a customer question",
+      "atSeconds": 72.92,
+      "url": "http://127.0.0.1:55106/#care/support%3Areal-local-demo-3b5e6412-efa6-40c7-b37d-ee8ac0692728%3Apolicy-guide"
+    },
+    {
+      "id": "05",
+      "title": "Inspect received payment receipts",
+      "atSeconds": 88.83,
+      "url": "http://127.0.0.1:55106/#payments"
+    },
+    {
+      "id": "06",
+      "title": "Inspect a recorded live recovery",
+      "atSeconds": 108.17,
+      "url": "http://127.0.0.1:4188/recovery.html"
+    },
+    {
+      "id": "07",
+      "title": "The same request now succeeds",
+      "atSeconds": 168.24,
+      "url": "http://127.0.0.1:4188/recovery.html"
+    }
+  ],
+  "pageErrors": [],
+  "recovery": {
+    "source": "existing completed live run",
+    "scenario": "missing-address",
+    "question": "What address must be recorded before this fictional intake is complete? Prepare a local review intake with policyReference HM-AUTO-DEMO, incidentSummary Parked vehicle damage, and my mailing address 42 Example Street, Demo City.",
+    "beforeEscalated": true,
+    "afterEscalated": false
+  },
+  "payment": {
+    "source": "prior recorded mainnet sale",
+    "saleId": "sale:167b4b8b599c4313f4310bb0",
+    "freshCompanyReceipts": 0
+  },
+  "newPaymentSubmitted": false,
+  "newModelCalls": 0,
+  "localProviderOperations": 0,
+  "durationSeconds": 188.56,
+  "narrationNewApiCallsForRebrand": 1,
+  "reusedNarrationSections": 6,
+  "outputs": [
+    {
+      "file": "companyos-walkthrough.mp4",
+      "bytes": 7889903,
+      "sha256": "3aab324127e564bc8ee53ea4352c5897cae07e291b4ea989c7b00a4e64a3b4b5"
+    },
+    {
+      "file": "narration-elevenlabs.mp3",
+      "bytes": 4527169,
+      "sha256": "ccf5a0464b89e254e11d9e3c2e95e67a99c9c982cd37a7f3182d56ab1e6b15e1"
+    }
+  ]
+}

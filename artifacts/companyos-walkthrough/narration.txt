@@ -1,0 +1,13 @@
+CompanyOs gives a business a place to define its purpose, organise its agents, and supervise their work. Let's explore it through Northstar Care, a customer-care agency serving our fictional insurance client, Harbor Mutual. Starting the demo creates a fresh company with a prepared brief. Here we can review who it serves, the outcome we want, and its first objective.
+
+The team has distinct responsibilities. The manager coordinates work, the backlog tracks gaps, and the policy and claims guides handle customer questions. Each profile has instructions we can inspect and edit. Company knowledge gives the team a shared, versioned source of facts. Operating limits define the boundaries around its work.
+
+On the marketplace, the agency's policy and claims guides are published as customer-facing services. A customer can discover a service and open a conversation directly. These listings belong to the company we just created.
+
+Let's ask about the collision deductible. The guide retrieves the approved policy wording and includes its source revision. This local demo uses exact document lookup, so we can see where the answer came from.
+
+Customer payments gives the owner a place to inspect received-payment receipts and their references. This new demo company has no payments yet. Below it is a separately labelled receipt from a prior mainnet service sale of ten USDC cents, with links to its settlement and ledger record.
+
+Now let's inspect a recorded live recovery run. A customer asked which address was needed to complete a claims intake. The support agent's runbook was missing that guidance, so the first attempt escalated. The gap reached the backlog, which delegated repairs. The knowledge curator brought the exact requirement in from an owner-approved source and saved a new runbook revision. The template developer added the missing address field. The same fixed tests rejected the old template and accepted the repaired version.
+
+The support agent then retried the same customer request with the updated knowledge and template. It recorded the customer-supplied mailing address and produced a complete intake. The result is a lasting change to how this organisation handles the next request: a gap became work, the work produced a checked repair, and the repair reached the customer-facing task.

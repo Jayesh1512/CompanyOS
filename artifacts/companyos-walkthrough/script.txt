@@ -1,0 +1,39 @@
+COMPANYOS — PRODUCT WALKTHROUGH
+First take: approximately 3 minutes 10 seconds. 1920 × 1080 screen capture.
+Voiceover script and action plan. Raw screen capture is silent; record the narration against these scenes.
+
+01 — CREATE A CUSTOMER-CARE AGENCY (0:00–0:25)
+ACTION: Start on Company setup. Click Start demo. Show Northstar Care's company name, purpose, customer and first objective. Save company and review agents.
+VOICEOVER: "CompanyOs gives a business a place to define its purpose, organise its agents, and supervise their work. Let's explore it through Northstar Care, a customer-care agency serving our fictional insurance client, Harbor Mutual. Starting the demo creates a fresh company with a prepared brief. Here we can review who it serves, the outcome we want, and its first objective."
+
+02 — REVIEW THE TEAM AND SHARED KNOWLEDGE (0:25–0:57)
+ACTION: Show the manager, backlog, policy guide and claims guide. Expand the policy guide's instructions. Continue to Company brain, show the four saved documents. Review operating limits and open the agency marketplace from final review.
+VOICEOVER: "The team has distinct responsibilities. The manager coordinates work, the backlog tracks gaps, and the policy and claims guides handle customer questions. Each profile has instructions we can inspect and edit. Company knowledge gives the team a shared, versioned source of facts. Operating limits define the boundaries around its work."
+
+03 — FIND THE COMPANY'S SERVICES ON THE MARKETPLACE (0:57–1:13)
+ACTION: Show both Northstar Care service listings. Open the policy guide and start a customer conversation.
+VOICEOVER: "On the marketplace, the agency's policy and claims guides are published as customer-facing services. A customer can discover a service and open a conversation directly. These listings belong to the company we just created."
+
+04 — ANSWER A CUSTOMER QUESTION (1:13–1:29)
+ACTION: Ask: What is the auto collision deductible? Show the response and source citation.
+VOICEOVER: "Let's ask about the collision deductible. The guide retrieves the approved policy wording and includes its source revision. This local demo uses exact document lookup, so we can see where the answer came from."
+
+05 — SHOW RECEIVED PAYMENTS (1:29–1:48)
+ACTION: Open Customer payments. Show this fresh company's empty receipts, then scroll to Recorded mainnet payment and its 0.1 USDC receipt. Briefly point to settlement and sale-ledger links. Do not start checkout or open external pages.
+VOICEOVER: "Customer payments gives the owner a place to inspect received-payment receipts and their references. This new demo company has no payments yet. Below it is a separately labelled receipt from a prior mainnet service sale of ten USDC cents, with links to its settlement and ledger record."
+
+06 — WATCH HOW THE ORGANISATION IMPROVES (1:48–2:49)
+ACTION: Explicit chapter transition to the existing completed live recovery workspace at port 4188. Show the saved first support attempt, backlog delegation, knowledge curator and template developer summaries. Open Company knowledge and the claims intake runbook; show the newly added mailing-address requirement. Return to the completed recovery result.
+VOICEOVER: "Now let's inspect a recorded live recovery run. A customer asked which address was needed to complete a claims intake. The support agent's runbook was missing that guidance, so the first attempt escalated. The gap reached the backlog, which delegated repairs. The knowledge curator brought the exact requirement in from an owner-approved source and saved a new runbook revision. The template developer added the missing address field. The same fixed tests rejected the old template and accepted the repaired version."
+
+07 — THE SAME REQUEST NOW SUCCEEDS (2:49–3:10)
+ACTION: Show Support retry, its source citation, the completed intake, and The same request now succeeds. End on the recovery result, with a short closing view of the local agency's marketplace if useful.
+VOICEOVER: "The support agent then retried the same customer request with the updated knowledge and template. It recorded the customer-supplied mailing address and produced a complete intake. The result is a lasting change to how this organisation handles the next request: a gap became work, the work produced a checked repair, and the repair reached the customer-facing task."
+
+RECORDING NOTES
+- Film the product, using ordinary clicks, readable pauses and deliberate scrolling.
+- The local agency tour and the recorded live recovery are separate workspaces. Announce the transition.
+- The displayed payment is a previous recorded sale, not a payment made during this take.
+- The recovery chapter inspects a saved completed run; do not animate waiting stages or pretend to submit new inference.
+- In this saved recovery run, evaluation used local fallback. Do not claim a new OutLayer attestation.
+- No new payment, live model call, claim approval or public transaction is needed to record these scenes.

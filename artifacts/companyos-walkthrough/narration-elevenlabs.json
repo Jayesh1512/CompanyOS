@@ -1,0 +1,64 @@
+{
+  "provider": "ElevenLabs",
+  "voiceId": "21m00Tcm4TlvDq8ikWAM",
+  "modelId": "eleven_multilingual_v2",
+  "durationSeconds": 188.56,
+  "scenes": [
+    {
+      "id": "01",
+      "startSeconds": 0,
+      "endSeconds": 24.79,
+      "originalDuration": 26.192109,
+      "speed": 1.067323,
+      "file": "audio-scenes/01-f62ec2b2d52b.mp3"
+    },
+    {
+      "id": "02",
+      "startSeconds": 24.79,
+      "endSeconds": 56.72,
+      "originalDuration": 22.058957,
+      "speed": 1,
+      "file": "audio-scenes/02-01ddd8db6ec9.mp3"
+    },
+    {
+      "id": "03",
+      "startSeconds": 56.72,
+      "endSeconds": 72.92,
+      "originalDuration": 14.907211,
+      "speed": 1,
+      "file": "audio-scenes/03-b21bd1a9005c.mp3"
+    },
+    {
+      "id": "04",
+      "startSeconds": 72.92,
+      "endSeconds": 88.83,
+      "originalDuration": 13.421134,
+      "speed": 1,
+      "file": "audio-scenes/04-cacfe91a81e4.mp3"
+    },
+    {
+      "id": "05",
+      "startSeconds": 88.83,
+      "endSeconds": 108.17,
+      "originalDuration": 19.365442,
+      "speed": 1.014429,
+      "file": "audio-scenes/05-b50988a9383c.mp3"
+    },
+    {
+      "id": "06",
+      "startSeconds": 108.17,
+      "endSeconds": 168.24,
+      "originalDuration": 31.161179,
+      "speed": 1,
+      "file": "audio-scenes/06-74e91a1bedc6.mp3"
+    },
+    {
+      "id": "07",
+      "startSeconds": 168.24,
+      "endSeconds": 188.56,
+      "originalDuration": 22.894875,
+      "speed": 1.140751,
+      "file": "audio-scenes/07-03729379b08f.mp3"
+    }
+  ]
+}

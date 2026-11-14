@@ -1,18 +1,18 @@
-# Company for None — A Platform for Living Organizations
+# CompanyOs
 
-**Create an organization, not just an agent.** Company for None is a platform for autonomous organizations designed to earn from useful work, maintain a treasury, and pay for the infrastructure and services that keep them running.
+**Create an organization, not just an agent.** CompanyOs is a platform for autonomous organizations designed to earn from useful work, maintain a treasury, and pay for the infrastructure and services that keep them running.
 
 An owner defines the purpose, approved knowledge, operating policy and initial budget. A master agent coordinates the team around that purpose. Customers pay for services; the treasury tracks revenue and expenses; the organization acquires the resources it needs and maintains its ability to serve the next customer.
 
 **Earn → Spend → Improve → Sustain.** Self-repair is one part of that operating cycle—not the product's entire purpose.
 
-Northstar Care, our fictional insurance customer-service organization, is the hackathon example. **Company for None is the platform; insurance is one instance.** Research services, document services and other customer-facing agent businesses are intended applications of the same operating model, not separate products already demonstrated.
+Northstar Care, our fictional insurance customer-service organization, is the hackathon example. **CompanyOs is the platform; insurance is one instance.** Research services, document services and other customer-facing agent businesses are intended applications of the same operating model, not separate products already demonstrated.
 
 [Judge's guide](docs/JUDGE_GUIDE.md) · [Payment evidence](docs/MAINNET_EVIDENCE.md) · [Organization guide](docs/COMPANY_FOR_NONE_GUIDE.md) · [Recovery evidence](docs/RECOVERY_EXECUTION.md)
 
 ## How a living organization works
 
-A conventional agent completes a task. An organization also has to pay its bills, coordinate work, maintain knowledge and keep serving customers. Company for None brings those responsibilities into one operating model.
+A conventional agent completes a task. An organization also has to pay its bills, coordinate work, maintain knowledge and keep serving customers. CompanyOs brings those responsibilities into one operating model.
 
 ```text
              Owner defines purpose, knowledge, policy and budget

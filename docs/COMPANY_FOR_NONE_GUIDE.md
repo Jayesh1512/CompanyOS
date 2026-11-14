@@ -1,4 +1,4 @@
-# How Company for None works
+# How CompanyOs works
 
 Current product guide · 14 November 2026
 
@@ -46,7 +46,7 @@ flowchart TD
 
 “Executive” describes a specialist’s assigned responsibility. The current command roles are manager, backlog, specialist and developer. A saved profile is real persisted configuration. It becomes a running agent only when a durable work claim starts. Setup uses Rules-defined manager and backlog profiles; a model does not invent bootstrap decisions.
 
-**Company for one** lets the owner assemble and manage the team. **Company for none**, the default for new companies, is intended to let agents organize routine work after owner setup and Start. Choosing a mode does not change the provider execution mode or grant spending authority. Existing profiles and explicitly saved manual mode are preserved.
+**Owner-managed** lets the owner assemble and manage the team. **Agent-managed**, the default for new companies, is intended to let agents organize routine work after owner setup and Start. Choosing a mode does not change the provider execution mode or grant spending authority. Existing profiles and explicitly saved manual mode are preserved.
 
 “None” means bounded agent operation with fewer routine owner decisions. The owner still supplies policy, budget, client authority and exceptional decisions. Agents cannot give themselves permission.
 

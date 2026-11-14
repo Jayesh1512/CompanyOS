@@ -46,7 +46,7 @@ export async function startServer(options={}) {
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try{loadEnvFile(path.join(root,'.env'));}catch(error){if(error.code!=='ENOENT')throw error;}
-  const runtime=await startServer();console.log(`Autonomous Research Shop (${runtime.app.rules.snapshot().mode}): ${runtime.url}`);
+  const runtime=await startServer();console.log(`CompanyOs (${runtime.app.rules.snapshot().mode}): ${runtime.url}`);
   let recovering=false;
   const timer=setInterval(()=>{if(!recovering){recovering=true;Promise.all([runtime.app.workflow.recover(),runtime.app.knowledge?.recover(),runtime.app.autonomy?.tick()]).catch(error=>console.error('Recovery:',error.code??error.message)).finally(()=>{recovering=false;});}},1000);timer.unref();
   let shuttingDown=false;
