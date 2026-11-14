@@ -14,7 +14,12 @@ test('the local guide shows actual component counts and separates live-only scop
 test('demo metadata changes presentation only; main workspace and paid execution scope remain explicit',()=>{
  const data={agents:[],tasks:[],catalog:[],activity:[],workspace:{name:'Demo'}},localDemo={active:true,returnUrl:'http://127.0.0.1:4173',knowledgeStatus:'connected'};
  assert.equal(parseRoute('#demo').page,'demo');
- const demo=renderWorkspace({data,localDemo,route:parseRoute('#demo')});assert.ok(demo.includes('Exit local demo'));assert.ok(demo.includes('Local demo workspace'));assert.ok(demo.includes('Explore the working company'));assert.ok(!demo.includes('Demo mode · fictional sample text'));
- const main=renderWorkspace({data,route:parseRoute('#demo')});assert.ok(main.includes('Real AI demo'));assert.ok(main.includes('Exit AI demo'));assert.ok(!main.includes('Ready to try'));
+ const demo=renderWorkspace({data,localDemo,route:parseRoute('#demo')});assert.ok(demo.includes('Exit local demo'));assert.ok(demo.includes('Local demo workspace'));assert.ok(demo.includes('Your customer-care agency is ready'));assert.ok(!demo.includes('Demo mode · fictional sample text'));
+ const main=renderWorkspace({data,route:parseRoute('#demo')});assert.ok(main.includes('Real AI demo'));assert.ok(main.includes('Start demo'));assert.ok(!main.includes('Ready to try'));
  const ledger=renderAutonomy({data,localDemo,autonomy:{company:{brief:{name:'Demo'},state:'paused',started:false},events:[{sequence:1,type:'support.replied',data:{summary:'actual reply'}}],permittedActions:['start']},route:parseRoute('#autonomy/ledger')},icon);assert.ok(ledger.includes('actual reply'));assert.ok(!ledger.includes('Start company'));assert.ok(!ledger.includes('NEAR on-chain ledger'));
+});
+
+test('the demo marketplace presents the newly published agency services and direct customer conversations',async()=>{
+ const {renderAgentMarketplace}=await import('../../public/marketplace.js');const html=renderAgentMarketplace({localDemo:{active:true},supportCatalog:{services:[{id:'fresh:policy',name:'Harbor Mutual Policy Guide',description:'Published policy guidance',kind:'policy'},{id:'fresh:claims',name:'Harbor Mutual Claims Guide',description:'Claims reporting',kind:'claims'}]}},icon);
+ assert.ok(html.includes('Harbor Mutual Policy Guide'));assert.ok(html.includes('Harbor Mutual Claims Guide'));assert.ok(html.includes('#care/fresh%3Apolicy'));assert.ok(html.includes('#care/fresh%3Aclaims'));assert.ok(!html.includes('Market opportunity brief'));assert.ok(!html.includes('Simulated checkout'));
 });
