@@ -23,3 +23,14 @@ test('the demo marketplace presents the newly published agency services and dire
  const {renderAgentMarketplace}=await import('../../public/marketplace.js');const html=renderAgentMarketplace({localDemo:{active:true},supportCatalog:{services:[{id:'fresh:policy',name:'Harbor Mutual Policy Guide',description:'Published policy guidance',kind:'policy'},{id:'fresh:claims',name:'Harbor Mutual Claims Guide',description:'Claims reporting',kind:'claims'}]}},icon);
  assert.ok(html.includes('Harbor Mutual Policy Guide'));assert.ok(html.includes('Harbor Mutual Claims Guide'));assert.ok(html.includes('#care/fresh%3Apolicy'));assert.ok(html.includes('#care/fresh%3Aclaims'));assert.ok(!html.includes('Market opportunity brief'));assert.ok(!html.includes('Simulated checkout'));
 });
+
+
+test('local demo exposes the prefilled company wizard, all care agents and marketplace finish',()=>{
+ const agents=[{id:'manager',name:'Northstar Care Manager',autonomyRole:'manager'},{id:'backlog',name:'Northstar Care Backlog',autonomyRole:'backlog'},{id:'policy',name:'Harbor Mutual Policy Guide'},{id:'claims',name:'Harbor Mutual Claims Guide'}].map(a=>({...a,role:'Customer care',skillIds:[],instructions:'Help customers',version:1}));
+ const state={localDemo:{active:true},data:{agents,tasks:[],catalog:[],activity:[],workspace:{name:'Northstar Care'}},autonomy:{company:{managerId:'manager',brief:{name:'Northstar Care',purpose:'Customer-care agency',customer:'Harbor Mutual customers',objective:'Answer policy questions'},intent:{}},agents,setup:{reviewed:true}}};
+ const org=renderWorkspace({...state,route:parseRoute('#setup/org')});
+ assert.ok(org.includes('id="company-brief-form"'));assert.ok(org.includes('value="Northstar Care"'));assert.ok(org.includes('Customer-care agency'));assert.ok(org.includes('href="#setup/org" aria-current="page"'));assert.ok(org.includes('Company setup'));assert.ok(!org.includes('Your customer-care agency is ready'));
+ const team=renderWorkspace({...state,route:parseRoute('#setup/agents')});assert.ok(team.includes('Customer-care specialists'));assert.ok(!team.includes('existing workspace agents'));for(const agent of agents)assert.ok(team.includes(`<h3>${agent.name}</h3>`));
+ const review=renderWorkspace({...state,route:parseRoute('#setup/review')});assert.ok(review.includes('href="#marketplace">Open agency marketplace'));
+ const main=renderWorkspace({...state,localDemo:undefined,route:parseRoute('#setup/review')});assert.ok(main.includes('href="#autonomy">Open company workspace'));
+});

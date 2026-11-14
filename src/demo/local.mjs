@@ -66,7 +66,7 @@ export function createLocalDemoLauncher({directory,binary,returnUrl,serve}){
    runtime=await serve({app,port:0,host:'127.0.0.1',enableLocalDemo:false,localOwnerAccess:true});
    const owned={close:async()=>{await runtime.close();await stopBrain();}};sessions.add(owned);
    brain.once('exit',()=>{if(sessions.delete(owned))runtime.close().catch(()=>{});});
-   return {active:true,url:runtime.url+'/#demo',companyId,sessionId,realLocal:true,paidCalls:0};
+   return {active:true,url:runtime.url+'/#setup/org',companyId,sessionId,realLocal:true,paidCalls:0};
   }catch(error){await runtime?.close().catch(()=>{});if(!runtime)await app?.close().catch(()=>{});await stopBrain();throw error;}
  }
  return {open,async close(){closing=true;await Promise.allSettled(launches.values());await Promise.allSettled([...sessions].map(async owned=>{sessions.delete(owned);await owned.close();}));}};
