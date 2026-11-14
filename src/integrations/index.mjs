@@ -2,7 +2,6 @@ import {fingerprint,ContractError} from '../contracts.mjs';
 import {createOperationRuntime,capability,result} from '../custody/adapter-runtime.mjs';
 import {readExchange} from './http.mjs';
 import {outlayerRequest,createOutlayerEvaluator} from './outlayer.mjs';
-import {pingRequest,createPingPay} from './pingpay.mjs';
 import {ownerIntentRequest,signedOwnerRequest,createOwnerSigning} from './owner-signing.mjs';
 import {accountPlan,checkpointFeedPlan} from './accounts.mjs';
 import {evaluateTemplateChange} from '../autonomy/evaluation.mjs';
@@ -11,15 +10,15 @@ const fail=(code,status=409)=>{throw Object.assign(new ContractError(code,code),
 export function readIntegrationFacts({journal,companyId,authorization=null,bounds=[],resources=[],costs=[]}){
  return {companyId,plans:journal?.list('integrationPlans')??[],operations:journal?Object.values(journal.snapshot().operations):[],incidents:journal?.list('integrationIncidents')??[],authorization,bounds,resources,costs};
 }
-export function createNearIntegrations({journal,rules,treasury,providers,dispatchAuthorized,companyId,autonomy,clock=()=>new Date(),technical={},transport=fetch,verifyOutlayer,verifyPingSettlement}){
+export function createNearIntegrations({journal,rules,treasury,providers,dispatchAuthorized,companyId,autonomy,clock=()=>new Date(),technical={},transport=fetch,verifyOutlayer}){
  const resources=new Map(),costs=new Map();
  const expires=()=>new Date(new Date(clock()).getTime()+30000).toISOString();
  let queue=Promise.resolve();const serial=fn=>{const p=queue.then(fn);queue=p.catch(()=>{});return p;};
- const clients={outlayer:createOutlayerEvaluator({resolveSecret:providers.resolveSecret,transport,verifyExecution:verifyOutlayer}),pingpay:createPingPay({resolveSecret:providers.resolveSecret,transport,verifySettlement:verifyPingSettlement}),'near-agent-api':createOwnerSigning({resolveSecret:providers.resolveSecret,transport,clock})};
+ const clients={outlayer:createOutlayerEvaluator({resolveSecret:providers.resolveSecret,transport,verifyExecution:verifyOutlayer}),'near-agent-api':createOwnerSigning({resolveSecret:providers.resolveSecret,transport,clock})};
  const meta=capability('near-integrations','live','near-ecosystem',{verified:false});
  const runtime=createOperationRuntime({journal,namespace:'near-integrations',meta,dispatchAuthorized,binding:{companyId},clock});
  const requireAllow=d=>{if(d.status!=='allow')fail(d.reasonCode,d.reasonCode==='ACCESS_DENIED'?403:409);return d;};
- const view=access=>{const d=requireAllow(rules.evaluate({id:`integrations:${companyId}:view`,type:'integration_view'},{access}));return {...d.plan,plans:journal.list('integrationPlans').filter(p=>p.companyId===companyId).map(p=>({id:p.id,kind:p.kind,hash:p.hash,createdAt:p.createdAt,expiresAt:p.expiresAt,binding:p.binding,readiness:rules.evaluate({id:`${p.id}:review`,type:'integration_review',planId:p.id},{access,financial:treasury.snapshot()}).plan??{executionAllowed:false,reasonCode:'INTEGRATION_PLAN_REQUIRED'}})),runs:journal.list('integrationRuns').filter(r=>r.companyId===companyId).map(r=>({id:r.id,planId:r.planId,status:r.result.status,reasonCode:r.result.code??null,reportedCostNanoUsd:r.result.reportedCostNanoUsd??null,evidenceRef:r.evidenceRef,providerRequestId:r.result.providerRequestId??null})),prerequisites:{cloud:'SUPPORTED_DURABLE_PLAINTEXT_REQUIRED',ledger:'EXACT_NATIVE_FEE_AND_SIGNING_AUTHORITY_REQUIRED',outlayer:'PINNED_PROJECT_PAYMENT_RESOURCE_AND_PROOF_REQUIRED',pingpay:'MERCHANT_CONFIGURATION_AND_INDEPENDENT_SETTLEMENT_REQUIRED',owner:'PARTNER_CREDENTIAL_AND_EXACT_SIGNED_INTENT_REQUIRED'}};};
+ const view=access=>{const d=requireAllow(rules.evaluate({id:`integrations:${companyId}:view`,type:'integration_view'},{access}));return {...d.plan,plans:journal.list('integrationPlans').filter(p=>p.companyId===companyId).map(p=>({id:p.id,kind:p.kind,hash:p.hash,createdAt:p.createdAt,expiresAt:p.expiresAt,binding:p.binding,readiness:rules.evaluate({id:`${p.id}:review`,type:'integration_review',planId:p.id},{access,financial:treasury.snapshot()}).plan??{executionAllowed:false,reasonCode:'INTEGRATION_PLAN_REQUIRED'}})),runs:journal.list('integrationRuns').filter(r=>r.companyId===companyId).map(r=>({id:r.id,planId:r.planId,status:r.result.status,reasonCode:r.result.code??null,reportedCostNanoUsd:r.result.reportedCostNanoUsd??null,evidenceRef:r.evidenceRef,providerRequestId:r.result.providerRequestId??null})),prerequisites:{cloud:'SUPPORTED_DURABLE_PLAINTEXT_REQUIRED',ledger:'EXACT_NATIVE_FEE_AND_SIGNING_AUTHORITY_REQUIRED',outlayer:'PINNED_PROJECT_PAYMENT_RESOURCE_AND_PROOF_REQUIRED',owner:'PARTNER_CREDENTIAL_AND_EXACT_SIGNED_INTENT_REQUIRED'}};};
  function getPlan(id){const p=journal.get('integrationPlans',id);if(!p||p.companyId!==companyId)fail('NOT_FOUND',404);return p;}
  async function prepare(kind,input,access,key){
   view(access);if(typeof key!=='string'||!key||key.length>160)fail('IDEMPOTENCY_KEY_REQUIRED',400);
@@ -30,15 +29,6 @@ export function createNearIntegrations({journal,rules,treasury,providers,dispatc
    if(Object.keys(input).some(k=>k!=='improvementId'))fail('INVALID_INPUT',400);
    const d=requireAllow(rules.evaluate({id:id+':evaluation',type:'autonomy_evaluate'},{access,input}));
    request=outlayerRequest({...technical.outlayer,evaluationSpec:d.plan.evaluationSpec,jobId:id});
-  }else if(kind.startsWith('pingpay_')){
-   if(Object.keys(input).some(k=>!['amountOut','requirements','refundTo','quotePlanId','txHash','depositMemo','resourceId'].includes(k)))fail('INVALID_INPUT',400);
-   let quote;
-   if(kind==='pingpay_settle'){
-    const prior=journal.list('integrationRuns').find(r=>r.planId===input.quotePlanId&&r.companyId===companyId&&r.result.quote);
-    if(!prior||getPlan(prior.planId).binding.resourceId!==input.resourceId)fail('PINGPAY_ORIGINAL_QUOTE_REQUIRED');quote=prior.result.quote;
-    if(Date.parse(quote.refundDeadline)<=new Date(clock()).getTime())fail('PINGPAY_QUOTE_EXPIRED');
-   }
-   request=pingRequest({...input,quote,kind,origin:technical.pingpay?.origin});
   }else if(kind==='owner_generate')request=ownerIntentRequest(input);
   else if(kind==='owner_submit'){
    if(Object.keys(input).some(k=>!['intentPlanId','signedData'].includes(k)))fail('INVALID_INPUT',400);
@@ -79,7 +69,7 @@ export function createNearIntegrations({journal,rules,treasury,providers,dispatc
    // workflow transition. Recovery can inspect it without resending an effect.
    await recordExchange(p,action,exchange);
    if(exchange.parseError)throw new ContractError(exchange.parseError,exchange.parseError);
-   if(!exchange.ok&&p.binding.provider!=='pingpay')return result(meta,exchange.httpStatus>=500?'unknown':'failed',action,{code:'PROVIDER_HTTP_ERROR',cost:{status:'pending',actualCostNanoUsd:null}});
+   if(!exchange.ok)return result(meta,exchange.httpStatus>=500?'unknown':'failed',action,{code:'PROVIDER_HTTP_ERROR',cost:{status:'pending',actualCostNanoUsd:null}});
    const decoded=await client.decode(exchange,p.request);return result(meta,decoded.status,action,decoded);
   }});
   const observed=await persist(p,action,outcome,exchange);
@@ -94,8 +84,7 @@ export function createNearIntegrations({journal,rules,treasury,providers,dispatc
    if(!op.result){const wire=journal.get('integrationExchanges',action.id);if(wire?.requestHash===p.hash){let value;try{value=JSON.parse(wire.raw);}catch{return result(meta,'unknown',action,{code:'PROVIDER_INVALID_JSON'});}return result(meta,'unknown',action,await client.decode({...wire,value},p.request));}}
    if(p.kind==='outlayer_evaluate'&&op.result?.providerRequestId){exchange=await client.observe(op.result.providerRequestId,p.request);return result(meta,'unknown',action,await client.decode(exchange,p.request));}
    if(p.kind==='owner_submit'){exchange=await client.observe(p.request.body.correlation_id);return result(meta,'unknown',action,await client.decode(exchange,p.request));}
-   // Ping settlement retries reuse the exact original deposit token/tx, but do not
-   // silently POST here after unknown. The owner reviews the original operation.
+   // Never silently re-send an effect after an unknown outcome; the owner reviews the original operation.
    return op.result??result(meta,'unknown',action,{code:'ORIGINAL_PROVIDER_OBSERVATION_REQUIRED'});
   });
   return persist(p,action,outcome,exchange);

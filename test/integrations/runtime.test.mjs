@@ -15,7 +15,7 @@ import {apply} from '../state-money/fixtures.mjs';
 const companyId='integration-test',owner={companyId,verified:true,role:'owner'},NOW=Date.parse('2026-11-14T16:00:00Z');
 async function fixture(t,{transport,resolveSecret,beforeGate}={}){
  const directory=await mkdtemp(path.join(tmpdir(),'near-mentor-'));let journal=await createJournal({directory,clock:()=>new Date(NOW)}),api,authorization=null,bounds=[],clock=NOW;
- const policy={...config(),mode:'live',nearIntegrations:{operations:['owner_generate','owner_submit','pingpay_offers','pingpay_quote','pingpay_settle'],maxRequestNanoUsd:'1000000'}};
+ const policy={...config(),mode:'live',nearIntegrations:{operations:['owner_generate','owner_submit'],maxRequestNanoUsd:'1000000'}};
  let rules,treasury;
  function init(){
   rules=createRules({companyId,clock:()=>clock,totalCeilingNanoUsd:'5000000000',config:policy,getIntegrationFacts:()=>{const f=api?.facts()??{};return readIntegrationFacts({journal,companyId,authorization,...f,bounds:[...bounds,...f.bounds??[]]});}});
@@ -29,45 +29,41 @@ async function fixture(t,{transport,resolveSecret,beforeGate}={}){
   authorize(plan,maxCostNanoUsd='0'){authorization={id:'exact:'+plan.id,companyId,policyVersion:rules.snapshot().policyVersion,planId:plan.id,requestHash:plan.hash,kind:plan.kind,maxCalls:1,maxCostNanoUsd,maxTotalNanoUsd:'5000000000',expiresAt:new Date(clock+60000).toISOString()};bounds.push({source:'integration-cost-bound',requestHash:plan.hash,kind:plan.kind,bindingHash:fingerprint(plan.binding),expiresAt:new Date(clock+60000).toISOString(),maxCostNanoUsd});},
   async restart(){await journal.close();journal=await createJournal({directory,clock:()=>new Date(clock)});init();},setClock:t=>clock=t,authorization:()=>authorization};
 }
-const requirement={scheme:'exact',network:'eip155:1',asset:'asset',extra:{assetTransferMethod:'near-intents',paymentFlow:'upfront'}};
+const AGENT='a'.repeat(64),body=()=>({type:'agent_freeze',agent_id:AGENT});
+const intentResponse=()=>({type:'agent_freeze',status:'PENDING_SIGNATURE',correlation_id:'intent_'+'a'.repeat(43),agent_id:AGENT,expires_at:new Date(NOW+60000).toISOString(),preview:{summary:'Exact provider operation'},signer:{type:'near',account_id:'owner.near'},intent:{standard:'nep413',payload:{message:'EXACT provider message',recipient:'agentsonintents.com',nonce:Buffer.alloc(32,1).toString('base64')}}});
+const prep=(f,key,input=body())=>f.api.prepare('owner_generate',input,owner,key);
 test('actual M01/M03 integration gate denies anonymous, unapproved and caller-supplied authority before HTTP',async t=>{
  let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response('{}');}});
  assert.throws(()=>f.api.view({role:'public'}),{code:'ACCESS_DENIED'});
- const {plan}=await f.api.prepare('pingpay_offers',{resourceId:'report:v1',amountOut:'100'},owner,'offer');assert.equal(sends,0);
+ const {plan}=await prep(f,'offer');assert.equal(sends,0);
  await assert.rejects(f.api.execute({planId:plan.id},owner),{code:'INTEGRATION_AUTHORIZATION_REQUIRED'});assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations.length,0);
  f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'unknown');assert.equal(sends,1);assert.equal(f.treasury.snapshot().reservations.length,1);
 });
 test('real client composition persists exact exchange before decoding, restart never resubmits original effect',async t=>{
- let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response(JSON.stringify({accepts:[requirement]}));}});
- const {plan}=await f.api.prepare('pingpay_offers',{resourceId:'report:v1',amountOut:'100'},owner,'offers');f.authorize(plan);
- const first=await f.api.execute({planId:plan.id},owner);assert.equal(first.status,'confirmed');assert.equal(sends,1);assert.ok(f.journal.get('integrationExchanges',plan.id+':execute').raw.includes('accepts'));
+ let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response(JSON.stringify(intentResponse()));}});
+ const {plan}=await prep(f,'offers');f.authorize(plan);
+ const first=await f.api.execute({planId:plan.id},owner);assert.equal(first.status,'confirmed');assert.equal(sends,1);assert.ok(f.journal.get('integrationExchanges',plan.id+':execute').raw.includes('PENDING_SIGNATURE'));
  await f.restart();const again=await f.api.execute({planId:plan.id},owner);assert.equal(again.reasonCode,'ORIGINAL_OPERATION_RECONCILIATION_REQUIRED');assert.equal(sends,1);
- assert.equal((await f.api.prepare('pingpay_offers',{resourceId:'report:v1',amountOut:'100'},owner,'offers')).replayed,true);
- await assert.rejects(f.api.prepare('pingpay_offers',{resourceId:'different',amountOut:'100'},owner,'offers'),{code:'CONFLICT'});
+ assert.equal((await prep(f,'offers')).replayed,true);
+ await assert.rejects(prep(f,'offers',{...body(),agent_id:'b'.repeat(64)}),{code:'CONFLICT'});
 });
 test('invalid JSON after accepted effect remains durable unknown with its original raw bytes',async t=>{
  let sends=0;const f=await fixture(t,{transport:async()=>{sends++;return new Response('provider accepted but invalid JSON');}});
- const {plan}=await f.api.prepare('pingpay_offers',{resourceId:'r',amountOut:'1'},owner,'malformed');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'unknown');
+ const {plan}=await prep(f,'malformed');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'unknown');
  assert.equal(f.journal.get('integrationExchanges',plan.id+':execute').raw,'provider accepted but invalid JSON');await f.restart();await f.api.execute({planId:plan.id},owner);assert.equal(sends,1);
 });
 test('missing credentials cause no provider operation or financial reservation',async t=>{
- let sends=0;const f=await fixture(t,{resolveSecret:async()=>null,transport:async()=>{sends++;return new Response('{}');}});const {plan}=await f.api.prepare('pingpay_offers',{resourceId:'r',amountOut:'1'},owner,'missing');f.authorize(plan);
+ let sends=0;const f=await fixture(t,{resolveSecret:async()=>null,transport:async()=>{sends++;return new Response('{}');}});const {plan}=await prep(f,'missing');f.authorize(plan);
  await assert.rejects(f.api.execute({planId:plan.id},owner),{code:'CREDENTIAL_UNAVAILABLE'});assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations.length,0);assert.equal(f.journal.recoverableOperations().length,0);
 });
 test('current kill/policy and plan expiry rechecked after credential await prevent transport',async t=>{
- let sends=0,secretHook=()=>{};const f=await fixture(t,{resolveSecret:async()=>{secretHook();return 'secret';},transport:async()=>{sends++;return new Response('{}');}});const {plan}=await f.api.prepare('pingpay_offers',{resourceId:'r',amountOut:'1'},owner,'stop');f.authorize(plan);
+ let sends=0,secretHook=()=>{};const f=await fixture(t,{resolveSecret:async()=>{secretHook();return 'secret';},transport:async()=>{sends++;return new Response('{}');}});const {plan}=await prep(f,'stop');f.authorize(plan);
  secretHook=()=>f.rules.updateConfig({...f.rules.snapshot().config,killSwitch:true});await assert.rejects(f.api.execute({planId:plan.id},owner),{code:'CONFLICT'});assert.equal(sends,0);
  assert.equal(f.treasury.snapshot().reservations.length,0);
 });
-test('customer quote cannot be attached to a different resource, and expired quotes cannot make a new deposit request',async t=>{
- const f=await fixture(t,{transport:async()=>new Response(JSON.stringify({isValid:true,extra:{operationToken:'original',depositAddress:'addr',amountIn:'10',refundDeadline:new Date(NOW+10000).toISOString()}}))});
- const {plan}=await f.api.prepare('pingpay_quote',{resourceId:'r:v1',requirements:requirement,refundTo:'refund'},owner,'q');f.authorize(plan);await f.api.execute({planId:plan.id},owner);
- await assert.rejects(f.api.prepare('pingpay_settle',{resourceId:'different:v1',requirements:requirement,quotePlanId:plan.id,txHash:'tx'},owner,'bad-resource'),{code:'PINGPAY_ORIGINAL_QUOTE_REQUIRED'});
- f.setClock(NOW+10001);await assert.rejects(f.api.prepare('pingpay_settle',{resourceId:'r:v1',requirements:requirement,quotePlanId:plan.id,txHash:'tx'},owner,'expired'),{code:'PINGPAY_QUOTE_EXPIRED'});
-});
 test('a current final stop releases only a locally proven unsubmitted reservation, never an unknown effect',async t=>{
  let sends=0;const f=await fixture(t,{beforeGate:rules=>rules.updateConfig({...rules.snapshot().config,killSwitch:true}),transport:async()=>{sends++;return new Response('{}');}});
- const {plan}=await f.api.prepare('pingpay_offers',{resourceId:'r',amountOut:'1'},owner,'final-stop');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'not_submitted');assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations[0].status,'released');assert.equal(f.treasury.snapshot().reservations[0].actualCostNanoUsd,'0');
+ const {plan}=await prep(f,'final-stop');f.authorize(plan);assert.equal((await f.api.execute({planId:plan.id},owner)).status,'not_submitted');assert.equal(sends,0);assert.equal(f.treasury.snapshot().reservations[0].status,'released');assert.equal(f.treasury.snapshot().reservations[0].actualCostNanoUsd,'0');
 });
 test('native snapshots are absolute, monotone and replayable; actual fees reconcile once without credit creation',async t=>{
  const f=await fixture(t),n={source:'near-json-rpc-final-account',networkId:'mainnet',accountId:'writer.near',balanceYocto:'1000',blockHeight:10,blockHash:'block',reference:'rpc',observedAt:new Date(NOW).toISOString()};

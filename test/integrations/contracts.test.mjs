@@ -5,7 +5,6 @@ import {spawnSync} from 'node:child_process';
 import {fingerprint} from '../../src/contracts.mjs';
 import {readExchange} from '../../src/integrations/http.mjs';
 import {outlayerRequest,createOutlayerEvaluator} from '../../src/integrations/outlayer.mjs';
-import {pingRequest,createPingPay} from '../../src/integrations/pingpay.mjs';
 import {ownerIntentRequest,validateOwnerIntent,signedOwnerRequest,createOwnerSigning} from '../../src/integrations/owner-signing.mjs';
 import {accountPlan,checkpointFeedPlan} from '../../src/integrations/accounts.mjs';
 import {nativeFeeReceipt} from '../../src/onchain/fees.mjs';
@@ -14,8 +13,6 @@ import {ledgerBindingHash} from '../../src/rules/onchain-ledger.mjs';
 
 const spec={baseline:{fields:[{name:'answer',required:false}]},candidate:{fields:[{name:'answer',required:true},{name:'evidence',required:true}]},contract:{requiredFields:['answer','evidence']}};
 const outRequest=()=>outlayerRequest({projectOwner:'company.near',projectName:'evaluate',versionHash:'a'.repeat(64),paymentKeyOwner:'payer.near',paymentKeyNonce:1,evaluationSpec:spec,jobId:'exact-job-1'});
-const requirement={scheme:'exact',network:'eip155:1',asset:'asset-id',extra:{assetTransferMethod:'near-intents',paymentFlow:'upfront',destination:'merchant.near'}};
-const quoteRequest=()=>pingRequest({kind:'pingpay_quote',resourceId:'report:v1',requirements:requirement,refundTo:'origin-refund-address'});
 const now=Date.parse('2026-11-14T16:00:00Z');
 const generated=request=>({type:request.body.type,status:'PENDING_SIGNATURE',correlation_id:'intent_'+'a'.repeat(43),agent_id:'a'.repeat(64),expires_at:new Date(now+60000).toISOString(),preview:{summary:'Exact provider operation'},signer:request.body.owner??{type:'near',account_id:'owner.near'},intent:{standard:'nep413',payload:{message:'EXACT provider message',recipient:'agentsonintents.com',nonce:Buffer.alloc(32,1).toString('base64')}}});
 const exchange=async(value,status=200)=>readExchange(new Response(JSON.stringify(value),{status}));
@@ -47,24 +44,6 @@ test('OutLayer real balance codec attributes the presented payer and excludes tr
  const client=createOutlayerEvaluator({resolveSecret:async()=> 'payer.near:1:secret',transport:async url=>{assert.equal(url,'https://api.outlayer.ai/payment-keys/balance');return new Response(JSON.stringify(body));}});
  const r=await client.balance(outRequest());assert.equal(r.availableNanoUsd,'50000');assert.ok(r.resourceId);
  for(const patch of [{owner:'other.near'},{nonce:2},{available:'51'},{trial:{calls_left:100}}]){const old=body;body={...body,...patch};await assert.rejects(client.balance(outRequest()),{code:'OUTLAYER_RESOURCE_UNVERIFIED'});body=old;}
-});
-test('Ping uses the documented quote/deposit protocol and exact original requirements/refund',async()=>{
- const q=quoteRequest(),calls=[];const client=createPingPay({resolveSecret:async()=> 'private-key',transport:(url,options)=>{calls.push({url,options});return Promise.resolve(new Response('{}'));}});
- const h=await client.prepare(q);assert.equal(calls.length,0);await h.start();assert.equal(calls[0].url,'https://pay.pingpay.io/agentpay/x402/verify');assert.equal(JSON.parse(calls[0].options.body).paymentPayload.payload.refundTo,'origin-refund-address');
- const r=await client.decode(await exchange({isValid:true,extra:{operationToken:'original-token',depositAddress:'original-address',amountIn:'123',refundDeadline:new Date(now+60000).toISOString()}}),q);
- const settle=pingRequest({kind:'pingpay_settle',resourceId:'report:v1',requirements:requirement,quote:r.quote,txHash:'original-origin-tx'});assert.equal(settle.body.paymentPayload.payload.operationToken,'original-token');assert.equal(settle.path,'/agentpay/x402/settle');
- assert.throws(()=>pingRequest({kind:'pingpay_settle',resourceId:'other',requirements:{...requirement,asset:'changed'},quote:r.quote,txHash:'tx'}),{code:'PINGPAY_ORIGINAL_QUOTE_REQUIRED'});
- assert.throws(()=>pingRequest({kind:'pingpay_quote',resourceId:'r',requirements:requirement,refundTo:'x',origin:'https://evil.example'}),{code:'PROVIDER_ORIGIN_DENIED'});
-});
-test('Ping pending/short/terminal/provider-success remain separate and never imply payment evidence',async()=>{
- const client=createPingPay(),q=quoteRequest();
- const r=pingRequest({kind:'pingpay_settle',resourceId:'report:v1',requirements:requirement,quote:{operationToken:'t',depositAddress:'a',requirementsHash:fingerprint(requirement)},txHash:'original'});
- assert.equal((await client.decode(await exchange({success:false,errorReason:'settlement_pending'}),r)).status,'pending');
- assert.equal((await client.decode(await exchange({success:false,extra:{status:'INCOMPLETE_DEPOSIT'}}),r)).status,'pending');
- assert.equal((await client.decode(await exchange({success:false,errorReason:'refunded'},402),r)).status,'failed');
- const success=await client.decode(await exchange({success:true,network:'near:mainnet',transaction:'hash'}),r);assert.equal(success.status,'unknown');assert.equal(success.settlementVerified,false);
- assert.equal((await client.decode(await exchange({accepts:[requirement]},503),pingRequest({kind:'pingpay_offers',resourceId:'r',amountOut:'1'}))).status,'unknown');
- assert.equal((await client.decode(await exchange({isValid:true,extra:{}},503),q)).status,'unknown');
 });
 test('Agent API owner signing keeps the exact provider payload and correlation through all standards',()=>{
  const req=ownerIntentRequest({type:'agent_create',owner:{type:'near',account_id:'owner.near'},name:'Company',policy:{}}),v=validateOwnerIntent(generated(req),req,now),signed={standard:'nep413',payload:v.intent.payload,public_key:'ed25519:'+'2'.repeat(44),signature:'a'.repeat(88)};

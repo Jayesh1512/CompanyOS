@@ -4,9 +4,9 @@
 
 ## Priorities from the Loops House mentor
 
-The user asked which NEAR tools to add. The mentor recommends finishing Agent API spending and 1Click settlement before adding another integration. It suggests PingPay/x402 only for one concrete paid resource, and deferring Agent Market and Chain Signatures until a real need exists. Full response and reviewer qualifications: `artifacts/loops-mentor-near-tools-20261113.json`.
+The user asked which NEAR tools to add. The mentor recommends finishing Agent API spending and 1Click settlement before adding another integration. It suggests x402 only for one concrete paid resource, and deferring Agent Market and Chain Signatures until a real need exists. Full response and reviewer qualifications: `artifacts/loops-mentor-near-tools-20261113.json`.
 
-The mentor incorrectly dismissed native search as not a NEAR capability. [NEAR AI Cloud documents built-in search](https://docs.near.ai/cloud/guides/web-search); it is a possible later improvement once model/tool compatibility and aggregate token/service charges are bounded. Search-result count is not a paid-call cap. The suggested PingPay documentation link was not retrievable during this pass; npm metadata confirms merchant middleware exists, not an implemented buyer payment route. Neither tool is installed or enabled by this advice.
+The mentor incorrectly dismissed native search as not a NEAR capability. [NEAR AI Cloud documents built-in search](https://docs.near.ai/cloud/guides/web-search); it is a possible later improvement once model/tool compatibility and aggregate token/service charges are bounded. Search-result count is not a paid-call cap. Native search is not installed or enabled by this advice.
 
 ## Implementation plan and contracts
 
