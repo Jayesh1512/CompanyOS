@@ -17,7 +17,7 @@ import {startNativeJBrain} from '../helpers/native-jbrain.mjs';
 
 // Only these tests replace the model transport and SDK findings. Production
 // composition imports no test helper, synthetic signature or reasoner.
-async function fixture(t,{invalidPatch=false,invalidCitation=false,proofFailure=false,preflightFailure=false,pendingBill=false,remoteEvaluation=false,scenarioId=DEFAULT_RECOVERY_SCENARIO,delegates=['knowledge_curator','template_developer']}={}){
+async function fixture(t,{invalidPatch=false,invalidCitation=false,proofFailure=false,preflightFailure=false,pendingBill=false,remoteEvaluation=false,scenarioId=DEFAULT_RECOVERY_SCENARIO,delegates=['knowledge_curator','template_developer'],requireOutlayer=false}={}){
  const scenario=recoveryScenario(scenarioId);
  const directory=await mkdtemp(path.join(os.tmpdir(),'near-recovery-')),brain=await startNativeJBrain(path.join(directory,'brain'));let app,calls=0;
  const authorization={id:'test-only-owner-grant',enabled:true,companyId:RECOVERY_COMPANY,model:RECOVERY_LIMITS.model,maxTotalNanoUsd:RECOVERY_LIMITS.maxTotalNanoUsd,responseAcceptance:'live-verified-hold-on-loss',credentialHash:'TEST',expiresAt:new Date(Date.now()+3600000).toISOString()};
@@ -37,7 +37,7 @@ async function fixture(t,{invalidPatch=false,invalidCitation=false,proofFailure=
    return {status:'confirmed',provider:'near-ai-cloud',mode:'live',inferenceId:'TEST-'+role,providerRequestId:'TEST-'+role,proof,generation:{output}};
   };
  }});
- const recovery=createRecovery({app,authorization,scenarioId,credential:'TEST-ONLY',...(remoteEvaluation?{outlayerEvaluator:{async evaluate(spec){return {status:'confirmed',providerRequestId:'test-call-id',proof:{evidenceRef:'private:test-only-execution'},attestationEvidenceRef:'private:test-only-attestation',responseEvidenceRef:'private:test-only-response',output:evaluateTemplateChange(spec)};}}}:{}),verificationFactory,cloudClient:{async costs(id){return {requests:[{requestId:id,costNanoUsd:pendingBill?'0':'1000'}]};}},readModels:async()=>({data:{data:[{id:RECOVERY_LIMITS.model,context_length:262144,max_output_length:65536,pricing:{input:0.04,output:1.35,request:'0'}}]}})});
+ const recovery=createRecovery({app,authorization,scenarioId,requireOutlayer,credential:'TEST-ONLY',...(remoteEvaluation?{outlayerEvaluator:{async evaluate(spec){return {status:'confirmed',providerRequestId:'test-call-id',proof:{evidenceRef:'private:test-only-execution'},attestationEvidenceRef:'private:test-only-attestation',responseEvidenceRef:'private:test-only-response',output:evaluateTemplateChange(spec)};}}}:{}),verificationFactory,cloudClient:{async costs(id){return {requests:[{requestId:id,costNanoUsd:pendingBill?'0':'1000'}]};}},readModels:async()=>({data:{data:[{id:RECOVERY_LIMITS.model,context_length:262144,max_output_length:65536,pricing:{input:0.04,output:1.35,request:'0'}}]}})});
  await recovery.seed();
  return {app,rules,recovery,authorization,facts,get calls(){return calls;},async run(){await recovery.start();const end=Date.now()+15000;while(recovery.busy&&Date.now()<end)await new Promise(r=>setTimeout(r,10));assert.equal(recovery.busy,false);return recovery.view();}};
 }
@@ -109,4 +109,11 @@ for(const delegates of [['manager'],['knowledge_curator','knowledge_curator'],'k
 });
 test('scenario selection is bounded and an existing journal cannot be silently repurposed',async t=>{
  assert.throws(()=>recoveryScenario('unknown'),{code:'RECOVERY_SCENARIO_UNKNOWN'});assert.throws(()=>recoveryScenario('__proto__'),{code:'RECOVERY_SCENARIO_UNKNOWN'});const f=await fixture(t);const other=createRecovery({app:f.app,scenarioId:'missing-address'});await assert.rejects(other.seed(),{code:'RECOVERY_SCENARIO_MISMATCH'});
+});
+
+test('required OutLayer evidence stops at an unavailable baseline evaluation instead of continuing locally',async t=>{
+ const f=await fixture(t,{requireOutlayer:true}),result=await f.run();assert.equal(result.scenario.state,'held');assert.equal(result.scenario.reasonCode,'OUTLAYER_PROJECT_BINDING_REQUIRED');assert.equal(f.calls,2);assert.equal(result.events.some(e=>e.type==='improvement.promoted'),false);
+});
+test('required OutLayer evidence permits a fully verified remote recovery',async t=>{
+ const f=await fixture(t,{requireOutlayer:true,remoteEvaluation:true}),result=await f.run();assert.equal(result.scenario.state,'completed');assert.equal(result.evaluations.every(e=>e.source==='outlayer'),true);
 });

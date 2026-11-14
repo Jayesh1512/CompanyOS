@@ -6,15 +6,38 @@ adapter, pins the project version, caps compute, and submits each job once.
 Pending jobs are polled by their original call ID. A lost submission response
 never triggers another paid submission.
 
-Configure the `SHOP_OUTLAYER_*` project/payer variables and private
-`OUTLAYER_PAYMENT_KEY` shown in `.env.example`. Pass a local module with
-`--outlayer-verifier /absolute/path/to/verifier.mjs` to
-`node scripts/recovery-demo.mjs --start`. The module must export
-`verifyExecution(input)`, independently verify the provider attestation and its
-WASM/input/output binding, and return the proof shape enforced by
-`src/integrations/outlayer.mjs`. The input includes the captured attestation and
-its private evidence reference. Merely returning hashes or accepting a provider
-success response does not implement attestation verification.
+Configure the `SHOP_OUTLAYER_*` project variables and private
+`OUTLAYER_PAYMENT_KEY` shown in `.env.example`. The recovery launcher derives the
+payer owner/nonce from the key unless explicitly configured. Install the pinned,
+independent verifier before requesting remote evidence:
+
+```sh
+node scripts/setup-outlayer-verifier.mjs
+node scripts/recovery-demo.mjs --scenario missing-address --port 4189 \
+  --directory .runtime/outlayer-address-proof-v1 --require-outlayer --start
+```
+
+The setup script builds `out-layer/outlayer-verify` at commit
+`90c27d9d4fc843194ddc6f8ebaafa4eb320c3bb6` with locked dependencies, checks its
+embedded Intel root hash, and records the executable hash/compiler in a local
+manifest. The launcher uses this binary through `outlayer-verifier.mjs`; it
+requires successful quote authenticity, approved worker identity, V1 task
+binding, UpToDate TCB, and both payload hash checks. It also compares the payer,
+project, pinned WASM, and captured attestation against the verifier bundle.
+The subprocess receives no payment key and cannot submit another execution.
+
+Verification uses the numeric task ID from the captured attestation, avoiding
+dependence on the mainnet call-ID lookup rollout. Both the machine report and
+self-contained evidence bundle are saved as private journal artifacts. The
+bundle can be rechecked with `outlayer-verify bundle proof.json --offline`;
+offline worker approval relies on the chain answer captured in that bundle.
+Use the online check to refresh the independently acquired chain observation.
+
+With `--require-outlayer`, a missing or rejected remote proof holds the scenario
+before repair or promotion. Ordinary recovery retains its explicit local
+fallback. A custom verifier module remains available through
+`--outlayer-verifier /absolute/path/to/verifier.mjs`, exporting
+`verifyExecution(input)` with the proof shape in `src/integrations/outlayer.mjs`.
 
 Verified output must also match the frozen local evaluator before promotion.
 Missing configuration, unavailable execution, invalid proof, or divergent output
