@@ -1,0 +1,289 @@
+[
+  {
+    "text": "CompanyOs gives a business a place to define its purpose,",
+    "startMs": 80,
+    "endMs": 3720,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "organise its agents, and supervise their work.",
+    "startMs": 3900,
+    "endMs": 6620,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Let's explore it through Northstar Care,",
+    "startMs": 7240,
+    "endMs": 9300,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "a customer-care agency serving our fictional insurance client, Harbor Mutual.",
+    "startMs": 9560,
+    "endMs": 14120,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Starting the demo creates a fresh company with a prepared brief.",
+    "startMs": 14840,
+    "endMs": 18320,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Here we can review who it serves,",
+    "startMs": 18880,
+    "endMs": 20780,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "the outcome we want, and its first objective.",
+    "startMs": 20960,
+    "endMs": 24340,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The team has distinct responsibilities.",
+    "startMs": 24880,
+    "endMs": 27140,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The manager coordinates work, the backlog tracks gaps,",
+    "startMs": 27540,
+    "endMs": 31060,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "and the policy and claims guides handle customer questions.",
+    "startMs": 31340,
+    "endMs": 34400,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Each profile has instructions we can inspect and edit.",
+    "startMs": 34960,
+    "endMs": 38620,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Company knowledge gives the team a shared, versioned source of facts.",
+    "startMs": 39200,
+    "endMs": 43320,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Operating limits define the boundaries around its work.",
+    "startMs": 43820,
+    "endMs": 46660,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "On the marketplace, the agency's policy and claims",
+    "startMs": 56780,
+    "endMs": 60200,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "guides are published as customer-facing services.",
+    "startMs": 60240,
+    "endMs": 63300,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "A customer can discover a service and open a conversation directly.",
+    "startMs": 63740,
+    "endMs": 67680,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "These listings belong to the company we just created.",
+    "startMs": 68300,
+    "endMs": 71480,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Let's ask about the collision deductible.",
+    "startMs": 73000,
+    "endMs": 75240,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The guide retrieves the approved policy wording and includes its source revision.",
+    "startMs": 75580,
+    "endMs": 79960,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "This local demo uses exact document lookup,",
+    "startMs": 80440,
+    "endMs": 83720,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "so we can see where the answer came from.",
+    "startMs": 84080,
+    "endMs": 86140,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Customer payments gives the owner a place to inspect",
+    "startMs": 88920,
+    "endMs": 91500,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "received-payment receipts and their references.",
+    "startMs": 91540,
+    "endMs": 94240,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "This new demo company has no payments yet.",
+    "startMs": 94880,
+    "endMs": 97760,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Below it is a separately labelled receipt from a prior mainnet service sale",
+    "startMs": 98420,
+    "endMs": 102740,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "of ten USDC cents, with links to its settlement and ledger record.",
+    "startMs": 102780,
+    "endMs": 107740,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "Now let's inspect a recorded live recovery run.",
+    "startMs": 108280,
+    "endMs": 111400,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "A customer asked which address was needed to complete a claims intake.",
+    "startMs": 111880,
+    "endMs": 115540,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The support agent's runbook was missing that guidance,",
+    "startMs": 115860,
+    "endMs": 118460,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "so the first attempt escalated.",
+    "startMs": 118680,
+    "endMs": 120460,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The gap reached the backlog, which delegated repairs.",
+    "startMs": 121000,
+    "endMs": 124260,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The knowledge curator brought the exact requirement in from",
+    "startMs": 124680,
+    "endMs": 127600,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "an owner-approved source and saved a new runbook revision.",
+    "startMs": 127640,
+    "endMs": 131260,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The template developer added the missing address field.",
+    "startMs": 131820,
+    "endMs": 134400,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The same fixed tests rejected the old template and accepted the repaired version.",
+    "startMs": 134840,
+    "endMs": 139140,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The support agent then retried the same customer",
+    "startMs": 168300,
+    "endMs": 170480,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "request with the updated knowledge and template.",
+    "startMs": 170520,
+    "endMs": 172920,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "It recorded the customer-supplied mailing address and produced a complete intake.",
+    "startMs": 173180,
+    "endMs": 176900,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "The result is a lasting change to how this organisation handles",
+    "startMs": 177440,
+    "endMs": 180880,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "the next request: a gap became work, the work produced a checked repair,",
+    "startMs": 180920,
+    "endMs": 185500,
+    "timestampMs": null,
+    "confidence": null
+  },
+  {
+    "text": "and the repair reached the customer-facing task.",
+    "startMs": 185780,
+    "endMs": 188120,
+    "timestampMs": null,
+    "confidence": null
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "provider": "ElevenLabs forced alignment",
+  "captionCount": 41,
+  "words": 361,
+  "openingOffsetMs": 4000,
+  "source": "companyos-walkthrough-uncaptioned.mp4",
+  "sourceSha256": "6853a631fb17db5b8e39624f0984ba9501afcbccd9925e10c1c5ab39d557e6ff",
+  "output": "companyos-walkthrough-captioned.mp4",
+  "outputSha256": "e392649676948e350892f29fd9d8c983dd0b886fe7175c2925d728c6c8d4d3a6",
+  "durationSeconds": 192.569002,
+  "sourceCaptionTiming": "relative to narration; opening offset applied in SRT/VTT and render",
+  "style": "white text, dark background, max two lines, bottom safe area",
+  "audio": "copied without re-encoding",
+  "audioPacketsUnchanged": true,
+  "fullVideoDecode": "passed",
+  "captionTextCoverage": "all narration words; Company O S displayed as CompanyOs"
+}

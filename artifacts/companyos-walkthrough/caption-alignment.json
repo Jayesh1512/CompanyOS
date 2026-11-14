@@ -1,0 +1,10 @@
+{
+  "provider": "ElevenLabs forced alignment",
+  "audioHash": "ccf5a0464b89e254e11d9e3c2e95e67a99c9c982cd37a7f3182d56ab1e6b15e1",
+  "transcriptHash": "dd898859da86473fecfebc402891d348c44282e35925ea4b616a20e6bd5f12b0",
+  "wordCount": 363,
+  "loss": 0.5988291210507343,
+  "source": "narration-elevenlabs.mp3",
+  "timing": "relative to narration audio; add opening offset at export",
+  "apiCalls": 1
+}

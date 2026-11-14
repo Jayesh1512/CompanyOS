@@ -88,6 +88,8 @@
     "durationSeconds": 192.569002,
     "openingSeconds": 4,
     "narrationStartsAtSeconds": 4,
-    "poster": "companyos-title-screen.png"
+    "poster": "companyos-title-screen.png",
+    "captions": "burned in",
+    "subtitles": "companyos-captions.srt"
   }
 }
