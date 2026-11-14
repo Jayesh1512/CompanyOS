@@ -142,7 +142,7 @@ npm run setup:jbrain
 npm run dev
 ```
 
-Open `http://127.0.0.1:4173/#setup` to define the company and review its agents, knowledge and boundaries. Ordinary startup seeds no sample organization or spending authority. A new domain needs its own approved documents, service configuration and permitted resource connections; the platform does not supply those automatically.
+Open the application in your browser and use the company setup wizard to define the company and review its agents, knowledge and boundaries. Ordinary startup seeds no sample organization or spending authority. A new domain needs its own approved documents, service configuration and permitted resource connections; the platform does not supply those automatically.
 
 The latest **Open demo** flow opens a fresh, prefilled company setup wizard for review, then the agency marketplace; it is a model-free local demonstration, not a paid autonomous run. The separate actual-AI and recovery paths require explicit credentials and budget authorization. Follow the [organization guide](docs/COMPANY_FOR_NONE_GUIDE.md), [local-access documentation](docs/LOCAL_WORKSPACE_ACCESS.md) and [recovery setup](docs/RECOVERY_EXECUTION.md).
 
