@@ -1,8 +1,7 @@
 {
   "product": "CompanyOs",
   "source": "companyos-walkthrough-body.mp4",
-  "output": "companyos-walkthrough.mp4",
-  "alternateOutput": "companyos-walkthrough-with-opening.mp4",
+  "output": "companyos-walkthrough-uncaptioned.mp4",
   "poster": "companyos-title-screen.png",
   "firstFrameIsTitleScreen": true,
   "openingSeconds": 4,
