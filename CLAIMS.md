@@ -179,14 +179,32 @@ Verify/reproduce: `node scripts/verify-funded-loop.mjs`
 
 Limit: The paying customer is the deployment-owner wallet, not an independent third party. Settlement assurance is provider status SUCCESS plus final deposit transactions; no independent money-movement port is wired. The inference was paid from an owner-prepaid Cloud key and attributed to the sale in accounting only: no agent-initiated Cloud credit purchase happened. No NanoGPT purchase has run on mainnet.
 
-<!-- claim:funded-commerce:BLOCKED -->
-## funded-commerce — BLOCKED
+<!-- claim:independent-customer-payment:BLOCKED -->
+## independent-customer-payment — BLOCKED
 
-An independent third-party customer paid, delivery, refund/payout and supplier acquisition completed with independently verified evidence.
+An independent third-party customer (a wallet outside the maintainer's control) paid for a service, and that revenue funded the agent's own inference or credit purchase.
 
 - No established evidence for this outcome.
 
-Limit: Not established. The only recorded checkout is owner-funded (see owner-funded-checkout). No independent customer paid us, no refund/payout ran and no supplier was acquired by the loop. The loop-spend, marketplace and swap records show outbound spending only; provider SUCCESS, signed quotes and task artifacts cannot stand in for monetary finality or reusable licences.
+Limit: Not established. Every recorded sale (the 0.10 USDC checkout and the 0.1376 NEAR sale) came from the deployment-owner wallet; see owner-funded-checkout and nanogpt-credit-purchase for what is real. The NanoGPT purchase (about $1) also exceeded its sale (about $0.40), with the shortfall funded from the agent balance and prior company funds.
+
+<!-- claim:refund-payout:NOT_IMPLEMENTED -->
+## refund-payout — NOT_IMPLEMENTED
+
+A customer refund or contributor payout ran against recorded revenue with independently verified evidence.
+
+- No established evidence for this outcome.
+
+Limit: No refund or payout has run. Provider SUCCESS, signed quotes and task artifacts cannot stand in for monetary finality.
+
+<!-- claim:autonomous-credit-purchase:NOT_IMPLEMENTED -->
+## autonomous-credit-purchase — NOT_IMPLEMENTED
+
+The autonomy loop itself decided to buy inference credit from a supplier and executed the purchase.
+
+- No established evidence for this outcome.
+
+Limit: The NanoGPT purchase was triggered by a script under owner authorization (see nanogpt-credit-purchase). The loop-driven spend (loop-spend) was a 0.025 USDC swap, not a supplier purchase, and the loop's spend command is not wired to credit purchase.
 
 <!-- claim:chain-signatures:OBSERVED -->
 ## chain-signatures — OBSERVED
