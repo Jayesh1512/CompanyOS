@@ -1,10 +1,10 @@
 # CompanyOs
 
-**Start with [How CompanyOs works](docs/COMPANY_FOR_NONE_GUIDE.md).** It explains the operating loop, a fictional insurance day-in-the-life, healing, upgrades, resource buying, current capability status and the owner setup checklist.
+**Start with [How CompanyOs works](docs/COMPANYOS_GUIDE.md).** It explains the operating loop, a fictional insurance day-in-the-life, healing, upgrades, resource buying, current capability status and the owner setup checklist.
 
 The product turns a company brief into a managed agent workspace. The intended routine is manager → scoped specialists → delivery → observed gaps → permanent backlog → developer → tested improvement → future work uses the new version. The owner sets purpose, knowledge, policy and budget. Agent-managed operation is the default for new companies; Owner-managed operation retains owner-managed work.
 
-The local workspace, native JBrain knowledge and fictional customer-care service work now. The complete reasoning/improvement loop has controlled test evidence. **Real funded operations are demonstrated on mainnet** (see below); a single loop-driven mainnet spend is also evidenced; the remaining gap is the autonomous sale-to-payout loop where customer revenue funds the agent's own inference. The guide’s [single status table](docs/COMPANY_FOR_NONE_GUIDE.md#current-capability-and-status) separates local evidence, controlled tests, required inputs and remaining implementation.
+The local workspace, native JBrain knowledge and fictional customer-care service work now. The complete reasoning/improvement loop has controlled test evidence. **Real funded operations are demonstrated on mainnet** (see below); a single loop-driven mainnet spend is also evidenced; the remaining gap is the autonomous sale-to-payout loop where customer revenue funds the agent's own inference. The guide’s [single status table](docs/COMPANYOS_GUIDE.md#current-capability-and-status) separates local evidence, controlled tests, required inputs and remaining implementation.
 
 **Earlier public-only evidence (14 November):** the run verified a real **1Click dry quote** with the official SDK’s default production root, plus **Cloud gateway/model UpToDate attestation** with fresh nonces and attested gateway TLS. Public responses include 64 models, 231 tokens and the deployment wallet's then-current `UNKNOWN_ACCOUNT` result, before its later funding and deployment. No completion, swap, transaction or spend occurred in that run. [Evidence, exact reproduction, hashes and limits](docs/LIVE_EVIDENCE.md) keep these results separate from paid business proof; deployment provenance was not checked.
 
@@ -60,7 +60,7 @@ Grant document access in Company knowledge, then select each role’s bounded co
 
 The internal workflow is separate from customer orders. It uses the official SDK path, durable claims/fences, stable effect identities and existing Rules/Treasury gates. Automatic healing supports additive structured document-template changes with a fixed baseline/candidate evaluator and exact-head promotion. Instruction proposals require paused owner review. Host-code proposals remain inert manual work. This is versioned operational improvement, not model training.
 
-Free skills/SOUL are real written guidance. They grant no tools or financial authority. Paid requests and commercial service drafts stay distinct from actual purchases, entitlements, publication and revenue. See the [guide](docs/COMPANY_FOR_NONE_GUIDE.md) and [unified setup contracts](docs/UNIFIED_COMPANY_SETUP.md).
+Free skills/SOUL are real written guidance. They grant no tools or financial authority. Paid requests and commercial service drafts stay distinct from actual purchases, entitlements, publication and revenue. See the [guide](docs/COMPANYOS_GUIDE.md) and [unified setup contracts](docs/UNIFIED_COMPANY_SETUP.md).
 
 ## Run
 
@@ -118,4 +118,4 @@ Private knowledge is not general public service context. The customer-care path 
 
 [PRODUCT.md](PRODUCT.md) describes the current mission and constraints. [DESIGN.md](DESIGN.md) preserves the visual direction. [MVP_STATUS.md](MVP_STATUS.md) is a chronological evidence record; earlier counts and runtime descriptions are historical snapshots.
 
-The reviewed [Company for none plan](docs/COMPANY_FOR_NONE_BUILD_PLAN.md), [critique](docs/COMPANY_FOR_NONE_CRITIQUE.md) and [real-execution plan](docs/REAL_EXECUTION_PLAN.md) remain unchanged. Historical BUILD_PLAN/PRD/architecture and earlier Council/Bonfire plans are preserved; use the [current guide](docs/COMPANY_FOR_NONE_GUIDE.md) for product behavior. The [recorded walkthrough](walkthrough/README.md) shows the earlier fixture workspace. The [problem film](problem-video/README.md) contains no project footage.
+The reviewed [CompanyOs plan](docs/COMPANYOS_BUILD_PLAN.md), [critique](docs/COMPANYOS_CRITIQUE.md) and [real-execution plan](docs/REAL_EXECUTION_PLAN.md) remain unchanged. Historical BUILD_PLAN/PRD/architecture and earlier Council/Bonfire plans are preserved; use the [current guide](docs/COMPANYOS_GUIDE.md) for product behavior. The [recorded walkthrough](walkthrough/README.md) shows the earlier fixture workspace. The [problem film](problem-video/README.md) contains no project footage.
