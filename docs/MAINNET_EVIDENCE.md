@@ -162,6 +162,31 @@ node scripts/verify-funded-loop.mjs                                         # re
 - The billed cost is the provider's report, not on-chain.
 - The paid-answer gate exists in the server route (`POST /api/workspace/ai-demo/run` with `saleId`, enabled by `SHOP_FUNDED_LOOP_FILE`) and is unit-tested, but the live answer was run through the script: the preview store is bound to a different provider identity (`ECONOMIC_IDENTITY_MISMATCH`), so the full server was not started for this evidence.
 
+## 10. Agent-bought inference credit (NanoGPT): built, not yet run live
+
+**Status: NOT RUN.** No NanoGPT credit has been bought and no NanoGPT inference has run. This section describes what exists so it can be checked, and it will be filled with transaction references only after a live run.
+
+NEAR AI Cloud has no API to buy credit (section 9 limits), so the agent's credit purchase uses a provider that does: [NanoGPT](https://docs.nano-gpt.com/api-reference/endpoint/crypto-deposits.md) creates a crypto deposit invoice from an API key (ticker `near`, minimum about $1) and credits the account when the invoice reaches `Completed`.
+
+| Step | Code | Status |
+| --- | --- | --- |
+| Customer pays NEAR into the company wallet `e17d480f…`; `sale.confirmed` on the ledger | `scripts/demo-nanogpt-loop.mjs customer-pay` | Not run |
+| Agent creates an invoice and pays that exact amount once from the company wallet; waits for `Completed`; `procurement.confirmed` on the ledger only if the NanoGPT balance rose | `buy-credits`, `src/cloud-funding/nanogpt.mjs` | Unit-tested (invoice safety checks, single payment, no ledger event on failure); not run live |
+| Agent runs inference on that credit; cost is the balance change around the call; `inference.consumed` on the ledger | `answer` | Not run |
+| Read-only verification against mainnet and NanoGPT | `scripts/verify-nanogpt-loop.mjs` | Written; nothing to verify yet |
+
+```sh
+node scripts/demo-nanogpt-loop.mjs preflight   # read-only; shows what is missing
+```
+
+**What this does and does not claim**
+- The purchase is triggered by the script under owner authorization. It is **not** an LLM decision, and the autonomy loop's `spend` command is not wired to it.
+- The marketplace listing "NanoGPT (agent-bought credit)" is a display listing ("Setup required"). The purchase does not run through the marketplace and the listing grants no spending authority.
+- When run, the "customer" is the owner's wallet: a real on-chain payment, not a third-party buyer.
+- NanoGPT is not TEE-attested. Private, verified inference stays on NEAR AI Cloud (section 7), which remains funded by the owner's prepaid key.
+- The measured cost is a balance delta, not a provider receipt.
+- Preflight on 14 November showed the company wallet holds 0.041 NEAR and 0 USDC, so the run needs the owner wallet's approval to move about 0.73 NEAR.
+
 ## Payment inventory: what moved and how to check it
 
 | Movement | Amount | Counterparty | Publicly checkable? |
