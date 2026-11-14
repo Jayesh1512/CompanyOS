@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-14T20:31:32.782Z",
+  "checks": [
+    "prior mainnet sale is displayed separately from empty current company receipts",
+    "real saved settlement and ledger transaction references are linked",
+    "fresh agency marketplace exposes the payment receipt page",
+    "refresh preserves payment records and does not turn historical evidence into demo revenue"
+  ],
+  "widths": [
+    {
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390
+    }
+  ],
+  "pageErrors": [],
+  "currentCompanyReceiptCount": 0,
+  "recordedSaleId": "sale:167b4b8b599c4313f4310bb0",
+  "recordedAmount": {
+    "amount": "100000",
+    "decimals": 6,
+    "asset": "USDC",
+    "network": "NEAR mainnet"
+  },
+  "providerOperations": 0,
+  "financialVersion": 0,
+  "newPaymentSubmitted": false
+}
