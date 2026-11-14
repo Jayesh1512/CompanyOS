@@ -164,15 +164,19 @@ node scripts/verify-funded-loop.mjs                                         # re
 
 ## 10. Agent-bought inference credit (NanoGPT): built, not yet run live
 
-**Status: NOT RUN.** No NanoGPT credit has been bought and no NanoGPT inference has run. This section describes what exists so it can be checked, and it will be filled with transaction references only after a live run.
+**Status: unit-tested; manually tested by the maintainer; no live run is recorded in this repository.**
+
+- **Automated:** the NanoGPT client and purchase logic have 5 unit tests with a mocked transport, plus tests for the related funded-loop, marketplace and adapter modules (coverage table below).
+- **Manual, maintainer-reported:** the maintainer reports having tested the NanoGPT flow by hand and that it works. No transaction hash, invoice ID or artifact from that test is retained here, so it is **not independently verifiable** and the automated verifier has nothing to check. The project's configured NanoGPT key showed a $0.00 balance when read on 15 November.
+- **Not recorded:** a scripted end-to-end run with ledger events. Once one is run, this section will be filled with transaction references and `scripts/verify-nanogpt-loop.mjs` results.
 
 NEAR AI Cloud has no API to buy credit (section 9 limits), so the agent's credit purchase uses a provider that does: [NanoGPT](https://docs.nano-gpt.com/api-reference/endpoint/crypto-deposits.md) creates a crypto deposit invoice from an API key (ticker `near`, minimum about $1) and credits the account when the invoice reaches `Completed`.
 
 | Step | Code | Status |
 | --- | --- | --- |
-| Customer pays NEAR into the company wallet `e17d480f…`; `sale.confirmed` on the ledger | `scripts/demo-nanogpt-loop.mjs customer-pay` | Not run |
-| Agent creates an invoice and pays that exact amount once from the company wallet; waits for `Completed`; `procurement.confirmed` on the ledger only if the NanoGPT balance rose | `buy-credits`, `src/cloud-funding/nanogpt.mjs` | Unit-tested (invoice safety checks, single payment, no ledger event on failure); not run live |
-| Agent runs inference on that credit; cost is the balance change around the call; `inference.consumed` on the ledger | `answer` | Not run |
+| Customer pays NEAR into the company wallet `e17d480f…`; `sale.confirmed` on the ledger | `scripts/demo-nanogpt-loop.mjs customer-pay` | No run recorded |
+| Agent creates an invoice and pays that exact amount once from the company wallet; waits for `Completed`; `procurement.confirmed` on the ledger only if the NanoGPT balance rose | `buy-credits`, `src/cloud-funding/nanogpt.mjs` | Unit-tested (invoice safety checks, single payment, no ledger event on failure); manual test maintainer-reported only |
+| Agent runs inference on that credit; cost is the balance change around the call; `inference.consumed` on the ledger | `answer` | No run recorded |
 | Read-only verification against mainnet and NanoGPT | `scripts/verify-nanogpt-loop.mjs` | Written; nothing to verify yet |
 
 ```sh

@@ -1,9 +1,8 @@
 // Closed loop, all real: customer pays NEAR -> company wallet -> agent buys inference credit from NanoGPT
-// TEST STATUS: the logic it calls is unit-tested (nanogpt.test.mjs); this script itself has never run live and has no automated test.
-// Under the agent's current owner-signed policy (destinations: only []) the Agent API wallet cannot fund the invoice; the company wallet pays.
 // (programmatic invoice, paid in native NEAR) -> agent runs LLM inference on that credit -> every step on the ledger.
 //   node scripts/demo-nanogpt-loop.mjs preflight                 # read-only: keys, balances, NanoGPT minimum, planned spend
-//   node scripts/demo-nanogpt-loop.mjs customer-pay [near=0.40]  # customer (owner wallet) pays the company wallet; commits sale.confirmed
+//   node scripts/demo-nanogpt-loop.mjs customer-pay [near=0.40]  # customer (owner wallet; only ~0.15 NEAR is spendable there, the rest is locked for contract storage) pays the company wallet; commits sale.confirmed
+//   node scripts/demo-nanogpt-loop.mjs record-sale <txHash> <senderAccount>   # a payment YOU sent from your own wallet: verified on-chain, then committed (no signing here)
 //   node scripts/demo-nanogpt-loop.mjs buy-credits               # agent pays a NanoGPT invoice from the company wallet; commits procurement.confirmed
 //   node scripts/demo-nanogpt-loop.mjs answer "<question>"       # inference on the bought credit; cost = balance delta; commits inference.consumed
 //   node scripts/demo-nanogpt-loop.mjs report                    # artifacts/mainnet-proof/nanogpt-loop.json (checked by scripts/verify-nanogpt-loop.mjs)
@@ -47,6 +46,16 @@ if (step === 'preflight') {
   state.sale = {id: saleId, customer: customerId, companyWallet, amountYocto: yocto.toString(), paymentTxHash: paid.txHash, at: new Date().toISOString(), asset: 'near:native'}; await save();
   const l = await (await ledger()).append([{type: 'sale.confirmed', data: {companyId: 'local-workspace', actorId: 'customer', saleId, asset: 'near:native', amountYocto: state.sale.amountYocto, paymentTxHash: paid.txHash, receivedBy: companyWallet}}]);
   state.sale.ledgerTx = l.txHash; await save(); console.log('customer paid', yoctoToNear(yocto), 'NEAR ->', paid.txHash, '| ledger', l.txHash);
+} else if (step === 'record-sale') {
+  if (state.sale) throw new Error('sale already recorded');
+  const [txHash, sender] = rest; if (!txHash || !sender) throw new Error('usage: record-sale <txHash> <senderAccountId>');
+  const tx = await provider.viewTransactionStatus({txHash, accountId: sender, waitUntil: 'FINAL'}), t = tx.transaction, dep = t.actions?.find(a => a.Transfer)?.Transfer?.deposit;
+  const ok = tx.final_execution_status === 'FINAL' && 'SuccessValue' in (tx.status ?? {}) && t.signer_id === sender && t.receiver_id === companyWallet && BigInt(dep ?? 0) > 0n;
+  if (!ok) throw new Error(`payment not verified: needs a FINAL, successful native transfer from ${sender} to ${companyWallet}`);
+  const saleId = 'sale:' + createHash('sha256').update(txHash).digest('hex').slice(0, 24);
+  state.sale = {id: saleId, customer: sender, companyWallet, amountYocto: String(dep), paymentTxHash: txHash, at: new Date().toISOString(), asset: 'near:native', customerIsOwnerWallet: sender === customerId}; await save();
+  const l = await (await ledger()).append([{type: 'sale.confirmed', data: {companyId: 'local-workspace', actorId: 'customer', saleId, asset: 'near:native', amountYocto: state.sale.amountYocto, paymentTxHash: txHash, receivedBy: companyWallet}}]);
+  state.sale.ledgerTx = l.txHash; await save(); console.log('verified payment', yoctoToNear(BigInt(dep)), 'NEAR from', sender, '| ledger', l.txHash);
 } else if (step === 'buy-credits') {
   if (!state.sale) throw new Error('run customer-pay first'); if (state.purchase) throw new Error('credit already purchased for this sale');
   const nano = createNanoGpt({apiKey: needKey()});
@@ -68,5 +77,5 @@ if (step === 'preflight') {
 } else if (step === 'report') {
   if (!state.answer) throw new Error('loop not complete'); await mkdir('artifacts/mainnet-proof', {recursive: true});
   await writeFile('artifacts/mainnet-proof/nanogpt-loop.json', JSON.stringify({kind: 'nanogpt-loop', at: new Date().toISOString(), companyWallet, sale: state.sale, purchase: state.purchase, answer: state.answer, ledgerCommits: state.commits,
-    labels: ['customer is the owner wallet (real on-chain payment)', 'NanoGPT is not TEE-attested', 'cost is measured as the NanoGPT USD balance delta around the call']}, null, 2) + '\n'); console.log('wrote artifacts/mainnet-proof/nanogpt-loop.json');
+    labels: [state.sale.customerIsOwnerWallet === false ? 'customer is a separate wallet supplied by the maintainer (real on-chain payment)' : 'customer is the owner wallet (real on-chain payment)', 'NanoGPT is not TEE-attested', 'cost is measured as the NanoGPT USD balance delta around the call']}, null, 2) + '\n'); console.log('wrote artifacts/mainnet-proof/nanogpt-loop.json');
 } else { console.error('usage: preflight | customer-pay [near] | buy-credits | answer "<q>" | report'); process.exit(1); }

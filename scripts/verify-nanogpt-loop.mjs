@@ -50,5 +50,5 @@ if (process.env.NANOGPT_API_KEY) {
 
 const failed = results.filter(x => !x.ok).length;
 console.log(`\n${results.length - failed}/${results.length} passed${failed ? `, ${failed} FAILED` : ''}`);
-console.log('Not proven here: the customer is the owner wallet (not a third party); the inference cost is a balance delta measured by us; NanoGPT is not TEE-attested; a ledger commitment proves the record existed, not that the business event is true.');
+console.log('Not proven here: whether the customer wallet belongs to an independent third party (see the note above); the inference cost is a balance delta measured by us; NanoGPT is not TEE-attested; a ledger commitment proves the record existed, not that the business event is true.');
 process.exitCode = failed ? 1 : 0;
